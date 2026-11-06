@@ -493,7 +493,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461350.8910648148
+2461350.924976852
   9
 $TDUCREATE
  40
@@ -501,7 +501,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461350.8910648148
+2461350.924976852
   9
 $TDUUPDATE
  40
@@ -553,7 +553,7 @@ $SPLINESEGS
   9
 $HANDSEED
   5
-3F
+40
   9
 $SURFTAB1
  70
@@ -933,11 +933,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{D70AA673-43D3-402C-803E-B2D241CB7F00}
+{F4EC0EBB-186D-4D1F-B08E-3059891FAA9E}
   9
 $VERSIONGUID
   2
-{4F9C29AC-6673-498B-A44F-935B632088B9}
+{52B282B1-1087-48CC-890E-B5FAAA686472}
   9
 $EXTNAMES
 290
@@ -1327,9 +1327,9 @@ ISM
   0
 CLASS
   1
-LAYOUT
+ACDBPLACEHOLDER
   2
-AcDbLayout
+AcDbPlaceHolder
   3
 ObjectDBX Classes
  90
@@ -1343,9 +1343,9 @@ ObjectDBX Classes
   0
 CLASS
   1
-ACDBPLACEHOLDER
+LAYOUT
   2
-AcDbPlaceHolder
+AcDbLayout
   3
 ObjectDBX Classes
  90
@@ -1573,7 +1573,7 @@ LAYER
 100
 AcDbSymbolTable
  70
-2
+3
   0
 LAYER
   5
@@ -1618,6 +1618,30 @@ Defpoints
 Continuous
 290
 0
+370
+-3
+390
+13
+347
+21
+  0
+LAYER
+  5
+3F
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+CUT
+ 70
+0
+ 62
+7
+  6
+Continuous
 370
 -3
 390
@@ -2055,7 +2079,7 @@ LINE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbLine
  10
@@ -2079,7 +2103,7 @@ LINE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbLine
  10
@@ -2103,7 +2127,7 @@ LINE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbLine
  10
@@ -2127,7 +2151,7 @@ LINE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbLine
  10
@@ -2151,7 +2175,7 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
@@ -2171,7 +2195,7 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
@@ -2191,7 +2215,7 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
@@ -2211,7 +2235,7 @@ LINE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbLine
  10
@@ -2235,7 +2259,7 @@ LINE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbLine
  10
@@ -2259,7 +2283,7 @@ LINE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbLine
  10
@@ -2283,7 +2307,7 @@ LINE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbLine
  10
@@ -2307,7 +2331,7 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
@@ -3321,7 +3345,7 @@ DictionaryVariables
 280
 0
   1
-1.4.5 @ 2026-11-06T03:23:08.162002+00:00
+1.4.5 @ 2026-11-06T04:11:58.921171+00:00
   0
 DICTIONARYVAR
   5
@@ -3333,7 +3357,7 @@ DictionaryVariables
 280
 0
   1
-1.4.5 @ 2026-11-06T03:23:08.164504+00:00
+1.4.5 @ 2026-11-06T04:11:58.934877+00:00
   0
 ENDSEC
   0

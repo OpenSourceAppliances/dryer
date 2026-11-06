@@ -10,7 +10,7 @@ One file holds every number. Run it and it writes:
 Coordinate system: X across the cabinet (left negative), Y from front (0) to back, Z up from the floor.
 All dimensions mm. Needs cadquery (pip install cadquery). Also runs in FreeCAD's CadQuery workbench.
 
-Status: draft 2, 2026-11-05. Bought parts (motor, blower, timers, rollers) are drawn as envelopes
+Status: draft 3, 2026-11-05. Bought parts (motor, blower, timers, rollers) are drawn as envelopes
 from catalog numbers that have NOT been measured. docs/verification.md says which measurement unlocks
 which DXF. Do not cut a plate whose gate is open.
 """
@@ -44,7 +44,9 @@ P = dict(
     tab_n=30, tab_w=24.0, tab_h=20.0, tab_hole_d=4.5,
     seam_pitch=50.0, seam_inset=15.0, seam_hole_d=4.5, splice_w=60.0, splice_t=1.0,
     baffle_n=3, baffle_leg=40.0, baffle_len=480.0, baffle_hole_d=6.5,
-    belt_track_w=40.0, roller_track_w=45.0,       # fastener-free zones on the wall
+    belt_track_w=40.0, roller_track_w=45.0,       # fastener-free zones on the wall (belt track centred on the pulley, 7a)
+    baffle_hole_offsets=(-170.0, -50.0, 50.0, 170.0),   # along the baffle from its centre; clear of the belt track
+    roller_inset=0.0,         # roller face flush with the drum end, so the roller runs over the ring (7b)
     drum_clear_bottom=20.0, drum_clear_top=18.5,   # 18.5 so the body comes out at 1000
     drum_front_y=50.0,        # front face of the drum
     door_opening_d=460.0,
@@ -71,6 +73,7 @@ P = dict(
     tray_w=320.0, tray_depth=250.0, tray_y0=420.0, tray_x0=-160.0, t_tray=1.5,
     pm_w=170.0, pm_depth=250.0, pm_h=180.0, pm_x0=-340.0, pm_y0=450.0,
     exhaust_d=102.0, exhaust_x=230.0, exhaust_z=150.0,
+    cord_hole_d=22.0,         # hole for the cord strain relief bushing (PG16 / M20 style); confirm against the bushing bought, V-112
 )
 P["drum_rim_r"] = P["drum_d"] / 2
 P["drum_flat_w"] = math.pi * (P["drum_d"] - P["drum_t"])   # sheet length at the mid-surface
@@ -84,6 +87,10 @@ P["rear_cross_y"] = P["rear_bulk_y"] + P["t_bulk"]  # rear cross rails start her
 P["inner_w"] = P["W"] - 2 * P["ext"]                # 610 between the posts
 P["half_w"] = P["W"] / 2
 P["belt_y"] = P["motor_y0"] + P["motor_len"] + 12.0   # pulley centre on the rear shaft
+P["belt_track_y"] = P["belt_y"] - P["drum_front_y"]   # belt track on the drum, in flat-pattern Y (from the front edge)
+P["r_mid"] = (P["drum_d"] - P["drum_t"]) / 2          # sheet mid-surface radius; flat X maps to angle at this radius
+for _off in P["baffle_hole_offsets"]:   # no baffle bolt in the belt track
+    assert abs(P["drum_l"] / 2 + _off - P["belt_track_y"]) > P["belt_track_w"] / 2 + P["baffle_hole_d"] / 2, "baffle hole in the belt track"
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -176,8 +183,20 @@ def plate_yz(name, y0, y1, z0, z1, x0, t, holes=()):
 
 
 def export_dxf(name, sketch_solid):
-    sec = sketch_solid.section(0.5)
-    exporters.export(sec, os.path.join(OUT, "drawings", f"{name}.dxf"))
+    # re-wrap the solid in a fresh workplane so the DXF comes out in world coordinates, not about the sketch centre
+    sec = cq.Workplane("XY").newObject([sketch_solid.val()]).section(0.5)
+    path = os.path.join(OUT, "drawings", f"{name}.dxf")
+    exporters.export(sec, path)
+    try:   # put every entity on a layer called CUT, which is what laser shops ask for; harmless if ezdxf is missing
+        import ezdxf
+        doc = ezdxf.readfile(path)
+        if "CUT" not in doc.layers:
+            doc.layers.add("CUT")
+        for ent in doc.modelspace():
+            ent.dxf.layer = "CUT"
+        doc.saveas(path)
+    except ImportError:
+        pass
 
 
 def pitch_points(a0, a1, pitch, inset):
@@ -263,22 +282,20 @@ plate_xz("rear-bulkhead", bulk_x0, bulk_x1, bulk_z0, bulk_z1, P["rear_bulk_y"], 
 # Bay ceiling plate (drum compartment floor) and base pan
 # ---------------------------------------------------------------------------
 tp = P["t_panel"]
+# The plate starts 0.5 mm behind the front bulkhead. In front of the bulkhead the mid front stubs and the
+# lint duct close the bay; a full-width plate there would be cut into loose strips by the bulkhead slot.
+P["ceil_y0"] = P["front_bulk_y"] + tb + 0.5
 ceil_holes = []
 for x in pitch_points(-hw + e, hw - e, P["panel_pitch"], 40):
-    if abs(x) >= 190:
-        ceil_holes.append((x, e / 2, P["m6_hole"]))      # into the mid front stubs
     ceil_holes.append((x, ry + e / 2, P["m6_hole"]))     # into the mid rear cross rail
     ceil_holes.append((x, D - e / 2, P["m6_hole"]))      # into the mid rear end rail
 for y in pitch_points(e, D - e, P["panel_pitch"], 40):
-    ceil_holes.append((-hw + e / 2, y, P["m6_hole"]))
+    ceil_holes.append((-hw + e / 2, y, P["m6_hole"]))    # into the mid side rails
     ceil_holes.append((hw - e / 2, y, P["m6_hole"]))
-plate_xy("bay-ceiling", -hw + tp, hw - tp, 0, D, bt, P["t_base"], holes=ceil_holes,
+plate_xy("bay-ceiling", -hw + tp, hw - tp, P["ceil_y0"], D, bt, P["t_base"], holes=ceil_holes,
          rect_cuts=[(0, P["belt_y"], 40, 90),                       # belt slot, centred on the pulley
-                    (0, e / 2, 304, e + 1),                        # lint duct passes between the front stubs
-                    (0, P["front_bulk_y"] + tb / 2, P["inner_w"] + 2, tb + 1),   # front bulkhead passes through
                     (0, P["rear_bulk_y"] + tb / 2, P["inner_w"] + 2, tb + 1),    # rear bulkhead passes through
-                    (-hw + e / 2, e / 2, e + 1, e + 1), (hw - e / 2, e / 2, e + 1, e + 1),          # post notches
-                    (-hw + e / 2, D - e / 2, e + 1, e + 1), (hw - e / 2, D - e / 2, e + 1, e + 1),
+                    (-hw + e / 2, D - e / 2, e + 1, e + 1), (hw - e / 2, D - e / 2, e + 1, e + 1),   # rear post notches
                     (0, ry + e + 2 + P["riser_depth"] / 2, P["riser_w"] + 4, P["riser_depth"] + 4)])   # riser, 2 mm clearance
 
 base_holes = []
@@ -286,8 +303,7 @@ for x in pitch_points(-hw + e, hw - e, P["panel_pitch"], 40):
     base_holes.append((x, e / 2, P["m6_hole"])); base_holes.append((x, D - e / 2, P["m6_hole"]))
 for y in pitch_points(e, D - e, P["panel_pitch"], 40):
     base_holes.append((-hw + e / 2, y, P["m6_hole"])); base_holes.append((hw - e / 2, y, P["m6_hole"]))
-plate_xy("base-pan", -hw + tp, hw - tp, 0, D, -P["t_base"], P["t_base"], holes=base_holes,
-         circ_cuts=[(P["exhaust_x"], D - 60, 0.1)])   # placeholder: no cut; the exhaust leaves through the rear lower panel
+plate_xy("base-pan", -hw + tp, hw - tp, 0, D, -P["t_base"], P["t_base"], holes=base_holes)   # no cuts; the exhaust leaves through the rear lower panel
 
 # ---------------------------------------------------------------------------
 # Outer panels
@@ -304,43 +320,53 @@ def side_holes():
 plate_yz("side-panel-left", 0, D, 0, Hb, -hw - tp, tp, holes=side_holes())
 plate_yz("side-panel-right", 0, D, 0, Hb, hw, tp, holes=side_holes())
 
-def end_holes(z0, z1, extra_levels):
+def end_holes(z0, z1, extra_levels, stubs_only_at=None):
+    """Holes down both posts between z0 and z1, plus a row along each rail centre line in extra_levels.
+    stubs_only_at: the Z of a row that lands on the mid front stubs, which only exist beyond X 170."""
     hs = []
     for z in pitch_points(z0, z1, P["panel_pitch"], 60):
         hs.append((-hw + e / 2, z, P["m6_hole"])); hs.append((hw - e / 2, z, P["m6_hole"]))
     for x in pitch_points(-hw + e, hw - e, P["panel_pitch"], 60):
         for zc in extra_levels:
+            if stubs_only_at is not None and zc == stubs_only_at and abs(x) < 190:
+                continue
             hs.append((x, zc, P["m6_hole"]))
     return hs
 
-# front upper panel with the door ring opening; front lower (bay) panel with inlet slots
-plate_xz("front-upper-panel", -hw, hw, bt, Hb, -tp, tp,
-         holes=end_holes(bt, Hb, [bt - e / 2, Hb - e / 2]),
+# The front and rear panels split at the bottom of the mid rail (260) so the upper panel bolts to the mid rail,
+# the top rail and the posts, and the lower panel to the bottom rail and the posts. The lower panel comes off
+# to reach the bay. The upper panel carries the door ring opening; the lower panels carry the louvers.
+P["panel_split_z"] = bt - e
+plate_xz("front-upper-panel", -hw, hw, P["panel_split_z"], Hb, -tp, tp,
+         holes=end_holes(P["panel_split_z"], Hb, [bt - e / 2, Hb - e / 2], stubs_only_at=bt - e / 2),
          circ_cuts=[(0, az, P["door_ring_id"] + 10)])
-louvers = [(x, z, 60, 5) for x in (-240, -160, -80, 0, 80, 160, 240) for z in range(80, 260, 20)]
-plate_xz("front-lower-panel", -hw, hw, 0, bt, -tp, tp,
-         holes=end_holes(0, bt, [e / 2, bt - e / 2]), slots=louvers)
-plate_xz("rear-upper-panel", -hw, hw, bt, Hb, D, tp, holes=end_holes(bt, Hb, [bt - e / 2, Hb - e / 2]))
-rear_louvers = [(x, z, 60, 5) for x in (-240, -160, -80, 0, 80, 160) for z in range(80, 260, 20)]
-plate_xz("rear-lower-panel", -hw, hw, 0, bt, D, tp,
-         holes=end_holes(0, bt, [e / 2, bt - e / 2]),
-         circ_cuts=[(P["exhaust_x"], P["exhaust_z"], P["exhaust_d"] + 4), (-250, 40, 25), (-200, 40, 20)],
+louvers = [(x, z, 60, 5) for x in (-240, -160, -80, 0, 80, 160, 240) for z in range(80, 240, 20)]
+plate_xz("front-lower-panel", -hw, hw, 0, P["panel_split_z"] - 1, -tp, tp,
+         holes=end_holes(0, P["panel_split_z"] - 1, [e / 2]), slots=louvers)
+plate_xz("rear-upper-panel", -hw, hw, P["panel_split_z"], Hb, D, tp, holes=end_holes(P["panel_split_z"], Hb, [bt - e / 2, Hb - e / 2]))
+rear_louvers = [(x, z, 60, 5) for x in (-160, -80, 0, 80) for z in range(80, 240, 20)]   # clear of the exhaust port and the cord entry
+plate_xz("rear-lower-panel", -hw, hw, 0, P["panel_split_z"] - 1, D, tp,
+         holes=end_holes(0, P["panel_split_z"] - 1, [e / 2]),
+         circ_cuts=[(P["exhaust_x"], P["exhaust_z"], P["exhaust_d"] + 4),     # exhaust collar, 2 mm clearance
+                    (-250, 120, P["cord_hole_d"])],                             # cord strain relief bushing, in front of the power module
          slots=rear_louvers)
 
 # top panel in front of the console, and the console wedge (sloped face with the UCI aperture, cap, two cheeks)
 top_holes = []
 for x in pitch_points(-hw + e, hw - e, P["panel_pitch"], 60):
     top_holes.append((x, e / 2, P["m6_hole"]))
-for y in pitch_points(e, P["console_y0"], P["panel_pitch"], 60):
+for y in pitch_points(e, P["console_y0"] - tp, P["panel_pitch"], 60):
     top_holes.append((-hw + e / 2, y, P["m6_hole"])); top_holes.append((hw - e / 2, y, P["m6_hole"]))
-plate_xy("top-panel", -hw, hw, 0, P["console_y0"], Hb, tp, holes=top_holes)
+plate_xy("top-panel", -hw, hw, 0, P["console_y0"] - tp, Hb, tp, holes=top_holes)   # stops 1.5 short of the face plate's outer corner
 
 cy0, cf, cr = P["console_y0"], P["console_face"], P["console_rise"]
 # sloped face: build as a plate in a tilted workplane; aperture and 4 holes
 face = (cq.Workplane("XY").rect(P["W"] - 2 * tp, cf).extrude(tp)
         .faces(">Z").workplane().rect(P["uci_ap_w"], P["uci_ap_h"]).cutThruAll()
         .faces(">Z").workplane().pushPoints([(sx * P["uci_hole_x"] / 2, sy * P["uci_hole_y"] / 2) for sx in (-1, 1) for sy in (-1, 1)]).hole(P["uci_hole_d"]))
-face = face.rotate((0, 0, 0), (1, 0, 0), -45).translate((0, cy0 + cr / 2, Hb + cr / 2))
+# +45 about X: the plate rises toward the rear and its outward normal is (0, -0.707, 0.707), front and up.
+# (Draft 2 had -45 here, which laid the face the wrong way; found by the section audit, see docs/verification.md V-010.)
+face = face.rotate((0, 0, 0), (1, 0, 0), 45).translate((0, cy0 + cr / 2, Hb + cr / 2))
 add("console-face", face, STEEL, plate=True, t=tp)
 sk = (cq.Workplane("XY").rect(P["W"] - 2 * tp, cf).extrude(1)
       .cut(cq.Workplane("XY").rect(P["uci_ap_w"], P["uci_ap_h"]).extrude(3).translate((0, 0, -1))))
@@ -375,7 +401,7 @@ export_dxf("door-disc", cq.Workplane("XY").circle(P["door_disc_d"] / 2).extrude(
 riser_top = az + P["inlet_above_axis"] + P["inlet_h"] + 10
 add("riser-duct", box(-P["riser_w"] / 2, P["riser_w"] / 2, ry + e + 2, ry + e + 2 + P["riser_depth"], bt - 120, riser_top), DUCT)
 assert ry + e + 2 + P["riser_depth"] + 2 <= D - e, "riser must clear the rear end rail"
-add("lint-duct", box(-150, 150, 2, 2 + P["lint_duct_depth"], 150, az - P["lint_slot_below_axis"] + P["lint_slot_h"] / 2), DUCT)
+add("lint-duct", box(-168, 168, 2, 2 + P["lint_duct_depth"], 150, az - P["lint_slot_below_axis"] + P["lint_slot_h"] / 2), DUCT)   # 2 mm from each front stub
 add("lint-duct-transition", box(-110, 110, 2 + P["lint_duct_depth"], P["blower_y0"], 50, 190), DUCT)
 
 # ---------------------------------------------------------------------------
@@ -385,29 +411,88 @@ add("lint-duct-transition", box(-110, 110, 2 + P["lint_duct_depth"], P["blower_y
 # Drum: wrapped sheet, two rings, splice strip, angle baffles (all made), four rollers (bought)
 # ---------------------------------------------------------------------------
 ro, ri = P["drum_d"] / 2, P["drum_d"] / 2 - P["drum_t"]
-y0d = P["drum_front_y"]
-shell = (cq.Workplane("XZ").center(0, az).circle(ro).circle(ri).extrude(-P["drum_l"]).translate((0, y0d, 0)))
+y0d, L = P["drum_front_y"], P["drum_l"]
+rm = P["r_mid"]
+
+
+def about_axis(shape, theta_deg):
+    """Turn a shape built at angle 0 (pointing +X from the drum axis) to angle theta in the XZ plane
+    (theta 90 is the top of the drum), then lift it to the drum axis."""
+    return shape.rotate((0, 0, 0), (0, 1, 0), -theta_deg).translate((0, 0, az))
+
+
+def radial_hole(theta_deg, y, d, r0, r1):
+    """A cylinder along the radius at angle theta, from radius r0 to r1, for cutting holes in curved parts."""
+    cyl = cq.Workplane("YZ").center(y, 0).circle(d / 2).extrude(r1 - r0).translate((r0, 0, 0))
+    return about_axis(cyl, theta_deg)
+
+
+def flat_x_to_theta(x):
+    """Flat-pattern X (0 at the seam) to drum angle in degrees; the seam is at the top (90)."""
+    return 90.0 + math.degrees(x / rm)
+
+
+# seam holes: down both short edges of the flat sheet, 50 mm pitch, clear of the belt track and the roller tracks
+seam_ys = []
+y = P["roller_track_w"] + 10
+while y <= L - P["roller_track_w"] - 10:
+    if abs(y - P["belt_track_y"]) > P["belt_track_w"] / 2 + 5:
+        seam_ys.append(y)
+    y += P["seam_pitch"]
+seam_thetas = (flat_x_to_theta(P["seam_inset"]), flat_x_to_theta(P["drum_flat_w"] - P["seam_inset"]))
+tab_thetas = [flat_x_to_theta(P["drum_flat_w"] * (i + 0.5) / P["tab_n"]) for i in range(P["tab_n"])]
+baffle_thetas = [flat_x_to_theta(P["drum_flat_w"] * (i + 0.5) / P["baffle_n"]) for i in range(P["baffle_n"])]
+baffle_ys = [y0d + L / 2 + off for off in P["baffle_hole_offsets"]]
+r_tab_hole = ri - P["tab_h"] / 2
+
+# the sheet: a thin cylinder with 30 tabs folded in against each ring face (sharp fold, bend allowance left to V-208)
+shell = cq.Workplane("XZ").center(0, az).circle(ro).circle(ri).extrude(-L).translate((0, y0d, 0))
+for theta in tab_thetas:
+    for (ya, yb) in ((y0d - P["drum_t"], y0d), (y0d + L, y0d + L + P["drum_t"])):
+        tab = box(ri - P["tab_h"], ro, ya, yb, -P["tab_w"] / 2, P["tab_w"] / 2)   # root reaches the sheet so the fold is one body
+        tab = tab.intersect(cq.Workplane("XZ").circle(ro).extrude(-(yb - ya) - 2).translate((0, ya - 1, 0)))   # root follows the sheet's outside
+        tab = tab.cut(cq.Workplane("XZ").center(r_tab_hole, 0).circle(P["tab_hole_d"] / 2).extrude(-4).translate((0, ya - 1, 0)))
+        shell = shell.union(about_axis(tab, theta))
+for theta in seam_thetas:
+    for yy in seam_ys:
+        shell = shell.cut(radial_hole(theta, y0d + yy, P["seam_hole_d"], ri - 2, ro + 2))
+for theta in baffle_thetas:
+    for yy in baffle_ys:
+        shell = shell.cut(radial_hole(theta, yy, P["baffle_hole_d"], ri - 2, ro + 2))
 add("drum-sheet", shell, DRUM, plate=True, t=P["drum_t"])
-for name, yy in (("drum-ring-front", y0d), ("drum-ring-rear", y0d + P["drum_l"] - P["ring_t"])):
-    ring_s = (cq.Workplane("XZ").center(0, az).circle(ri).circle(P["ring_id"] / 2).extrude(-P["ring_t"]).translate((0, yy, 0)))
+
+# the rings: 2 mm, outside on the sheet's inside, 30 tab holes
+for name, yy in (("drum-ring-front", y0d), ("drum-ring-rear", y0d + L - P["ring_t"])):
+    ring_s = cq.Workplane("XZ").center(0, az).circle(ri).circle(P["ring_id"] / 2).extrude(-P["ring_t"]).translate((0, yy, 0))
+    for theta in tab_thetas:
+        ring_s = ring_s.cut(about_axis(cq.Workplane("XZ").center(r_tab_hole, 0).circle(P["tab_hole_d"] / 2).extrude(-P["ring_t"] - 2).translate((0, yy - 1, 0)), theta))
     add(name, ring_s, DRUM, plate=True, t=P["ring_t"])
-# splice strip inside the seam (seam at the top of the drum), between the rings
+
+# the splice strip: inside the sheet under the seam (top of the drum), between the rings, holes on the seam holes
 half_ang = math.degrees((P["splice_w"] / 2) / ri)
-spl_len = P["drum_l"] - 2 * P["ring_t"] - 2
+spl_len = L - 2 * P["ring_t"] - 2
 splice = (cq.Workplane("XZ").center(0, az).circle(ri).circle(ri - P["splice_t"]).extrude(-spl_len)
           .translate((0, y0d + P["ring_t"] + 1, 0)))
-# keep only the sector at the top of the drum, where the seam is
 keep = (cq.Workplane("XY").box(2 * ri * math.sin(math.radians(half_ang)) + 0.01, spl_len + 2, 2 * ri, centered=(True, False, False))
         .translate((0, y0d + P["ring_t"], az)))
 splice = splice.intersect(keep)
+for theta in seam_thetas:
+    for yy in seam_ys:
+        splice = splice.cut(radial_hole(theta, y0d + yy, P["seam_hole_d"], ri - 4, ri + 2))
 add("drum-splice", splice, DRUM, plate=True, t=P["splice_t"])
-# baffles: catalog aluminum angle, drawn as boxes on the inside wall at 120 degree spacing
-for i in range(P["baffle_n"]):
-    ang = math.radians(90 + i * 360 / P["baffle_n"] + 60)
-    bx, bz = (ri - P["baffle_leg"] / 2 - 1.5) * math.cos(ang), az + (ri - P["baffle_leg"] / 2 - 1.5) * math.sin(ang)
-    b = (cq.Workplane("XY").box(P["baffle_leg"], P["baffle_len"], P["baffle_leg"])
-         .rotate((0, 0, 0), (0, 1, 0), -math.degrees(ang)).translate((bx, y0d + P["drum_l"] / 2, bz)))
-    add(f"baffle-{i+1} (angle, cut to length)", b, BOUGHT)
+
+# the baffles: catalog 40x40x3 aluminium angle, 480 long, the wall leg bolted through the sheet's baffle holes.
+# The flat leg sits 0.7 mm off the curved wall at its centre line so its edges clear the wall (sagitta of a 40 chord on R 309).
+d_leg = math.sqrt(ri ** 2 - (P["baffle_leg"] / 2) ** 2) - 0.05
+tb_ang = 3.0
+for i, theta in enumerate(baffle_thetas):
+    yb0, yb1 = y0d + L / 2 - P["baffle_len"] / 2, y0d + L / 2 + P["baffle_len"] / 2
+    leg_wall = box(d_leg - tb_ang, d_leg, yb0, yb1, -P["baffle_leg"] / 2, P["baffle_leg"] / 2)
+    leg_up = box(d_leg - P["baffle_leg"], d_leg, yb0, yb1, P["baffle_leg"] / 2 - tb_ang, P["baffle_leg"] / 2)
+    ang_s = leg_wall.union(leg_up)
+    for yy in baffle_ys:
+        ang_s = ang_s.cut(cq.Workplane("YZ").center(yy, 0).circle(P["baffle_hole_d"] / 2).extrude(tb_ang + 4).translate((d_leg - tb_ang - 2, 0, 0)))
+    add(f"baffle-{i+1} (angle, cut to length)", about_axis(ang_s, theta), BOUGHT)
 cut_list.append(("baffle-1..3", "angle 40x40x3 aluminum", P["baffle_len"], 3, "drum baffles, drilled on the drill press"))
 
 # flat patterns for the drum sheet, the rings, and the splice (plate-local coordinates, mm)
@@ -420,28 +505,22 @@ def drum_sheet_sketch():
         for yc, sign in ((L + P["tab_h"] / 2, 1), (-P["tab_h"] / 2, -1)):
             sk = sk.union(cq.Workplane("XY").center(xc, yc).rect(P["tab_w"], P["tab_h"]).extrude(1))
             sk = sk.cut(cq.Workplane("XY").center(xc, yc + sign * 0).circle(P["tab_hole_d"] / 2).extrude(3).translate((0, 0, -1)))
-    # seam holes along both short edges, skipping the belt track and the roller tracks
-    ys = []
-    y = P["roller_track_w"] + 10
-    while y <= L - P["roller_track_w"] - 10:
-        if abs(y - L / 2) > P["belt_track_w"] / 2 + 5:
-            ys.append(y)
-        y += P["seam_pitch"]
+    # seam holes along both short edges (same list as the solid: clear of the belt track and the roller tracks)
     for xc in (P["seam_inset"], W - P["seam_inset"]):
-        for yc in ys:
+        for yc in seam_ys:
             sk = sk.cut(cq.Workplane("XY").center(xc, yc).circle(P["seam_hole_d"] / 2).extrude(3).translate((0, 0, -1)))
     # baffle holes: three columns, four holes each
     for i in range(P["baffle_n"]):
         xc = W * (i + 0.5) / P["baffle_n"]
-        for yc in (L / 2 - 180, L / 2 - 60, L / 2 + 60, L / 2 + 180):
-            sk = sk.cut(cq.Workplane("XY").center(xc, yc).circle(P["baffle_hole_d"] / 2).extrude(3).translate((0, 0, -1)))
-    return sk, ys
-sheet_sk, seam_ys = drum_sheet_sketch()
+        for off in P["baffle_hole_offsets"]:
+            sk = sk.cut(cq.Workplane("XY").center(xc, L / 2 + off).circle(P["baffle_hole_d"] / 2).extrude(3).translate((0, 0, -1)))
+    return sk
+sheet_sk = drum_sheet_sketch()
 export_dxf("drum-sheet", sheet_sk)
 ring_sk = cq.Workplane("XY").circle(ri).extrude(1).cut(cq.Workplane("XY").circle(P["ring_id"] / 2).extrude(3).translate((0, 0, -1)))
-r_hole = ri - P["tab_h"] / 2
+r_hole = r_tab_hole
 for i in range(P["tab_n"]):
-    a = 2 * math.pi * (i + 0.5) / P["tab_n"]
+    a = math.radians(tab_thetas[i])   # same angles as the solid, so the drawing and the model overlay
     ring_sk = ring_sk.cut(cq.Workplane("XY").center(r_hole * math.cos(a), r_hole * math.sin(a)).circle(P["tab_hole_d"] / 2).extrude(3).translate((0, 0, -1)))
 export_dxf("drum-ring", ring_sk)
 spl_sk = cq.Workplane("XY").center(P["splice_w"] / 2, spl_len / 2).rect(P["splice_w"], spl_len).extrude(1)
@@ -459,7 +538,7 @@ cut_list.append(("belt (bought)", "PJ poly-V, 4 or 5 ribs", round(belt_len), 1, 
 mz, my0 = P["motor_axis_z"], P["motor_y0"]
 motor = cq.Workplane("XZ").center(0, mz).circle(P["motor_d"] / 2).extrude(-P["motor_len"]).translate((0, my0, 0))
 add("motor (bought)", motor, BOUGHT)
-add("pulley (bought)", cq.Workplane("XZ").center(0, mz).circle(16).extrude(-16).translate((0, my0 + P["motor_len"] + 4, 0)), BOUGHT)
+add("pulley (bought)", cq.Workplane("XZ").center(0, mz).circle(P["motor_pulley_d"] / 2).extrude(-16).translate((0, my0 + P["motor_len"] + 4, 0)), BOUGHT)
 blower = cq.Workplane("XZ").center(0, mz).circle(P["blower_d"] / 2).extrude(-P["blower_w"]).translate((0, P["blower_y0"], 0))
 add("blower (bought)", blower, BOUGHT)
 add("heat-module-tray", box(P["tray_x0"], P["tray_x0"] + P["tray_w"], P["tray_y0"], P["tray_y0"] + P["tray_depth"], e + es, e + es + P["t_tray"]), STEEL)
@@ -468,10 +547,11 @@ add("power-module (envelope)", box(P["pm_x0"], P["pm_x0"] + P["pm_w"], P["pm_y0"
 exh = (cq.Workplane("XZ").center(P["exhaust_x"], P["exhaust_z"]).circle(P["exhaust_d"] / 2).extrude(-(D - P["blower_y0"] - P["blower_w"]))
        .translate((0, P["blower_y0"] + P["blower_w"], 0)))
 add("exhaust-duct (bought)", exh, DUCT)
+roller_w = 25.0   # catalog roller width, measured at V-106
 for i, (x, z, d) in enumerate(rollers):
-    r = cq.Workplane("XZ").center(x, z).circle(P["roller_d"] / 2).extrude(-25).translate((0, P["rear_bulk_y"] - 27, 0))
+    r = cq.Workplane("XZ").center(x, z).circle(P["roller_d"] / 2).extrude(-roller_w).translate((0, y0d + L - P["roller_inset"] - roller_w, 0))
     add(f"roller-rear-{i+1} (bought)", r, BOUGHT)
-    r = cq.Workplane("XZ").center(x, z).circle(P["roller_d"] / 2).extrude(-25).translate((0, P["front_bulk_y"] + tb + 2, 0))
+    r = cq.Workplane("XZ").center(x, z).circle(P["roller_d"] / 2).extrude(-roller_w).translate((0, y0d + P["roller_inset"], 0))
     add(f"roller-front-{i+1} (bought)", r, BOUGHT)
 
 # ---------------------------------------------------------------------------

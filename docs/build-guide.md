@@ -39,14 +39,14 @@ Every step names the checks from `docs/verification.md` that must be closed befo
 
 ## 4. Bay ceiling plate
 
-1. Slide the plate in over the mid rails from the front, slots over the rear bulkhead, notches at the posts.
-2. M6 into the mid rails, the stubs, the rear cross rail, the rear end rail.
-3. Lint duct through its cutout at the front, bolted to the plate and to the transition box below.
+1. Slide the plate in over the mid rails from the front, slot over the rear bulkhead, notches at the rear posts. Its front edge stops 0.5 mm behind where the front bulkhead will stand.
+2. M6 into the mid side rails, the rear cross rail, the rear end rail.
+3. Lint duct up between the front stubs (2 mm to each), bolted to the stubs and to the transition box below.
 
 ## 5. Front bulkhead
 
 1. Fit the glides per the kit (V-103), the felt seal (V-104), the lint slot hardware. Bond the plate.
-2. Hang it on the mid front stubs and the top front rail, the slot in the ceiling plate over its bottom edge.
+2. Hang it on the mid front stubs and the top front rail; its bottom edge stands just in front of the ceiling plate's front edge.
 3. Lint duct bolted to its face over the slot.
 
 ## 6. Drum

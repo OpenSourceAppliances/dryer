@@ -43,7 +43,7 @@ The same chassis takes one of four heat modules. Pick one; the module and the co
 2. `docs/design-rules.md`, the dryer-specific targets and rules that the CAD and schematic must meet.
 3. `docs/verification.md`, every check between this paper and a test run, with its gate.
 4. `DECISIONS.md`, every design decision and every departure from the charter, newest first.
-5. `mechanical/cad/osa_dryer_cad.py`, the parametric model; `mechanical/drawings/` has its DXFs, the cut list, and check views; `mechanical/step/` the STEP files.
+5. `mechanical/cad/osa_dryer_cad.py`, the parametric model; `mechanical/drawings/` has its DXFs, the cut list, and check views; `mechanical/step/` the STEP files. `mechanical/cad/cad_audit.py` measures every file the model writes against the documents and leaves its report in `mechanical/cad/audit/`; `mechanical/cad/fusion_audit/` repeats the measurements inside Autodesk Fusion.
 
 ## Charter
 

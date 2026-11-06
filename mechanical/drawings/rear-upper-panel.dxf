@@ -493,7 +493,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461350.890983796
+2461350.9249421298
   9
 $TDUCREATE
  40
@@ -501,7 +501,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461350.890983796
+2461350.9249421298
   9
 $TDUUPDATE
  40
@@ -553,7 +553,7 @@ $SPLINESEGS
   9
 $HANDSEED
   5
-45
+4A
   9
 $SURFTAB1
  70
@@ -933,11 +933,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{A68153F1-4F26-49C2-A478-42BFFAC5F89D}
+{847D1A36-10C0-4F91-8876-346164CC3CD4}
   9
 $VERSIONGUID
   2
-{1CC8ECA4-EA46-441E-9370-B95E95D05E93}
+{F8D20205-414A-4A84-82BB-BFC32773F20D}
   9
 $EXTNAMES
 290
@@ -1327,9 +1327,9 @@ ISM
   0
 CLASS
   1
-LAYOUT
+ACDBPLACEHOLDER
   2
-AcDbLayout
+AcDbPlaceHolder
   3
 ObjectDBX Classes
  90
@@ -1343,9 +1343,9 @@ ObjectDBX Classes
   0
 CLASS
   1
-ACDBPLACEHOLDER
+LAYOUT
   2
-AcDbPlaceHolder
+AcDbLayout
   3
 ObjectDBX Classes
  90
@@ -1377,7 +1377,7 @@ AcDbSymbolTable
   0
 VPORT
   5
-41
+45
 330
 8
 100
@@ -1399,7 +1399,7 @@ AcDbViewportTableRecord
  12
 0.0
  22
-0.0
+630.0
  13
 0.0
  23
@@ -1425,7 +1425,7 @@ AcDbViewportTableRecord
  37
 0.0
  40
-700.0
+740.0
  41
 1.34
  42
@@ -1573,7 +1573,7 @@ LAYER
 100
 AcDbSymbolTable
  70
-2
+3
   0
 LAYER
   5
@@ -1618,6 +1618,30 @@ Defpoints
 Continuous
 290
 0
+370
+-3
+390
+13
+347
+21
+  0
+LAYER
+  5
+49
+330
+1
+100
+AcDbSymbolTableRecord
+100
+AcDbLayerTableRecord
+  2
+CUT
+ 70
+0
+ 62
+7
+  6
+Continuous
 370
 -3
 390
@@ -1725,7 +1749,7 @@ ACAD
   0
 APPID
   5
-42
+46
 330
 3
 100
@@ -1739,7 +1763,7 @@ HATCHBACKGROUNDCOLOR
   0
 APPID
   5
-43
+47
 330
 3
 100
@@ -2055,19 +2079,19 @@ LINE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbLine
  10
 -345.0
  20
-350.0
+1000.0
  30
 0.5
  11
 -345.0
  21
--350.0
+260.0
  31
 0.5
   0
@@ -2079,19 +2103,19 @@ LINE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbLine
  10
 -345.0
  20
--350.0
+260.0
  30
 0.5
  11
 345.0
  21
--350.0
+260.0
  31
 0.5
   0
@@ -2103,19 +2127,19 @@ LINE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbLine
  10
 345.0
  20
--350.0
+260.0
  30
 0.5
  11
 345.0
  21
-350.0
+1000.0
  31
 0.5
   0
@@ -2127,19 +2151,19 @@ LINE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbLine
  10
 345.0
  20
-350.0
+1000.0
  30
 0.5
  11
 -345.0
  21
-350.0
+1000.0
  31
 0.5
   0
@@ -2151,13 +2175,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
 -325.0
  20
--290.0
+320.0
  30
 0.5
  40
@@ -2171,13 +2195,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
--325.0
+-245.0
  20
--145.0
+280.0
  30
 0.5
  40
@@ -2191,13 +2215,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
-325.0
+-81.66666666666666
  20
--290.0
+280.0
  30
 0.5
  40
@@ -2211,13 +2235,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
-325.0
+-325.0
  20
--145.0
+475.0
  30
 0.5
  40
@@ -2231,13 +2255,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
--325.0
+81.66666666666669
  20
-0.0
+280.0
  30
 0.5
  40
@@ -2251,13 +2275,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
--325.0
+245.0
  20
-145.0
+280.0
  30
 0.5
  40
@@ -2271,13 +2295,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
--325.0
+325.0
  20
-290.0
+320.0
  30
 0.5
  40
@@ -2291,13 +2315,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
--245.0
+325.0
  20
-330.0
+475.0
  30
 0.5
  40
@@ -2311,13 +2335,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
--81.66666666666666
+-325.0
  20
-330.0
+630.0
  30
 0.5
  40
@@ -2331,13 +2355,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
-325.0
+-325.0
  20
-0.0
+785.0
  30
 0.5
  40
@@ -2351,13 +2375,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
-325.0
+-325.0
  20
-145.0
+940.0
  30
 0.5
  40
@@ -2371,13 +2395,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
-81.66666666666669
+-245.0
  20
-330.0
+980.0
  30
 0.5
  40
@@ -2391,13 +2415,13 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
-245.0
+-81.66666666666666
  20
-330.0
+980.0
  30
 0.5
  40
@@ -2411,13 +2435,93 @@ CIRCLE
 100
 AcDbEntity
   8
-0
+CUT
 100
 AcDbCircle
  10
 325.0
  20
-290.0
+630.0
+ 30
+0.5
+ 40
+3.25
+  0
+CIRCLE
+  5
+41
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbCircle
+ 10
+325.0
+ 20
+785.0
+ 30
+0.5
+ 40
+3.25
+  0
+CIRCLE
+  5
+42
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbCircle
+ 10
+81.66666666666669
+ 20
+980.0
+ 30
+0.5
+ 40
+3.25
+  0
+CIRCLE
+  5
+43
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbCircle
+ 10
+245.0
+ 20
+980.0
+ 30
+0.5
+ 40
+3.25
+  0
+CIRCLE
+  5
+44
+330
+17
+100
+AcDbEntity
+  8
+CUT
+100
+AcDbCircle
+ 10
+325.0
+ 20
+940.0
  30
 0.5
  40
@@ -3413,7 +3517,7 @@ CREATED_BY_EZDXF
   3
 WRITTEN_BY_EZDXF
 350
-44
+48
   0
 DICTIONARYVAR
   5
@@ -3425,11 +3529,11 @@ DictionaryVariables
 280
 0
   1
-1.4.5 @ 2026-11-06T03:23:01.940261+00:00
+1.4.5 @ 2026-11-06T04:11:55.810077+00:00
   0
 DICTIONARYVAR
   5
-44
+48
 330
 2D
 100
@@ -3437,7 +3541,7 @@ DictionaryVariables
 280
 0
   1
-1.4.5 @ 2026-11-06T03:23:01.943710+00:00
+1.4.5 @ 2026-11-06T04:11:55.830701+00:00
   0
 ENDSEC
   0

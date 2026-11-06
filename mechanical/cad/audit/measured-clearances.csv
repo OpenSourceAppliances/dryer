@@ -1,0 +1,45 @@
+part_a,part_b,minimum_distance_mm
+drum-sheet,front-bulkhead,7.7
+drum-sheet,rear-bulkhead,9.2
+drum-sheet,bay-ceiling,20.0
+drum-sheet,side-panel-left,35.0
+drum-sheet,side-panel-right,35.0
+drum-sheet,top-panel,58.5
+drum-sheet,rail-top-left,138.26
+drum-sheet,rail-top-right,138.26
+drum-sheet,rail-top-front,21.03
+drum-sheet,roller-front-1 (bought),0.0
+drum-sheet,roller-front-2 (bought),0.0
+drum-sheet,roller-rear-1 (bought),0.0
+drum-sheet,roller-rear-2 (bought),0.0
+drum-sheet,drum-ring-front,0.0
+drum-sheet,drum-ring-rear,0.0
+drum-sheet,drum-splice,0.0
+drum-sheet,"baffle-1 (angle, cut to length)",0.05
+drum-ring-front,front-bulkhead,8.5
+drum-ring-rear,rear-bulkhead,10.0
+door-ring,front-upper-panel,0.0
+door-disc,door-ring,8.0
+console-face,console-cheek-left,0.0
+console-face,console-cheek-right,0.0
+console-face,top-panel,0.439
+console-face,console-cap,0.0
+front-bulkhead,bay-ceiling,0.5
+rear-bulkhead,bay-ceiling,0.5
+lint-duct,rail-mid-front-left,2.0
+lint-duct,rail-mid-front-right,2.0
+lint-duct,front-bulkhead,2.0
+lint-duct,front-upper-panel,2.0
+riser-duct,rear-bulkhead,42.0
+riser-duct,rail-mid-rear,6.5
+riser-duct,bay-ceiling,2.0
+heat-module (envelope),heat-module-tray,0.5
+heat-module (envelope),bay-ceiling,78.0
+motor (bought),base-pan,50.0
+blower (bought),front-bulkhead,55.057
+blower (bought),lint-duct-transition,0.0
+pulley (bought),bay-ceiling,166.108
+exhaust-duct (bought),rear-lower-panel,2.0
+power-module (envelope),side-panel-left,5.0
+power-module (envelope),bay-ceiling,80.0
+drum-sheet,front-upper-panel,49.2

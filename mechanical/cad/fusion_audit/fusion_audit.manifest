@@ -1,0 +1,10 @@
+{
+    "autodeskProduct": "Fusion",
+    "type": "script",
+    "author": "Open Source Appliances",
+    "description": {
+        "": "Measures every STEP file of the dryer for the CAD audit (docs/verification.md V-014)"
+    },
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}
