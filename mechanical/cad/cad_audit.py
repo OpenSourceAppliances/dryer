@@ -1320,6 +1320,9 @@ if FUSION_CSV:
                             "PASS" if not missing and not left else "FAIL"))
     for r in fdist:
         key = (r["body"], r["other"])
+        if not r.get("value_mm"):   # a pair Fusion could not find (the names changed between drafts)
+            fusion_rows.append(("osa-dryer-assembly", f"{key[0]} / {key[1]}", "clearance", f"Fusion: {r.get('note') or 'no value'}", "FAIL"))
+            continue
         ref = clearances.get(key)
         if ref is None and r["body"] in assembly and r["other"] in assembly:
             ref = min_dist(assembly[r["body"]]["shape"], assembly[r["other"]]["shape"])

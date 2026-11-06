@@ -50,10 +50,14 @@ CLEAR_PAIRS = [
     ("console-face", "console-cap"), ("front-bulkhead", "bay-ceiling"), ("rear-bulkhead", "bay-ceiling"),
     ("lint-duct", "rail-mid-front-left"), ("lint-duct", "rail-mid-front-right"), ("lint-duct", "front-bulkhead"),
     ("lint-duct", "front-upper-panel"), ("riser-duct", "rear-bulkhead"), ("riser-duct", "rail-mid-rear"),
-    ("riser-duct", "bay-ceiling"), ("heat-module (envelope)", "heat-module-tray"), ("heat-module (envelope)", "bay-ceiling"),
+    ("riser-duct", "bay-ceiling"), ("heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)", "riser-duct"), ("heat-module-top", "bay-ceiling"),
     ("motor (bought)", "base-pan"), ("blower (bought)", "front-bulkhead"), ("blower (bought)", "lint-duct-transition"),
-    ("pulley (bought)", "bay-ceiling"), ("exhaust-duct (bought)", "rear-lower-panel"), ("power-module (envelope)", "side-panel-left"),
-    ("power-module (envelope)", "bay-ceiling"), ("drum-sheet", "front-upper-panel"),
+    ("pulley (bought)", "bay-ceiling"), ("exhaust-duct (bought)", "rear-lower-panel"), ("power-module-plate", "riser-duct"),
+    ("power-module-plate", "bay-ceiling"), ("drum-sheet", "front-upper-panel"),
+    # draft 7: single-body parts only (a compound's distance would be taken from its first body)
+    ("heat-module-wall-front", "idler-spring (bought, extension spring)"), ("heat-module-tray", "idler-spring (bought, extension spring)"),
+    ("heat-module-terminal-plate", "heat-module-wall-rear"), ("power-module-cover", "rear-upper-panel"), ("power-module-plate", "rail-mid-rearcross"),
+    ("felt-seal-rear-long", "drum-ring-rear"), ("felt-seal-front-long", "drum-ring-front"), ("heat-module-tray", "tray-rail-1"),
 ]
 
 FIELDS = ["record", "file", "body", "other", "is_solid", "volume_mm3", "area_mm2", "faces", "planar_faces", "cylindrical_faces",
