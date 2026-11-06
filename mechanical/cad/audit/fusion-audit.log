@@ -1,0 +1,247 @@
+fusion_audit start 2026-11-05 22:34:14  Fusion 2706.1.17
+47 STEP files in mechanical\step (paths in this log are relative to the repo)
+importing base-pan
+  1 bodies
+  Body1: solid True, 26 faces (6 planar, 20 cylindrical in 20 cylinders), volume 771879.508 mm3
+importing bay-ceiling
+  1 bodies
+  Body1: solid True, 42 faces (22 planar, 20 cylindrical in 20 cylinders), volume 694781.008 mm3
+importing console-cap
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 193403.117 mm3
+importing console-cheek-left
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 41311.688 mm3
+importing console-cheek-right
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 41311.688 mm3
+importing console-face
+  1 bodies
+  Body1: solid True, 14 faces (10 planar, 4 cylindrical in 4 cylinders), volume 121584.574 mm3
+importing door-disc
+  1 bodies
+  Body1: solid True, 3 faces (2 planar, 1 cylindrical in 1 cylinders), volume 458044.209 mm3
+importing door-ring
+  1 bodies
+  Body1: solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 145612.819 mm3
+importing drum-ring-front
+  1 bodies
+  Body1: solid True, 34 faces (2 planar, 32 cylindrical in 32 cylinders), volume 237835.937 mm3
+importing drum-ring-rear
+  1 bodies
+  Body1: solid True, 34 faces (2 planar, 32 cylindrical in 32 cylinders), volume 237835.937 mm3
+importing drum-sheet
+  1 bodies
+  Body1: solid True, 450 faces (360 planar, 90 cylindrical in 90 cylinders), volume 878506.097 mm3
+importing drum-splice
+  1 bodies
+  Body1: solid True, 22 faces (4 planar, 18 cylindrical in 18 cylinders), volume 32391.002 mm3
+importing front-bulkhead
+  1 bodies
+  Body1: solid True, 20 faces (8 planar, 12 cylindrical in 12 cylinders), volume 402971.475 mm3
+importing front-lower-panel
+  1 bodies
+  Body1: solid True, 238 faces (118 planar, 120 cylindrical in 120 cylinders), volume 242917.467 mm3
+importing front-upper-panel
+  1 bodies
+  Body1: solid True, 23 faces (6 planar, 17 cylindrical in 17 cylinders), volume 493670.001 mm3
+importing heat-module-tray
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 120000.000 mm3
+importing lint-duct-transition
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1416800.000 mm3
+importing lint-duct
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 2800224.000 mm3
+importing osa-dryer-assembly
+  59 bodies
+  post-1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1600000.000 mm3
+  post-2: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1600000.000 mm3
+  post-3: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1600000.000 mm3
+  post-4: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1600000.000 mm3
+  rail-bottom-front: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+  rail-bottom-rear: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+  rail-bottom-left: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1072000.000 mm3
+  rail-bottom-right: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1072000.000 mm3
+  rail-mid-front-left: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 216000.000 mm3
+  rail-mid-front-right: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 216000.000 mm3
+  rail-mid-rear: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+  rail-mid-left: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1072000.000 mm3
+  rail-mid-right: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1072000.000 mm3
+  rail-mid-rearcross: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+  rail-top-front: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+  rail-top-rear: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+  rail-top-left: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1072000.000 mm3
+  rail-top-right: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1072000.000 mm3
+  rail-top-rearcross: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+  tray-rail-1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 144000.000 mm3
+  tray-rail-2: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 144000.000 mm3
+  front-bulkhead: solid True, 20 faces (8 planar, 12 cylindrical in 12 cylinders), volume 402971.475 mm3
+  rear-bulkhead: solid True, 144 faces (6 planar, 138 cylindrical in 138 cylinders), volume 652348.458 mm3
+  bay-ceiling: solid True, 42 faces (22 planar, 20 cylindrical in 20 cylinders), volume 694781.008 mm3
+  base-pan: solid True, 26 faces (6 planar, 20 cylindrical in 20 cylinders), volume 771879.508 mm3
+  side-panel-left: solid True, 35 faces (6 planar, 29 cylindrical in 29 cylinders), volume 1123556.536 mm3
+  side-panel-right: solid True, 35 faces (6 planar, 29 cylindrical in 29 cylinders), volume 1123556.536 mm3
+  front-upper-panel: solid True, 23 faces (6 planar, 17 cylindrical in 17 cylinders), volume 493670.001 mm3
+  front-lower-panel: solid True, 238 faces (118 planar, 120 cylindrical in 120 cylinders), volume 242917.467 mm3
+  rear-upper-panel: solid True, 24 faces (6 planar, 18 cylindrical in 18 cylinders), volume 765004.057 mm3
+  rear-lower-panel: solid True, 144 faces (70 planar, 74 cylindrical in 74 cylinders), volume 239717.026 mm3
+  top-panel: solid True, 16 faces (6 planar, 10 cylindrical in 10 cylinders), volume 463699.754 mm3
+  console-face: solid True, 14 faces (10 planar, 4 cylindrical in 4 cylinders), volume 121584.574 mm3
+  console-cap: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 193403.117 mm3
+  console-cheek-left: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 41311.688 mm3
+  console-cheek-right: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 41311.688 mm3
+  door-ring: solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 145612.819 mm3
+  door-disc: solid True, 3 faces (2 planar, 1 cylindrical in 1 cylinders), volume 458044.209 mm3
+  riser-duct: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 8339500.000 mm3
+  lint-duct: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 2800224.000 mm3
+  lint-duct-transition: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1416800.000 mm3
+  drum-sheet: solid True, 450 faces (360 planar, 90 cylindrical in 90 cylinders), volume 878506.097 mm3
+  drum-ring-front: solid True, 34 faces (2 planar, 32 cylindrical in 32 cylinders), volume 237835.937 mm3
+  drum-ring-rear: solid True, 34 faces (2 planar, 32 cylindrical in 32 cylinders), volume 237835.937 mm3
+  drum-splice: solid True, 22 faces (4 planar, 18 cylindrical in 18 cylinders), volume 32391.002 mm3
+  baffle-1 (angle, cut to length): solid True, 12 faces (8 planar, 4 cylindrical in 4 cylinders), volume 110481.803 mm3
+  baffle-2 (angle, cut to length): solid True, 12 faces (8 planar, 4 cylindrical in 4 cylinders), volume 110481.803 mm3
+  baffle-3 (angle, cut to length): solid True, 12 faces (8 planar, 4 cylindrical in 4 cylinders), volume 110481.803 mm3
+  motor (bought): solid True, 3 faces (2 planar, 1 cylindrical in 1 cylinders), volume 3078760.801 mm3
+  pulley (bought): solid True, 3 faces (2 planar, 1 cylindrical in 1 cylinders), volume 11309.734 mm3
+  blower (bought): solid True, 3 faces (2 planar, 1 cylindrical in 1 cylinders), volume 3801327.111 mm3
+  heat-module-tray: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 120000.000 mm3
+  heat-module (envelope): solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 9408000.000 mm3
+  power-module (envelope): solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 7650000.000 mm3
+  exhaust-duct (bought): solid True, 3 faces (2 planar, 1 cylindrical in 1 cylinders), volume 4624945.890 mm3
+  roller-rear-1 (bought): solid True, 3 faces (2 planar, 1 cylindrical in 1 cylinders), volume 70685.835 mm3
+  roller-front-1 (bought): solid True, 3 faces (2 planar, 1 cylindrical in 1 cylinders), volume 70685.835 mm3
+  roller-rear-2 (bought): solid True, 3 faces (2 planar, 1 cylindrical in 1 cylinders), volume 70685.835 mm3
+  roller-front-2 (bought): solid True, 3 faces (2 planar, 1 cylindrical in 1 cylinders), volume 70685.835 mm3
+  distance drum-sheet / front-bulkhead: 7.7000 mm
+  distance drum-sheet / rear-bulkhead: 9.2000 mm
+  distance drum-sheet / bay-ceiling: 20.0000 mm
+  distance drum-sheet / side-panel-left: 35.0000 mm
+  distance drum-sheet / side-panel-right: 35.0000 mm
+  distance drum-sheet / top-panel: 58.5000 mm
+  distance drum-sheet / rail-top-left: 138.2602 mm
+  distance drum-sheet / rail-top-right: 138.2602 mm
+  distance drum-sheet / rail-top-front: 21.0297 mm
+  distance drum-sheet / roller-front-1 (bought): 0.0000 mm
+  distance drum-sheet / roller-front-2 (bought): 0.0000 mm
+  distance drum-sheet / roller-rear-1 (bought): 0.0000 mm
+  distance drum-sheet / roller-rear-2 (bought): 0.0000 mm
+  distance drum-sheet / drum-ring-front: 0.0000 mm
+  distance drum-sheet / drum-ring-rear: 0.0000 mm
+  distance drum-sheet / drum-splice: 0.0000 mm
+  distance drum-sheet / baffle-1 (angle, cut to length): 0.0499 mm
+  distance drum-ring-front / front-bulkhead: 8.5000 mm
+  distance drum-ring-rear / rear-bulkhead: 10.0000 mm
+  distance door-ring / front-upper-panel: 0.0000 mm
+  distance door-disc / door-ring: 8.0000 mm
+  distance console-face / console-cheek-left: 0.0000 mm
+  distance console-face / console-cheek-right: 0.0000 mm
+  distance console-face / top-panel: 0.4393 mm
+  distance console-face / console-cap: 0.0000 mm
+  distance front-bulkhead / bay-ceiling: 0.5000 mm
+  distance rear-bulkhead / bay-ceiling: 0.5000 mm
+  distance lint-duct / rail-mid-front-left: 2.0000 mm
+  distance lint-duct / rail-mid-front-right: 2.0000 mm
+  distance lint-duct / front-bulkhead: 2.0000 mm
+  distance lint-duct / front-upper-panel: 2.0000 mm
+  distance riser-duct / rear-bulkhead: 42.0000 mm
+  distance riser-duct / rail-mid-rear: 6.5000 mm
+  distance riser-duct / bay-ceiling: 2.0000 mm
+  distance heat-module (envelope) / heat-module-tray: 0.5000 mm
+  distance heat-module (envelope) / bay-ceiling: 78.0000 mm
+  distance motor (bought) / base-pan: 50.0000 mm
+  distance blower (bought) / front-bulkhead: 55.0568 mm
+  distance blower (bought) / lint-duct-transition: 0.0000 mm
+  distance pulley (bought) / bay-ceiling: 166.1077 mm
+  distance exhaust-duct (bought) / rear-lower-panel: 2.0000 mm
+  distance power-module (envelope) / side-panel-left: 5.0000 mm
+  distance power-module (envelope) / bay-ceiling: 80.0000 mm
+  distance drum-sheet / front-upper-panel: 49.2000 mm
+importing post-1
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1600000.000 mm3
+importing post-2
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1600000.000 mm3
+importing post-3
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1600000.000 mm3
+importing post-4
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1600000.000 mm3
+importing rail-bottom-front
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+importing rail-bottom-left
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1072000.000 mm3
+importing rail-bottom-rear
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+importing rail-bottom-right
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1072000.000 mm3
+importing rail-mid-front-left
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 216000.000 mm3
+importing rail-mid-front-right
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 216000.000 mm3
+importing rail-mid-left
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1072000.000 mm3
+importing rail-mid-rear
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+importing rail-mid-rearcross
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+importing rail-mid-right
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1072000.000 mm3
+importing rail-top-front
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+importing rail-top-left
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1072000.000 mm3
+importing rail-top-rear
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+importing rail-top-rearcross
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 976000.000 mm3
+importing rail-top-right
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 1072000.000 mm3
+importing rear-bulkhead
+  1 bodies
+  Body1: solid True, 144 faces (6 planar, 138 cylindrical in 138 cylinders), volume 652348.458 mm3
+importing rear-lower-panel
+  1 bodies
+  Body1: solid True, 144 faces (70 planar, 74 cylindrical in 74 cylinders), volume 239717.026 mm3
+importing rear-upper-panel
+  1 bodies
+  Body1: solid True, 24 faces (6 planar, 18 cylindrical in 18 cylinders), volume 765004.057 mm3
+importing riser-duct
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 8339500.000 mm3
+importing side-panel-left
+  1 bodies
+  Body1: solid True, 35 faces (6 planar, 29 cylindrical in 29 cylinders), volume 1123556.536 mm3
+importing side-panel-right
+  1 bodies
+  Body1: solid True, 35 faces (6 planar, 29 cylindrical in 29 cylinders), volume 1123556.536 mm3
+importing top-panel
+  1 bodies
+  Body1: solid True, 16 faces (6 planar, 10 cylindrical in 10 cylinders), volume 463699.754 mm3
+importing tray-rail-1
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 144000.000 mm3
+importing tray-rail-2
+  1 bodies
+  Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 144000.000 mm3
+done: 105 bodies, 1352 cylinders, 44 distances, 0 errors
+wrote mechanical\cad\audit\fusion-measured.csv

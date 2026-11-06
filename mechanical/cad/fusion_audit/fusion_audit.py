@@ -8,9 +8,9 @@ How to run it, inside Fusion on Windows:
   1. Utilities > Add-Ins > Scripts and Add-Ins (Shift+S), or File > Scripts and Add-Ins.
   2. Scripts tab, the + next to My Scripts, pick the folder mechanical/cad/fusion_audit (it holds this file
      and fusion_audit.manifest), then select fusion_audit and Run.
-  Or, in the Text Commands window (File > View > Show Text Commands), switch the toggle to Py and type
-     exec(open(r"C:\\...\\mechanical\\cad\\fusion_audit\\fusion_audit.py").read()); main()
-  Set the two paths below first if the repo is somewhere else.
+  Or, in the Text Commands window (File > View > Show Text Commands), switch the toggle to Py and type,
+  with the repo folder in place of <repo>:
+     REPO=r"<repo>"; exec(open(REPO + r"\\mechanical\\cad\\fusion_audit\\fusion_audit.py").read()); main()
 
 It opens every STEP in STEP_DIR in a new unsaved document, measures, writes the CSV and a log, and closes
 the documents without saving. Nothing is uploaded; Fusion's local STEP translator is used.
@@ -26,8 +26,14 @@ import traceback
 import adsk.core
 import adsk.fusion
 
-STEP_DIR = r"C:\Users\cory\appliances\osa-dryer\mechanical\step"
-OUT_DIR = r"C:\Users\cory\appliances\osa-dryer\mechanical\cad\audit"
+# The repo root. Found from this file's location when Fusion runs it as a script; when it is run through
+# exec() in the Text Commands window there is no __file__, so set REPO there first (see above).
+try:
+    REPO = globals().get("REPO") or os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+except NameError:
+    raise RuntimeError("set REPO to the repo folder before exec(), for example REPO=r'D:\\osa\\dryer'")
+STEP_DIR = os.path.join(REPO, "mechanical", "step")
+OUT_DIR = os.path.join(REPO, "mechanical", "cad", "audit")
 OUT_CSV = os.path.join(OUT_DIR, "fusion-measured.csv")
 OUT_LOG = os.path.join(OUT_DIR, "fusion-audit.log")
 
@@ -143,7 +149,7 @@ def main():
         log(logf, f"fusion_audit start {time.strftime('%Y-%m-%d %H:%M:%S')}  Fusion {app.version}")
         im = app.importManager
         files = sorted(glob.glob(os.path.join(STEP_DIR, "*.step")))
-        log(logf, f"{len(files)} STEP files in {STEP_DIR}")
+        log(logf, f"{len(files)} STEP files in {os.path.relpath(STEP_DIR, REPO)} (paths in this log are relative to the repo)")
         for path in files:
             tag = os.path.splitext(os.path.basename(path))[0]
             log(logf, f"importing {tag}")
@@ -190,9 +196,9 @@ def main():
         n_bodies = sum(1 for r in rows if r["record"] == "body")
         n_err = sum(1 for r in rows if r["record"] == "error")
         log(logf, f"done: {n_bodies} bodies, {sum(1 for r in rows if r['record'] == 'cylinder')} cylinders, {sum(1 for r in rows if r['record'] == 'distance')} distances, {n_err} errors")
-        log(logf, f"wrote {OUT_CSV}")
+        log(logf, f"wrote {os.path.relpath(OUT_CSV, REPO)}")
     try:
-        app.log(f"fusion_audit done: {n_bodies} bodies, {n_err} errors, see {OUT_LOG}")
+        app.log(f"fusion_audit done: {n_bodies} bodies, {n_err} errors, see {os.path.relpath(OUT_LOG, REPO)}")
     except Exception:
         pass
     return n_bodies, n_err
