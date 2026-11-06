@@ -1,6 +1,6 @@
 # Fusion motion and interference check (V-021)
 
-Date: 2026-11-06. Autodesk Fusion 2706.1.17 (Personal), Windows. Model draft 6 (`mechanical/cad/osa_dryer_cad.py`), assembly STEP imported through Fusion's own STEP translator; joints, appearances and the interference analysis from `mechanical/cad/fusion_motion/fusion_motion.py` draft 3, run in the Text Commands window. The draft 5 run of 2026-11-06 is kept below the line.
+Date: 2026-11-06, rerun the same day after the aperture grew to 500 wide (UCI-D draft 5); same result. Autodesk Fusion 2706.1.17 (Personal), Windows. Model draft 6 (`mechanical/cad/osa_dryer_cad.py`), assembly STEP imported through Fusion's own STEP translator; joints, appearances and the interference analysis from `mechanical/cad/fusion_motion/fusion_motion.py` draft 3, run in the Text Commands window. The draft 5 run of 2026-11-06 is kept below the line.
 
 ## What was built in Fusion
 
@@ -39,7 +39,7 @@ The joint list and the signs the script worked out (so that a positive value in 
 
 Result: 0 overlaps over the three poses (`fusion-motion-interference.txt`). The archive with the joints and appearances is `mechanical/fusion/osa-dryer-assembly-motion.f3d` (Fusion's own format, 11.1 MB; open it in Fusion and drag any joint).
 
-The independent re-measure of every STEP with Fusion's kernel (V-014) was rerun on draft 6 the same day: 633 bodies, 711 comparisons, no difference beyond the usual face-count split on the drum sheet (`audit-report.md` section 3).
+The independent re-measure of every STEP with Fusion's kernel (V-014) was rerun on draft 6 the same day, and again after the aperture change: 637 bodies, 711 comparisons, no difference beyond the usual face-count split on the drum sheet (`audit-report.md` section 3).
 
 ---
 

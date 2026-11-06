@@ -1,4 +1,4 @@
-fusion_audit start 2026-11-06 12:58:16  Fusion 2706.1.17
+fusion_audit start 2026-11-06 13:30:38  Fusion 2706.1.17
 59 STEP files in mechanical\step (paths in this log are relative to the repo)
 importing base-pan
   1 bodies
@@ -17,7 +17,7 @@ importing console-cheek-right
   Body1: solid True, 15 faces (6 planar, 9 cylindrical in 9 cylinders), volume 42473.148 mm3
 importing console-face
   1 bodies
-  Body1: solid True, 26 faces (10 planar, 16 cylindrical in 16 cylinders), volume 163260.023 mm3
+  Body1: solid True, 28 faces (10 planar, 18 cylindrical in 18 cylinders), volume 116412.310 mm3
 importing console-post-1
   1 bodies
   Body1: solid True, 59 faces (54 planar, 5 cylindrical in 5 cylinders), volume 217723.512 mm3
@@ -88,7 +88,7 @@ importing lint-duct
   1 bodies
   Body1: solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 3270960.000 mm3
 importing osa-dryer-assembly
-  575 bodies
+  579 bodies
   post-1: solid True, 59 faces (54 planar, 5 cylindrical in 5 cylinders), volume 1088617.560 mm3
   post-2: solid True, 59 faces (54 planar, 5 cylindrical in 5 cylinders), volume 1088617.560 mm3
   post-3: solid True, 59 faces (54 planar, 5 cylindrical in 5 cylinders), volume 1088617.560 mm3
@@ -352,7 +352,7 @@ importing osa-dryer-assembly
   hardware-console-brackets (bought, 24 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-console-brackets (bought, 24 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-console-brackets (bought, 24 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
-  console-face: solid True, 26 faces (10 planar, 16 cylindrical in 16 cylinders), volume 163260.023 mm3
+  console-face: solid True, 28 faces (10 planar, 18 cylindrical in 18 cylinders), volume 116412.310 mm3
   hardware-console-face (bought, 8 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-console-face (bought, 8 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-console-face (bought, 8 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
@@ -393,15 +393,19 @@ importing osa-dryer-assembly
   hardware-console-cheek-right (bought, 5 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-console-cheek-right (bought, 5 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-console-cheek-right (bought, 5 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
-  tier0-faceplate: solid True, 513 faces (359 planar, 20 cylindrical in 20 cylinders), volume 87020.179 mm3
-  hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 203.803 mm3
-  hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 203.803 mm3
-  hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 203.803 mm3
-  hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 203.803 mm3
-  hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
-  hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
-  hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
-  hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  tier0-faceplate: solid True, 515 faces (359 planar, 22 cylindrical in 22 cylinders), volume 170156.562 mm3
+  hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 203.803 mm3
+  hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 203.803 mm3
+  hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 203.803 mm3
+  hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 203.803 mm3
+  hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 203.803 mm3
+  hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 203.803 mm3
+  hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
   tier0-knob-dry-time (bought): solid True, 20 faces (15 planar, 3 cylindrical in 3 cylinders), volume 15189.251 mm3
   tier0-timer-dry-time (bought): solid True, 16 faces (15 planar, 1 cylindrical in 1 cylinders), volume 90563.210 mm3
   tier0-knob-heat-time (bought): solid True, 20 faces (15 planar, 3 cylindrical in 3 cylinders), volume 15189.251 mm3
@@ -785,7 +789,7 @@ importing side-panel-right
   Body1: solid True, 39 faces (6 planar, 33 cylindrical in 33 cylinders), volume 1123510.182 mm3
 importing tier0-faceplate
   1 bodies
-  Body1: solid True, 513 faces (359 planar, 20 cylindrical in 20 cylinders), volume 87020.179 mm3
+  Body1: solid True, 515 faces (359 planar, 22 cylindrical in 22 cylinders), volume 170156.562 mm3
 importing top-panel
   1 bodies
   Body1: solid True, 30 faces (6 planar, 24 cylindrical in 24 cylinders), volume 775208.154 mm3
@@ -795,5 +799,5 @@ importing tray-rail-1
 importing tray-rail-2
   1 bodies
   Body1: solid True, 59 faces (54 planar, 5 cylindrical in 5 cylinders), volume 72929.578 mm3
-done: 633 bodies, 3148 cylinders, 44 distances, 0 errors
+done: 637 bodies, 3162 cylinders, 44 distances, 0 errors
 wrote mechanical\cad\audit\fusion-measured.csv
