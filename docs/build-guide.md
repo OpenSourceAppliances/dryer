@@ -2,7 +2,7 @@
 
 This is an uncertified appliance design published for free by individuals with no organization behind it. It involves mains voltage, heat, moving parts, and in some cases water and refrigerant. Building or operating it can cause fire, electric shock, injury, property damage, or death. There is no warranty of any kind. You are responsible for your own build, for checking it against your local electrical and building codes, and for deciding whether to use it. If you are not confident you can do that, do not build this.
 
-Draft 1, 2026-11-05. Status: an order of assembly with the verification gates in it. There has been no real build, so there are no photos yet; the photos come from the first build and go next to the step where something could go wrong.
+Draft 2, 2026-11-06 (draft 1 2026-11-05). Status: an order of assembly with the verification gates in it. Draft 2 follows model draft 7: full-depth tray rails on brackets, the power module as a plate behind the rear bulkhead, the roller studs and the drum glides, the electric module's bolted box. There has been no real build, so there are no photos yet; the photos come from the first build and go next to the step where something could go wrong.
 
 Every step names the checks from `docs/verification.md` that must be closed before it and the ones it closes. Do not skip a check because a step went well.
 
@@ -19,23 +19,24 @@ Every step names the checks from `docs/verification.md` that must be closed befo
 2. Bottom level: two side rails and two end rails between the four posts, corner brackets, M8 into T-nuts, square before tightening. Diagonals equal within 2 mm (V-301).
 3. Mid level at 260 to 300: side rails, rear end rail, the two front stubs, the rear cross rail at Y 611.5. Check the stubs leave the 340 mm gap centered.
 4. Top level at 960 to 1000: side rails, end rails, rear cross rail.
-5. Tray rails (2020) on the bottom rails at X minus 170 and plus 150, front end at Y 340.
+5. Tray rails (2020, 750 long) on the front and rear bottom end rails at X minus 170 to 150 and plus 150 to 170, a 2020 inside corner bracket at each end: one M4 into the rail's outer side slot (T-nut for the 6 mm slot), one down into the end rail's top slot (M4 T-nut for the 8 mm slot). Put four more M4 T-nuts into each tray rail's top slot now, for the heat module tray; they cannot go in later.
 6. Feet into the post ends (per V-113). Level the frame on the floor it will live on.
 7. Mark every torqued bolt with a paint pen (V-302).
 
 ## 2. Bay
 
-1. Base pan under the bottom rails, M6 into the slots. The cord's strain relief bushing into the 22 mm hole under the power module's place, locknut under the pan.
-2. Motor mount plate and blower housing at the front (per the drawings that follow V-106 and V-107), motor in, pulley on the rear shaft, wheel on the front shaft. Direction checked at V-204 already.
-3. Power module box at the rear left, bonded to the frame (ring terminal, star washer, bare metal).
+1. Base pan under the bottom rails, M6 into the slots. The cord's strain relief bushing into the 22 mm hole at the rear left (X -275, Y 690), locknut under the pan.
+2. Motor mount plate and blower housing at the front (per the drawings that follow V-106 and V-107), motor in, the 20 mm pulley on the rear shaft, wheel on the front shaft. Direction checked at V-204 already.
+3. Idler bracket and spring bracket on the pan, the arm on its pivot, the idler on the arm; the spring waits for the belt.
 4. Exhaust duct from the blower outlet along the right side to the rear lower panel port position.
 5. Lint duct transition box in front of the blower inlet.
 
 ## 3. Rear bulkhead and riser
 
-1. Fit the rollers to the rear bulkhead per the kit (V-102). Felt seal per V-104. Bond the plate.
-2. Hang the bulkhead on the mid and top rear cross rails, M6 into the slots, rollers down, inlet field up.
-3. Riser duct from the bay up behind the bulkhead to the inlet field, gasketed, bolted.
+1. Fit the two rear glides (9.5 thick) to the bulkhead's front face with their nuts sunk in the pads, bolt heads behind (V-103). Lay the two felt arcs (10 mm, the long one round the bottom, the short one over the top) round the glides per V-104. Fit the two rear rollers on their studs: shim under the head, roller, spacer, stud through the 8.5 hole from the drum side, washer and nut behind; the nut clamps the shoulder's step to the plate and the roller stays free (V-102). Bond the plate.
+2. Hang the bulkhead on the mid and top rear cross rails, M6 into the slots from the front, rollers down, inlet field up.
+3. Riser duct from the bay up behind the bulkhead to the inlet field, gasketed, bolted; its hood reaches forward under the mid rear cross rail with the foam ring glued round the collar hole.
+4. Power module plate on the rear faces of the two rear cross rails, four M6 into their rear slots (T-nuts in first), bonded through its ground stud. Its bottom edge drops through the bay ceiling's slot, so the ceiling plate goes in first if it is not already there (section 4), or the plate goes on after it.
 
 ## 4. Bay ceiling plate
 
@@ -45,8 +46,8 @@ Every step names the checks from `docs/verification.md` that must be closed befo
 
 ## 5. Front bulkhead
 
-1. Fit the glides per the kit (V-103), the felt seal (V-104), the lint slot hardware. Bond the plate.
-2. Hang it on the mid front stubs and the top front rail; its bottom edge stands just in front of the ceiling plate's front edge.
+1. Fit the two front glides (8 thick) to the back face, the two felt arcs, the two front rollers on their studs (heads on the drum side, nuts in front of the plate), the lint slot hardware (V-103, V-104, V-102). Bond the plate.
+2. Hang it on the mid front stubs and the top front rail; its bottom edge stands just in front of the ceiling plate's front edge. The front studs' nuts sit beside the lint duct, 4 mm from its sides.
 3. Lint duct bolted to its face over the slot.
 
 ## 6. Drum
@@ -60,13 +61,14 @@ Built on the bench before the frame is closed, after V-208 has been run with a c
 5. Measure the diameter at mid-length at four angles (V-208 again, on the real sheet) and write the numbers in the build log.
 6. Drill the three baffles on the drill press to the sheet's holes and bolt them in, angle inside, nuts outside.
 7. Two people. Drum in from the front at an angle, rear end onto the rear rollers, front end onto the front rollers.
-8. Turn by hand: free, silent, both felt seals touching the ring faces all round (V-304, V-306).
-9. Belt around the drum through the two ceiling slots, under the motor pulley, idler fitted. Ten turns by hand, belt centered on the smooth track between the seam bolts (V-305).
+8. Turn by hand: free, silent, both felt seals touching the ring faces all round, about 1 mm of end play between the glides (V-304, V-306).
+9. Belt around the drum through the two ceiling slots, under the motor pulley, over the idler, spring hooked between its posts. Ten turns by hand, belt centered on the smooth track between the seam bolts (V-305).
 
 ## 7. Heat module
 
-1. Build the electric tray on the bench (V-203 closed), slide it in on the tray rails from the back (the rear lower panel is still off; the module passes under the riser's hood), bolt it to the rails.
-2. Riser flange adapter gasketed and bolted. Mains leads to X2, coil leads to X4. Tray bonded to X2:4.
+1. Build the electric module on the bench (V-203 closed): the box on the tray (bottom angles first, bolted to the tray with the nuts under it; the element rails and side walls; the end walls and corner angles; the element on its rails with its terminals out through the right wall), the collar and thermostats on the lid, the lid on its angles, the terminal plate on its foot behind the box, the DIN rail and its devices, the element leads. Bond the tray at its stud.
+2. Slide it in on the tray rails from the back (the rear lower panel is still off; everything on it passes under the riser's hood at 230) until its front edge is at Y 420, and bolt the side angles down into the rails' T-nuts (four M4). The collar's rim is now 3 under the hood, touching the foam ring.
+3. Mains leads from X2 and the SELV pair from X4 down through the bay harness grommet to the module's strips. Tray bonding lead to X2:4.
 
 ## 8. Panels and console
 
@@ -76,7 +78,7 @@ Built on the bench before the frame is closed, after V-208 has been run with a c
 
 ## 9. Harness and controls
 
-1. Cord through the base pan's bushing from below into the power module, strain relieved. J1 and J2 leads from the power module up to the console through their grommet, strain relieved (V-310).
+1. Cord through the base pan's bushing from below, straight up the bay and through the ceiling grommet to X1 on the power module's rail A1, strain relieved at the bushing. The bay harness down through the second ceiling grommet. J1 and J2 leads from the power module up through the top panel's grommet into the console, strain relieved (V-310). Cover on the mains rails, four M4.
 2. Control module in, four M4 screws, plugs in.
 3. Everything in Gate 3 ticked (V-301 to V-311).
 

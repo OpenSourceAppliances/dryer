@@ -10,15 +10,21 @@ One file holds every number. Run it and it writes:
 Coordinate system: X across the cabinet (left negative), Y from front (0) to back, Z up from the floor.
 All dimensions mm. Needs cadquery (pip install cadquery). Also runs in FreeCAD's CadQuery workbench.
 
-Status: draft 6, 2026-11-06. Draft 5 drew what the documents already called for but the model only
+Status: draft 7, 2026-11-06. Draft 5 drew what the documents already called for but the model only
 implied: T-slot profiles on the extrusions, laser corner radii, every panel bolt, the leveling feet, the belt
 on its real path with the idler, the door hinges, handle, seal and catch, the Tier 0 control module, and
-the detail of the motor, pulley and blower. Draft 6 settles the three things draft 5 found (DECISIONS.md,
+the detail of the motor, pulley and blower. Draft 6 settled the three things draft 5 found (DECISIONS.md,
 2026-11-06): the drum ring bore grows to 540 and the lint slot becomes a curved slot inside it, the heat
 module leaves by the back under a hood into a raised riser, and the console is a vertical box on its own small
-4040 frame that holds the whole UCI envelope. Every M4 is a button head. Bought parts (motor, blower, timers, rollers, hinges, feet) are
-drawn as representations from catalog numbers that have NOT been measured. docs/verification.md says which
-measurement unlocks which DXF. Do not cut a plate whose gate is open.
+4040 frame that holds the whole UCI envelope. Draft 7 draws the two modules and the drum's support: the electric
+heat module (a bolted 1.5 mm duct box on the tray with the catalog element, a round collar under the hood, and its
+contactor and terminals on a DIN rail behind the box), the common power module as a plate with five DIN rails on
+the rear cross rails behind the rear upper panel (DECISIONS.md, 2026-11-06), the tray rails the full depth of the
+cabinet, nylon glides that locate the drum endways with the felts in two arcs round them, shoulder-screw roller
+studs, the 20 mm motor pulley (56 drum rpm; 30 gave 83), and the grommets the cord and harnesses pass through.
+Every M4 is a button head. Bought parts (motor, blower, timers, rollers, hinges, feet, element, DIN devices) are
+drawn as envelopes or representations from published figures that have NOT been measured. docs/verification.md
+says which measurement unlocks which DXF. Do not cut a plate whose gate is open.
 """
 import csv
 import math
@@ -30,7 +36,7 @@ import cadquery as cq
 from cadquery import exporters
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "."
-DRAFT = 6
+DRAFT = 7
 HERE = os.path.dirname(os.path.abspath(__file__))
 for sub in ("step", "drawings"):
     os.makedirs(os.path.join(OUT, sub), exist_ok=True)
@@ -65,14 +71,18 @@ P = dict(
     door_opening_d=460.0,
     door_ring_od=560.0, door_ring_id=470.0, door_disc_d=540.0, t_door=2.0,
     # rollers (bought dryer drum rollers, two front and two rear; measure the kit)
-    roller_d=60.0, roller_angle_deg=30.0, roller_shaft_hole_d=10.5,
-    motor_pulley_d=30.0,
+    roller_d=60.0, roller_angle_deg=32.0, roller_shaft_hole_d=8.5, roller_bore_d=10.5,   # 32 degrees (draft 7): the studs' nuts clear the lint duct; 8.5 hole for the stud's M8 thread
+    roller_stud_head_d=16.0, roller_stud_head_h=7.0, roller_stud_shoulder=35.0, roller_stud_thread=13.0, roller_spacer=8.5,   # ISO 7379 shoulder screw 10 x 35, M8 thread, bearing on the bulkhead; spacer 16 x 10.5 x 8.5; 1.0 shim under the head
+    roller_inset_rear=-1.5,   # the rear rollers stand 1.5 proud of the drum's rear end so both ends use the same 35 shoulder (front gap 8.5, rear gap 10 - 1.5)
+    glide_w=45.0, glide_h=20.0, glide_r=282.0, glide_angle_deg=45.0, glide_t_front=8.0, glide_t_rear=9.5,   # two nylon drum glides per bulkhead at 10 and 2 o'clock, on the felt's radius; 0.5 end float
+    motor_pulley_d=20.0,      # 1725 rpm x 20 / 620 = 56 drum rpm (draft 7: 30 gave 83, outside the 45 to 55 target)
     # lint filter slot in the front bulkhead: a curved slot inside the ring bore, below the door opening (draft 6)
     lint_slot_r0=238.0, lint_slot_r1=266.0, lint_slot_half_deg=36.0,   # 8 outside the 460 opening, 4 inside the 540 bore; 8865 mm2
     # rear air inlet zone
     inlet_w=200.0, inlet_h=130.0, inlet_above_axis=50.0, inlet_hole_d=10.0, inlet_pitch=14.0,   # inside the ring opening (R 240)
     # riser duct: vertical part behind the rear cross rails, and a hood under the mid cross rail over the heat module's outlet
-    riser_w=260.0, riser_depth=50.0, riser_z0=230.0, hood_w=300.0, hood_y0=560.0, hood_h=28.0,
+    riser_w=260.0, riser_depth=50.0, riser_z0=230.0, hood_w=300.0, hood_y0=448.0, hood_h=28.0,   # the hood reaches forward over the module's collar (draft 7)
+    hood_gasket_od=150.0, hood_gasket_t=3.0,   # foam ring glued under the hood; the collar's rim brushes it
     # console: a vertical box at the rear of the top on its own 4040 sub-frame (draft 6), holding the full UCI envelope
     console_h=200.0, uci_ap_z_off=83.0,   # console depth: from the top rear cross rail to the back (set below). Aperture centre above the top panel: the module's nuts under the front rail, the faceplate under its bolts
     uci_ap_w=500.0, uci_ap_h=120.0, uci_hole_x=520.0, uci_hole_y=140.0, uci_hole_d=4.5,   # UCI-D draft 5: 500 wide, six holes (the corners plus two on the centre line)
@@ -82,10 +92,27 @@ P = dict(
     motor_axis_z=120.0, motor_len=200.0, motor_d=140.0, motor_y0=190.0,   # motor behind the blower, pulley on its rear shaft
     blower_d=220.0, blower_w=100.0, blower_y0=84.0,                       # blower on the front shaft, inlet facing front
     lint_duct_y0=5.0, lint_duct_depth=33.0, lint_duct_top=445.0,         # between the front panel (behind the ring bolts' nuts and tips) and the front bulkhead
-    tray_w=320.0, tray_depth=250.0, tray_y0=420.0, tray_x0=-160.0, t_tray=1.5,
-    pm_w=170.0, pm_depth=250.0, pm_h=180.0, pm_x0=-340.0, pm_y0=450.0,
+    tray_w=340.0, tray_depth=280.0, tray_y0=420.0, tray_x0=-170.0, t_tray=1.5,   # on the two 2020 tray rails (X +-150..170), draft 7; starts 3 behind the idler spring (409..417)
+    # electric heat module (draft 7): a laser-cut 1.5 mm duct box on the tray, joined with 20x20x2 aluminium angle and M4 (no
+    # brake, no rivets), the catalog element along X inside it on two angle rails, a round catalog collar on top under the
+    # riser's hood, the contactor and terminal strips on a DIN rail on a plate behind the box
+    hm_box_x=145.0, hm_box_y0=422.0, hm_box_y1=627.0, hm_box_h=110.0, t_duct=1.5,
+    hm_elem_l=267.0, hm_elem_w=190.0, hm_elem_h=51.0,          # Whirlpool 279838 class element: 10.5 x 7.5 x 2 in from a seller listing (V-108)
+    hm_elem_z0=81.5,                                            # element frame's underside, on the rails' top legs
+    hm_collar_d=125.0, hm_collar_y=525.0, hm_collar_top=227.0, hm_collar_flange_d=155.0,   # 125 flanged starting collar, 3 under the hood's gasket
+    hm_inlet_y=(450.0, 600.0), hm_inlet_z=(84.0, 144.0),        # opening in the box's left end: 150 x 60, 9000 mm2
+    hm_term_cut=(525.0, 107.0, 40.0, 25.0),                     # the element's terminals leave through the right end: (yc, zc, w, h), final position from the element bought (V-108)
+    hm_plate_y=634.0, hm_plate_h=100.0,                         # the terminal plate across the tray behind the box, DIN rail on its rear face
+    hm_thermostat_x=110.0, hm_thermostat_y=500.0,               # 279816 class high-limit and thermal cut-off on the box top, either side of the collar, brackets along Y
+    # common power module (draft 7): a plate on the rear faces of the two rear cross rails, left of the riser, behind the
+    # rear upper panel; five DIN rails across it, the mains rails under a cover, a barrier between mains and SELV
+    pm_x0=-300.0, pm_w=150.0, pm_z0=270.0, pm_z1=990.0, pm_rails_z=(360.0, 470.0, 580.0, 700.0, 820.0), pm_barrier_z=640.0,
+    pm_cover_standoff=75.0, pm_cover_z0=310.0, pm_cover_z1=640.0,   # the cover starts above the bay ceiling's rear bolt heads (307)
+    grommet_cord=(-275.0, 690.0, 22.0), grommet_harness=(-200.0, 690.0, 30.0), grommet_console=(-225.0, 690.0, 22.0),   # (x, y, hole) in the bay ceiling (cord, bay harness) and the top panel (console harness)
+    cord_top_z=320.0,          # the cord ends under X1 on the power module's first rail
     exhaust_d=102.0, exhaust_x=230.0, exhaust_z=150.0,
-    cord_hole_d=22.0, cord_x=-250.0, cord_y=690.0,   # cord strain relief bushing through the base pan under the power module (draft 6); confirm against the bushing bought, V-112
+    cord_hole_d=22.0, cord_x=-275.0, cord_y=690.0,   # cord strain relief bushing through the base pan at the rear left (draft 6); the cord goes up through the bay ceiling to the power module (draft 7); confirm against the bushing bought, V-112
+    motor_shaft_d=12.7,        # 1/2 in dryer motor shaft both ends (V-106)
     # --- draft 4: what the documents call for, now drawn ---
     plate_corner_r=6.0,       # laser-cut outside corners of every rectangular plate (no sharp sheet corners to handle)
     small_corner_r=3.0,       # cheeks, the splice strip, the drum tabs
@@ -110,8 +137,8 @@ P = dict(
     seal_ri=237.0, seal_ro=246.0, seal_t=6.0,
     ring_bolt_r=257.5, ring_bolt_n=8,
     latch_x0=256.0, latch_x1=268.0,
-    # felt seal (7a Drum and door): 8 mm polyester felt annulus glued to the rear bulkhead; the front one waits on the lint slot decision (V-010 finding)
-    felt_ri=273.0, felt_ro=291.0, felt_t=8.0,   # on the ring face between the 540 bore and the tab tips (293.2)
+    # felt seals (7b Seals): 10 mm polyester felt arcs glued to both bulkheads, drawn compressed to the gap the drum leaves
+    felt_ri=273.0, felt_ro=291.0, felt_t=8.0, felt_t_rear=10.0,   # on the ring face between the 540 bore and the tab tips (293.2); front gap 8.5, rear gap 10
     # Tier 0 control module (controls/tier0-mechanical): faceplate numbers from mechanical/drawings/tier0_drawings.py
     fp_w=540.0, fp_h=160.0, fp_r=10.0, fp_t=2.0,
     knob_d=40.0, knob_skirt_h=3.0, knob_body_d=30.0, knob_h=20.0,
@@ -340,17 +367,21 @@ def plate_xy(name, x0, x1, y0, y1, z0, t, holes=(), rect_cuts=(), circ_cuts=(), 
     return solid
 
 
-def plate_yz(name, y0, y1, z0, z1, x0, t, holes=(), r=None, bolt_side=None, bolt_d=None, bolt=None, bolt_label=None):
-    """A flat plate in the YZ plane (side panel), thickness along +X from x0. holes: (y, z, d)."""
+def plate_yz(name, y0, y1, z0, z1, x0, t, holes=(), rect_cuts=(), r=None, bolt_side=None, bolt_d=None, bolt=None, bolt_label=None):
+    """A flat plate in the YZ plane (side panel), thickness along +X from x0. holes: (y, z, d). rect_cuts: (yc, zc, w, h)."""
     r = P["plate_corner_r"] if r is None else r
     d, h = y1 - y0, z1 - z0
     solid = fillet_corners(cq.Workplane("YZ").center((y0 + y1) / 2, (z0 + z1) / 2).rect(d, h).extrude(t), "|X", r).translate((x0, 0, 0))
     for (y, z, dd) in holes:
         solid = solid.cut(cq.Workplane("YZ").center(y, z).circle(dd / 2).extrude(t + 2).translate((x0 - 1, 0, 0)))
+    for (yc, zc, cw, ch) in rect_cuts:
+        solid = solid.cut(cq.Workplane("YZ").center(yc, zc).rect(cw, ch).extrude(t + 2).translate((x0 - 1, 0, 0)))
     add(name, solid, STEEL, plate=True, t=t)
     sk = fillet_corners(cq.Workplane("XY").center((y0 + y1) / 2, (z0 + z1) / 2).rect(d, h).extrude(1), "|Z", r)
     for (y, z, dd) in holes:
         sk = sk.cut(cq.Workplane("XY").center(y, z).circle(dd / 2).extrude(3).translate((0, 0, -1)))
+    for (yc, zc, cw, ch) in rect_cuts:
+        sk = sk.cut(cq.Workplane("XY").center(yc, zc).rect(cw, ch).extrude(3).translate((0, 0, -1)))
     export_dxf(name, sk)
     if bolt_side:
         xb = x0 if bolt_side < 0 else x0 + t
@@ -408,11 +439,30 @@ for lvl, (z0, z1) in levels.items():
     if lvl in ("mid", "top"):
         extrusion(f"rail-{lvl}-rearcross", -hw + e, hw - e, ry, ry + e, z0, z1, "rear bulkhead cross rail")
 
-# tray rails: 2020 on top of the bottom frame, running front to back, 600 long
+# tray rails (draft 7): two 2020 lengths the full depth of the cabinet, lying on the front and rear bottom end rails
+# at X +-150..170, each held at both ends by a 2020 inside corner bracket on the end rail's top slot. The heat
+# module tray sits on them and slides out the back over the rear bottom rail.
 es = P["ext_small"]
-tx0 = P["tray_x0"]
-for i, x in enumerate([tx0 - 10, tx0 + P["tray_w"] - 10]):
-    extrusion(f"tray-rail-{i+1}", x, x + es, e + 300, D - e - 10, e, e + es, "2020 tray rail")
+TRAY_RAIL_X = [(-170.0, -150.0), (150.0, 170.0)]
+for i, (x0, x1) in enumerate(TRAY_RAIL_X):
+    extrusion(f"tray-rail-{i+1}", x0, x1, 0, D, e, e + es, "2020 tray rail, on the bottom end rails")
+# the brackets: 20 series inside corner brackets (legs 20, 2.5 thick, 17 wide) on the rail's outer side and the end rail's top
+B20L, B20T, B20W = 20.0, 2.5, 17.0
+tr_brk, tr_hw = [], []
+for (x0, x1) in TRAY_RAIL_X:
+    sx = -1 if x0 < 0 else 1
+    xf = x0 if sx < 0 else x1            # the tray rail's outer face
+    for yc in (e / 2, D - e / 2):        # on the front and rear bottom rails' top slot centre lines
+        leg_v = box(min(xf, xf + sx * B20T), max(xf, xf + sx * B20T), yc - B20W / 2, yc + B20W / 2, e, e + B20L)
+        leg_h = box(min(xf, xf + sx * B20L), max(xf, xf + sx * B20L), yc - B20W / 2, yc + B20W / 2, e, e + B20T)
+        b = leg_v.union(leg_h)
+        b = b.cut(cq.Workplane("YZ").center(yc, e + es / 2).circle(2.25).extrude(B20T + 2).translate((min(xf, xf + sx * B20T) - 1, 0, 0)))
+        b = b.cut(cq.Workplane("XY").center(xf + sx * (B20L - 8.0), yc).circle(2.25).extrude(B20T + 2).translate((0, 0, e - 1)))
+        tr_brk.append(b)
+        tr_hw.append(place(button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 8.0, 2.5), (xf + sx * B20T, yc, e + es / 2), (sx, 0, 0)))   # into the tray rail's side slot (its centre line, 10 up)
+        tr_hw.append(place(button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 8.0, 2.5), (xf + sx * (B20L - 8.0), yc, e + B20T), (0, 0, 1)))   # into the end rail's top slot
+add("tray-rail-brackets (bought, 4 x 2020 inside corner brackets)", compound(tr_brk), HARDWARE)
+add("hardware-tray-rails (bought, 8 x M4 x 8 button head, T-nuts for the 6 and 8 mm slots)", compound(tr_hw), HARDWARE)
 
 # leveling feet: into the posts' tapped centre bores, through the base pan
 foot_pts = [(x0 + e / 2, y0 + e / 2) for (x0, y0) in post_xy]
@@ -445,15 +495,27 @@ def bulk_holes(front=False):
         hs.append((x, Hb - e / 2, P["m6_hole"]))
     return hs
 
-# roller shaft holes, the same pattern on both bulkheads: on the rim radius plus the roller radius, 30 degrees each side of bottom
+# roller stud holes, the same pattern on both bulkheads: on the rim radius plus the roller radius, 32 degrees each side of
+# bottom (draft 7: 30 put the studs' nuts into the lint duct's sides)
 rollers = []
 rr = P["drum_rim_r"] + P["roller_d"] / 2
 for ang in (-P["roller_angle_deg"], P["roller_angle_deg"]):
     rollers.append((rr * math.sin(math.radians(ang)), az - rr * math.cos(math.radians(ang)), P["roller_shaft_hole_d"]))
+# drum glides (draft 7): two nylon pads per bulkhead at 10 and 2 o'clock on the felt's radius, taking the drum's end
+# thrust; the felt is laid in two arcs between them. Two M4 holes each, through the bulkhead.
+GLIDE_ANGLES = (-P["glide_angle_deg"], P["glide_angle_deg"])     # from straight up, viewed from the front
+glide_pts, glide_holes = [], []
+for ang in GLIDE_ANGLES:
+    a = math.radians(ang)
+    cx_, cz_ = P["glide_r"] * math.sin(a), az + P["glide_r"] * math.cos(a)
+    tx_, tz_ = math.cos(a), -math.sin(a)      # tangent, along the pad
+    glide_pts.append((cx_, cz_, ang))
+    for k in (-12.0, 12.0):
+        glide_holes.append((cx_ + k * tx_, cz_ + k * tz_, P["m4_hole"]))
 
 # front bulkhead: door opening, lint slot, front roller holes; bolt heads on its back face (the rails are in front of it)
 plate_xz("front-bulkhead", bulk_x0, bulk_x1, bulk_z0, bulk_z1, P["front_bulk_y"], tb,
-         holes=bulk_holes(front=True) + rollers,
+         holes=bulk_holes(front=True) + rollers + glide_holes,
          circ_cuts=[(0, az, P["door_opening_d"])],
          sectors=[(0, az, P["lint_slot_r0"], P["lint_slot_r1"], P["lint_slot_half_deg"])], bolt_side=+1)
 P["lint_slot_area"] = math.radians(2 * P["lint_slot_half_deg"]) / 2 * (P["lint_slot_r1"] ** 2 - P["lint_slot_r0"] ** 2)
@@ -469,18 +531,75 @@ for i in range(nx):
         z = az + P["inlet_above_axis"] + j * P["inlet_pitch"]
         inlet.append((x, z, P["inlet_hole_d"]))
 plate_xz("rear-bulkhead", bulk_x0, bulk_x1, bulk_z0, bulk_z1, P["rear_bulk_y"], tb,
-         holes=bulk_holes() + rollers + inlet, bolt_side=-1)
+         holes=bulk_holes() + rollers + inlet + glide_holes, bolt_side=-1)
 
-# felt seals: on the rear bulkhead's front face against the rear ring, and on the front bulkhead's back face against the
-# front ring; both ride on the ring face between the 540 bore and the tab tips (7b Seals). Same annulus, one DXF.
+
+def about_drum_axis(shape, theta_deg):
+    return shape.rotate((0, 0, az), (0, 1, az), theta_deg)
+
+
+# felt seals and glides (7b Seals, draft 7): on the rear bulkhead's front face against the rear ring, and on the front
+# bulkhead's back face against the front ring; both ride on the ring face between the 540 bore and the tab tips. Each
+# felt is two arcs of strip (a long one round the bottom, a short one over the top) with a glide pad in each gap; the
+# pads carry the drum's end thrust so the felt only seals. The pads are 8 thick at the front (the felt's thickness) and
+# 10 at the rear, where the ring face is 2 further from the bulkhead.
 assert P["felt_ro"] < ri - P["tab_h"] and P["felt_ri"] > P["ring_id"] / 2, "felt must sit on the ring face inboard of the tabs"
-felt = (cq.Workplane("XZ").center(0, az).circle(P["felt_ro"]).circle(P["felt_ri"]).extrude(-P["felt_t"])
-        .translate((0, P["rear_bulk_y"] - P["felt_t"], 0)))
-add("felt-seal-rear", felt, FELT, plate=True, t=P["felt_t"])
-felt_f = (cq.Workplane("XZ").center(0, az).circle(P["felt_ro"]).circle(P["felt_ri"]).extrude(-P["felt_t"])
-          .translate((0, P["front_bulk_y"] + tb, 0)))
-add("felt-seal-front", felt_f, FELT, plate=True, t=P["felt_t"])
-export_dxf("felt-seal", cq.Workplane("XY").circle(P["felt_ro"]).extrude(1).cut(cq.Workplane("XY").circle(P["felt_ri"]).extrude(3).translate((0, 0, -1))))
+assert P["glide_r"] - P["glide_h"] / 2 >= P["felt_ri"] - 1 and P["glide_r"] + P["glide_h"] / 2 <= P["felt_ro"] + 1, "glides in the felt band"
+pad_half_deg = math.degrees((P["glide_w"] + 2.0) / 2 / P["glide_r"])        # half the gap each pad takes, 1 mm clear each side
+long_half = 180.0 - P["glide_angle_deg"] - pad_half_deg                     # the long arc, centred on straight down
+short_half = P["glide_angle_deg"] - pad_half_deg                            # the short arc, centred on straight up
+P["felt_long_len"] = 2 * math.radians(long_half) * P["glide_r"]
+P["felt_short_len"] = 2 * math.radians(short_half) * P["glide_r"]
+
+
+def felt_arcs(y0, t):
+    long_ = sector_xz(0, az, P["felt_ri"], P["felt_ro"], long_half, t).translate((0, y0, 0))
+    short_ = about_drum_axis(sector_xz(0, az, P["felt_ri"], P["felt_ro"], short_half, t).translate((0, y0, 0)), 180.0)
+    return long_, short_
+
+
+def glide_pads(y0, t, pocket_far):
+    """Two pads from Y y0 to y0 + t, long axis along the tangent; hex pockets 4.5 deep for the M4 nuts open on the ring
+    side (the far, +Y face if pocket_far, else the near face), cut with the nut's own placement so the hexagons agree."""
+    pads = []
+    for (cx_, cz_, ang) in glide_pts:
+        pad = box(-P["glide_w"] / 2, P["glide_w"] / 2, 0, t, -P["glide_h"] / 2, P["glide_h"] / 2)
+        pad = pad.edges("|Y").fillet(3.0)
+        for k in (-12.0, 12.0):
+            pad = pad.cut(cq.Workplane("XZ").center(k, 0).circle(2.25).extrude(-t - 2).translate((0, -1, 0)))
+        pad = pad.rotate((0, 0, 0), (0, 1, 0), ang).translate((cx_, y0, cz_))
+        a = math.radians(ang)
+        for k in (-12.0, 12.0):
+            px, pz = cx_ + k * math.cos(a), cz_ - k * math.sin(a)
+            if pocket_far:
+                pad = pad.cut(place(hexagon(7.6, 5.0), (px, y0 + t - 4.5, pz), (0, 1, 0)))
+            else:
+                pad = pad.cut(place(hexagon(7.6, 5.0), (px, y0 + 4.5, pz), (0, -1, 0)))
+        pads.append(pad)
+    return pads
+
+
+fl, fs = felt_arcs(P["rear_bulk_y"] - P["felt_t_rear"], P["felt_t_rear"])
+add("felt-seal-rear-long", fl, FELT, plate=True, t=P["felt_t_rear"])
+add("felt-seal-rear-short", fs, FELT, plate=True, t=P["felt_t_rear"])
+fl, fs = felt_arcs(P["front_bulk_y"] + tb, P["felt_t"])
+add("felt-seal-front-long", fl, FELT, plate=True, t=P["felt_t"])
+add("felt-seal-front-short", fs, FELT, plate=True, t=P["felt_t"])
+export_dxf("felt-seal-long", sector_xy(0, 0, P["felt_ri"], P["felt_ro"], long_half, 1))
+export_dxf("felt-seal-short", sector_xy(0, 0, P["felt_ri"], P["felt_ro"], short_half, 1))
+cut_list.append(("felt-seal-long", "10 mm polyester felt, 18 wide strip", round(P["felt_long_len"]), 2, "or cut to drawings/felt-seal-long.dxf; one per bulkhead, round the bottom"))
+cut_list.append(("felt-seal-short", "10 mm polyester felt, 18 wide strip", round(P["felt_short_len"]), 2, "or cut to drawings/felt-seal-short.dxf; one per bulkhead, over the top"))
+GT_F, GT_R = P["glide_t_front"], P["glide_t_rear"]
+glide_y_rear = P["rear_bulk_y"] - GT_R
+add("drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)", compound(glide_pads(P["front_bulk_y"] + tb, GT_F, True)), BOUGHT)
+add("drum-glides-rear (bought, 2 x nylon drum glide pads, 45 x 20 x 9.5)", compound(glide_pads(glide_y_rear, GT_R, False)), BOUGHT)
+glide_hw = []
+for (gx, gz, d_) in glide_holes:
+    glide_hw.append(place(button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 8.0, 2.5), (gx, P["front_bulk_y"], gz), (0, -1, 0)))      # head in the front gap
+    glide_hw.append(place(nut(P["m4_nut_af"], P["m4_nut_h"], 4.2), (gx, P["front_bulk_y"] + tb + GT_F - 4.5, gz), (0, 1, 0)))        # sunk in the pad
+    glide_hw.append(place(button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 10.0, 2.5), (gx, P["rear_bulk_y"] + tb, gz), (0, 1, 0)))   # head in the rear compartment
+    glide_hw.append(place(nut(P["m4_nut_af"], P["m4_nut_h"], 4.2), (gx, glide_y_rear + 4.5, gz), (0, -1, 0)))                       # sunk in the pad
+add("hardware-drum-glides (bought, 4 x M4 x 8 and 4 x M4 x 10 button head, nuts)", compound(glide_hw), HARDWARE)
 
 # ---------------------------------------------------------------------------
 # Belt path (needed for the bay ceiling slots): drum -> motor pulley (right run) -> idler -> drum (left run)
@@ -550,12 +669,15 @@ for x in pitch_points(-hw + e, hw - e, P["panel_pitch"], 40):
 for y in pitch_points(e, D - e, P["panel_pitch"], 40):
     ceil_holes.append((-hw + e / 2, y, P["m6_hole"]))    # into the mid side rails
     ceil_holes.append((hw - e / 2, y, P["m6_hole"]))
+PM_X0, PM_W, PM_Y = P["pm_x0"], P["pm_w"], ry + e   # the power module plate stands on the cross rails' rear faces (draft 7)
+ceil_holes += [(gx, gy, gd) for (gx, gy, gd) in (P["grommet_cord"], P["grommet_harness"])]   # grommets: the cord and the bay harness come up to the power module
 plate_xy("bay-ceiling", -hw + tp, hw - tp, P["ceil_y0"], D, bt, P["t_base"], holes=ceil_holes,
          rect_cuts=[(round(P["belt_cross_left"], 1), P["belt_y"], P["belt_slot_w"], P["belt_slot_l"]),    # belt slots, one per run
                     (round(P["belt_cross_right"], 1), P["belt_y"], P["belt_slot_w"], P["belt_slot_l"]),
                     (0, P["rear_bulk_y"] + tb / 2, P["inner_w"] + 2, tb + 1),    # rear bulkhead passes through
                     (-hw + e / 2, D - e / 2, e + 1, e + 1), (hw - e / 2, D - e / 2, e + 1, e + 1),   # rear post notches
-                    (0, ry + e + 2 + P["riser_depth"] / 2, P["riser_w"] + 4, P["riser_depth"] + 4)],   # riser, 2 mm clearance
+                    (0, ry + e + 2 + P["riser_depth"] / 2, P["riser_w"] + 4, P["riser_depth"] + 4),   # riser, 2 mm clearance
+                    (PM_X0 + PM_W / 2, PM_Y + tp / 2, PM_W + 2, tp + 2)],   # power module plate passes through (draft 7)
          bolt_side=+1)
 
 base_holes = []
@@ -645,6 +767,7 @@ for y in pitch_points(e, D - e, P["panel_pitch"], 60):
     if y < con_y0 - 12:   # not under the console posts; the console's foot bolts clamp the panel there
         top_holes.append((-hw + e / 2, y, P["m6_hole"])); top_holes.append((hw - e / 2, y, P["m6_hole"]))
 top_holes += [(fx, fy, P["m6_hole"]) for (fx, fy) in cfoot_pts]
+top_holes.append(P["grommet_console"])   # the console harness comes up from the power module through a grommet (draft 7)
 plate_xy("top-panel", -hw, hw, 0, D, Hb, tp, holes=top_holes, bolt_side=+1, bolt_skip=tuple(cfoot_pts))   # the console's foot bolts are in its own hardware
 
 # the sub-frame: a small cabinet frame of 4040 like the cabinet's own, four posts the full console height with four
@@ -921,6 +1044,11 @@ add("riser-duct", riser, DUCT)
 assert riser_y0 + P["riser_depth"] + 2 <= D - e, "riser must clear the rear end rail"
 assert hood_z1 + 2 <= bt - e, "hood must pass under the mid rear cross rail"
 P["hood_area"] = P["hood_h"] * P["hood_w"]
+# the hood's gasket (draft 7): a foam ring glued under the hood round the collar's hole; the module's collar rim brushes it
+gk = (cq.Workplane("XY").center(0, P["hm_collar_y"]).circle(P["hood_gasket_od"] / 2).circle(P["hm_collar_d"] / 2).extrude(P["hood_gasket_t"])
+      .translate((0, 0, P["riser_z0"] - P["hood_gasket_t"])))
+add("hood-gasket (bought, 3 mm foam ring 150 x 125, glued under the hood)", gk, FELT)
+assert P["hood_y0"] <= P["hm_collar_y"] - P["hood_gasket_od"] / 2, "the hood must cover the gasket ring"
 add("lint-duct", box(-168, 168, P["lint_duct_y0"], P["lint_duct_y0"] + P["lint_duct_depth"], 150, P["lint_duct_top"]), DUCT)   # 2 mm from each front stub, behind the ring bolts' nuts
 add("lint-duct-transition", box(-110, 110, P["lint_duct_y0"] + P["lint_duct_depth"], P["blower_y0"], 50, 190), DUCT)
 
@@ -1093,8 +1221,9 @@ ml, md = P["motor_len"], P["motor_d"]
 motor = cq.Workplane("XZ").center(0, mz).circle(md / 2).extrude(-(ml - 24)).translate((0, my0 + 12, 0))           # frame
 for yy in (my0, my0 + ml - 12):                                                                                    # end bells
     motor = motor.union(cq.Workplane("XZ").center(0, mz).circle(md / 2 - 10).extrude(-12).translate((0, yy, 0)))
-motor = motor.union(cq.Workplane("XZ").center(0, mz).circle(7.5).extrude(-(my0 - (P["blower_y0"] + P["blower_w"]))).translate((0, P["blower_y0"] + P["blower_w"], 0)))   # front shaft to the blower
-motor = motor.union(cq.Workplane("XZ").center(0, mz).circle(7.5).extrude(-4).translate((0, my0 + ml, 0)))          # rear shaft to the pulley
+msr = P["motor_shaft_d"] / 2
+motor = motor.union(cq.Workplane("XZ").center(0, mz).circle(msr).extrude(-(my0 - (P["blower_y0"] + P["blower_w"]))).translate((0, P["blower_y0"] + P["blower_w"], 0)))   # front shaft to the blower
+motor = motor.union(cq.Workplane("XZ").center(0, mz).circle(msr).extrude(-4).translate((0, my0 + ml, 0)))          # rear shaft to the pulley
 motor = motor.union(box(-25, 25, my0 + 70, my0 + 130, mz + md / 2 - 5, mz + md / 2 + 20))                          # terminal box
 add("motor (bought)", motor, BOUGHT)
 for i, yy in enumerate((my0 + 25, my0 + ml - 55)):   # two cradle mounts from the motor mount kit, bolted to the base pan
@@ -1104,25 +1233,336 @@ pulley = cq.Workplane("XZ").center(0, mz).circle(P["motor_pulley_d"] / 2).extrud
 for k in range(4):   # four grooves between the five ribs
     gy = P["belt_y"] - 4.5 + 3.0 * k
     pulley = pulley.cut(cq.Workplane("XZ").center(0, mz).circle(P["motor_pulley_d"] / 2 + 1).circle(P["motor_pulley_d"] / 2 - 1.2).extrude(-1.2).translate((0, gy - 0.6, 0)))
-pulley = pulley.union(cq.Workplane("XZ").center(0, mz).circle(10.0).extrude(-6).translate((0, P["belt_y"] + 8, 0)))   # hub with the set screw
+pulley = pulley.union(cq.Workplane("XZ").center(0, mz).circle(P["motor_pulley_d"] / 2 + 1.0).extrude(-6).translate((0, P["belt_y"] + 8, 0)))   # hub with the set screw
 add("pulley (bought)", pulley, BOUGHT)
+P["drum_rpm"] = 1725.0 * P["motor_pulley_d"] / P["drum_d"]
+assert 45.0 <= P["drum_rpm"] <= 57.0, f"drum speed {P['drum_rpm']:.1f} rpm is outside the 45 to 55 target (pulley {P['motor_pulley_d']})"
 blower = cq.Workplane("XZ").center(0, mz).circle(P["blower_d"] / 2).extrude(-P["blower_w"]).translate((0, P["blower_y0"], 0))
 blower = blower.cut(cq.Workplane("XZ").center(0, mz).circle(65.0).extrude(-8).translate((0, P["blower_y0"], 0)))     # inlet mouth, facing the transition
 blower = blower.union(box(100, 270, P["blower_y0"] + 26, my0, mz - 10, mz + 70))                                     # tangential outlet turning into the exhaust duct
 add("blower (bought)", blower, BOUGHT)
 P["exhaust_y0"] = my0
-add("heat-module-tray", box(P["tray_x0"], P["tray_x0"] + P["tray_w"], P["tray_y0"], P["tray_y0"] + P["tray_depth"], e + es, e + es + P["t_tray"]), STEEL)
-hm_top = e + es + 2 + 160
-hm = box(P["tray_x0"] + 20, P["tray_x0"] + P["tray_w"] - 20, P["tray_y0"] + 20, P["tray_y0"] + P["tray_depth"] - 20, e + es + 2, hm_top)
-hm = hm.union(box(-120, 120, 580, 640, hm_top, P["riser_z0"] - 1.0))      # outlet collar up to 1 mm under the hood
-add("heat-module (envelope)", hm, BOUGHT)
-assert P["riser_z0"] - 1.0 > hm_top, "the hood must clear the module's top"
-add("power-module (envelope)", box(P["pm_x0"], P["pm_x0"] + P["pm_w"], P["pm_y0"], P["pm_y0"] + P["pm_depth"], e, e + P["pm_h"]), BOUGHT)
 exh = (cq.Workplane("XZ").center(P["exhaust_x"], P["exhaust_z"]).circle(P["exhaust_d"] / 2).extrude(-(D - P["exhaust_y0"]))
        .translate((0, P["exhaust_y0"], 0)))
 add("exhaust-duct (bought)", exh, DUCT)
-# cord: strain relief bushing through the base pan under the power module (body inside the bay, locknut under the pan),
-# the cord up into the power module and down under the pan to the back, on the height the feet give
+
+# ---------------------------------------------------------------------------
+# Electric heat module (draft 7): a laser-cut duct box on the tray, joined with 20x20x2 aluminium angle and M4 button
+# heads with nuts (no brake, no rivets), the element on two angle rails inside, a round catalog collar on top under the
+# riser's hood, the contactor and the terminal strips on a DIN rail on a plate behind the box. Everything here slides
+# out the back with the tray. Part names start with "heat-module" so the motion check moves them together.
+# ---------------------------------------------------------------------------
+m4b8 = button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 8.0, 2.5)
+m4n_ = nut(P["m4_nut_af"], P["m4_nut_h"], 4.2)
+A_L, A_T = 20.0, 2.0                                       # 20 x 20 x 2 aluminium angle
+tz1 = e + es + P["t_tray"]                                 # tray top face (61.5)
+ty0, ty1 = P["tray_y0"], P["tray_y0"] + P["tray_depth"]
+bx, by0, by1, td = P["hm_box_x"], P["hm_box_y0"], P["hm_box_y1"], P["t_duct"]
+bz1 = tz1 + P["hm_box_h"]                                  # top face of the box's top plate
+wz1 = bz1 - td                                             # walls end under the top plate
+HM_BY = (470.0, 580.0)                                     # bolt rows along the side walls (Y)
+HM_BX = (-100.0, 0.0, 100.0)                               # bolt columns along the end walls (X)
+Z_BOT, Z_TOP, Z_CNR = tz1 + 10.0, wz1 - 6.5, (tz1 + A_L + wz1 + A_T - A_L) / 2   # bolt heights on the bottom angles' legs, the top angles' legs, the corner angles
+hm_hw, hm_nuts = [], []
+
+
+def angle_x(x0, x1, y_v, sy, z_v, sz):
+    """A 20x20x2 angle along X from x0 to x1: vertical leg from y_v growing toward sy (+1/-1), from z_v growing toward sz;
+    horizontal leg at the vertical leg's end z_v, growing from y_v toward sy. Returns the solid (holes cut by the caller)."""
+    leg_v = box(x0, x1, min(y_v, y_v + sy * A_T), max(y_v, y_v + sy * A_T), min(z_v, z_v + sz * A_L), max(z_v, z_v + sz * A_L))
+    leg_h = box(x0, x1, min(y_v, y_v + sy * A_L), max(y_v, y_v + sy * A_L), min(z_v, z_v + sz * A_T), max(z_v, z_v + sz * A_T))
+    return leg_v.union(leg_h)
+
+
+def angle_y(y0, y1, x_v, sx, z_v, sz):
+    leg_v = box(min(x_v, x_v + sx * A_T), max(x_v, x_v + sx * A_T), y0, y1, min(z_v, z_v + sz * A_L), max(z_v, z_v + sz * A_L))
+    leg_h = box(min(x_v, x_v + sx * A_L), max(x_v, x_v + sx * A_L), y0, y1, min(z_v, z_v + sz * A_T), max(z_v, z_v + sz * A_T))
+    return leg_v.union(leg_h)
+
+
+def angle_z(z0, z1, x_v, sx, y_v, sy):
+    """A vertical corner angle: one leg in the plane x = x_v growing toward sx, the other in y = y_v growing toward sy."""
+    leg_x = box(min(x_v, x_v + sx * A_T), max(x_v, x_v + sx * A_T), min(y_v, y_v + sy * A_L), max(y_v, y_v + sy * A_L), z0, z1)
+    leg_y = box(min(x_v, x_v + sx * A_L), max(x_v, x_v + sx * A_L), min(y_v, y_v + sy * A_T), max(y_v, y_v + sy * A_T), z0, z1)
+    return leg_x.union(leg_y)
+
+
+def hole_x(solid, y, z):
+    return solid.cut(cq.Workplane("YZ").center(y, z).circle(2.25).extrude(2000).translate((-1000, 0, 0)))
+
+
+def hole_y(solid, x, z):
+    return solid.cut(cq.Workplane("XZ").center(x, z).circle(2.25).extrude(-2000).translate((0, -500, 0)))
+
+
+def hole_z(solid, x, y):
+    return solid.cut(cq.Workplane("XY").center(x, y).circle(2.25).extrude(3000).translate((0, 0, -500)))
+
+
+def joint(p_head, n, p_nut=None, length=8.0):
+    """An M4 button head with its head on the surface point p_head (outward normal n) and, if given, a nut with its base on p_nut facing -n."""
+    hm_hw.append(place(button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], length, 2.5), p_head, n))
+    if p_nut is not None:
+        hm_nuts.append(place(m4n_, p_nut, tuple(-c for c in n)))
+
+
+# the tray: on the two 2020 rails, bonded with an M6 stud at the rear right
+tray_holes = [(sx * 160.0, yy, P["m4_hole"]) for sx in (-1, 1) for yy in HM_BY]                  # side angles and tray to the rails' top slots (T-nuts)
+tray_holes += [(x, by0 + td + A_L / 2, P["m4_hole"]) for x in HM_BX]                              # front inside angle
+tray_holes += [(x, by1 - td - A_L / 2, P["m4_hole"]) for x in HM_BX]                              # rear inside angle
+tray_holes += [(x, P["hm_plate_y"] + 1.5 + A_L / 2, P["m4_hole"]) for x in HM_BX]                 # terminal plate angle
+tray_holes += [(140.0, 680.0, 6.6)]                                                                # bonding stud
+plate_xy("heat-module-tray", P["tray_x0"], P["tray_x0"] + P["tray_w"], ty0, ty1, e + es, P["t_tray"], holes=tray_holes)
+assert ty0 >= (P["belt_y"] + BW / 2 + 1.0 + 4.0) + 4.0 + 3.0, "the tray starts at least 3 behind the idler spring (its centre line is set with the idler below)"
+assert by0 >= ty0 + 2.0 and by1 + 2.0 <= ty1, "the box sits on the tray"
+# the box walls (1.5 mm, same stock as the panels): side walls full length outside the end walls; holes for the angles
+side_holes_hm = [(yy, Z_BOT, P["m4_hole"]) for yy in HM_BY] + [(yy, Z_TOP, P["m4_hole"]) for yy in HM_BY] + [(yy, Z_CNR, P["m4_hole"]) for yy in (by0 + A_L / 2, by1 - A_L / 2)]
+iy, iz = P["hm_inlet_y"], P["hm_inlet_z"]
+plate_yz("heat-module-wall-left", by0, by1, tz1, wz1, -bx, td, holes=side_holes_hm,
+         rect_cuts=[((iy[0] + iy[1]) / 2, (iz[0] + iz[1]) / 2, iy[1] - iy[0], iz[1] - iz[0])], r=P["small_corner_r"])
+tc = P["hm_term_cut"]
+plate_yz("heat-module-wall-right", by0, by1, tz1, wz1, bx - td, td, holes=side_holes_hm, rect_cuts=[tc], r=P["small_corner_r"])
+end_holes_hm = [(x, Z_BOT, P["m4_hole"]) for x in HM_BX] + [(x, Z_TOP, P["m4_hole"]) for x in HM_BX] + [(sx * (bx - A_L / 2), Z_CNR, P["m4_hole"]) for sx in (-1, 1)]
+plate_xz("heat-module-wall-front", -bx + td, bx - td, tz1, wz1, by0, td, holes=end_holes_hm, r=P["small_corner_r"])
+plate_xz("heat-module-wall-rear", -bx + td, bx - td, tz1, wz1, by1 - td, td, holes=end_holes_hm, r=P["small_corner_r"])
+# the top plate: lid, held by the top angles' legs; the collar's hole and flange holes; the thermostats' holes
+cy, cd_ = P["hm_collar_y"], P["hm_collar_d"]
+top_holes_hm = [(sx * (bx - A_L / 2), yy, P["m4_hole"]) for sx in (-1, 1) for yy in HM_BY]
+top_holes_hm += [(x, yy, P["m4_hole"]) for x in HM_BX for yy in (by0 + A_L / 2, by1 - A_L / 2)]
+top_holes_hm += [(cx_, cy_, P["m4_hole"]) for (cx_, cy_) in ((70.0, cy), (-70.0, cy), (0.0, cy + 70.0), (0.0, cy - 70.0))]
+tx_, ty_ = P["hm_thermostat_x"], P["hm_thermostat_y"]
+top_holes_hm += [(sx * tx_, ty_ + k, P["m4_hole"]) for sx in (-1, 1) for k in (-20.0, 20.0)]
+plate_xy("heat-module-top", -bx, bx, by0, by1, wz1, td, holes=top_holes_hm, circ_cuts=[(0, cy, cd_ + 1.0)], r=P["small_corner_r"])
+
+# the angles. Bottom: outside on the side walls (their legs on the tray, bolted into the tray rails' top slots, which also
+# holds the tray), inside on the end walls (legs on the tray, nuts under it). Top: outside, legs on the lid. Corners:
+# outside, between the bottom and top angles' legs. Element rails: inside the side walls, top leg under the element.
+ang_bottom, ang_top, ang_corner, ang_rails = [], [], [], []
+for sx in (-1, 1):
+    xo = sx * bx                                                    # the side wall's outer face
+    a = angle_y(by0, by1, xo, sx, tz1, +1)                          # outside bottom angle
+    for yy in HM_BY:
+        a = hole_x(a, yy, Z_BOT); a = hole_z(a, sx * 160.0, yy)
+        joint((xo + sx * A_T, yy, Z_BOT), (sx, 0, 0), (xo - sx * (td + A_T), yy, Z_BOT))   # through the wall into the element rail's leg
+        joint((sx * 160.0, yy, tz1 + A_T), (0, 0, 1))                                        # into the tray rail's top slot (T-nut)
+    ang_bottom.append(a)
+    a = angle_y(by0 + A_L, by1 - A_L, xo + sx * A_T, -sx, bz1 + A_T, -1)   # outside top angle from its outer top corner, between the end walls' top angles
+    for yy in HM_BY:
+        a = hole_x(a, yy, Z_TOP); a = hole_z(a, sx * (bx - A_L / 2), yy)
+        joint((xo + sx * A_T, yy, Z_TOP), (sx, 0, 0), (xo - sx * td, yy, Z_TOP))
+        joint((sx * (bx - A_L / 2), yy, bz1 + A_T), (0, 0, 1), (sx * (bx - A_L / 2), yy, wz1))
+    ang_top.append(a)
+    r_ = angle_y(by0 + td + A_T, by1 - td - A_T, xo - sx * td, -sx, tz1 + A_L, -1)   # element rail: vertical leg on the wall's inside, top leg inward, between the inside bottom angles
+    for yy in HM_BY:
+        r_ = hole_x(r_, yy, Z_BOT)
+    ang_rails.append(r_)
+    for (yo, sy) in ((by0, -1), (by1, +1)):                         # corner angles
+        a = angle_z(tz1 + A_L, bz1 + A_T - A_L, xo + sx * A_T, -sx, yo + sy * A_T, -sy)   # from its outer corner, legs inward along both walls
+        a = hole_x(a, yo - sy * A_L / 2, Z_CNR); a = hole_y(a, sx * (bx - A_L / 2), Z_CNR)
+        joint((xo + sx * A_T, yo - sy * A_L / 2, Z_CNR), (sx, 0, 0), (xo - sx * td, yo - sy * A_L / 2, Z_CNR))
+        joint((sx * (bx - A_L / 2), yo + sy * A_T, Z_CNR), (0, sy, 0), (sx * (bx - A_L / 2), yo - sy * td, Z_CNR))
+        ang_corner.append(a)
+for (yo, sy) in ((by0, -1), (by1, +1)):
+    a = angle_x(-bx + td + A_T, bx - td - A_T, yo - sy * td, -sy, tz1, +1)   # inside bottom angle, between the element rails' legs
+    for x in HM_BX:
+        a = hole_y(a, x, Z_BOT); a = hole_z(a, x, yo - sy * (td + A_L / 2))
+        joint((x, yo, Z_BOT), (0, sy, 0), (x, yo - sy * (td + A_T), Z_BOT))
+        joint((x, yo - sy * (td + A_L / 2), tz1 + A_T), (0, 0, 1), (x, yo - sy * (td + A_L / 2), e + es))
+    ang_bottom.append(a)
+    a = angle_x(-bx, bx, yo + sy * A_T, -sy, bz1 + A_T, -1)         # outside top angle on the end wall, from its outer top corner
+    for x in HM_BX:
+        a = hole_y(a, x, Z_TOP); a = hole_z(a, x, yo - sy * A_L / 2)
+        joint((x, yo + sy * A_T, Z_TOP), (0, sy, 0), (x, yo - sy * td, Z_TOP))
+        joint((x, yo - sy * A_L / 2, bz1 + A_T), (0, 0, 1), (x, yo - sy * A_L / 2, wz1))
+    ang_top.append(a)
+add("heat-module-angles-bottom (20x20x2 aluminium angle, 2 x 205 outside, 2 x 283 inside)", compound(ang_bottom), ALU)
+add("heat-module-angles-top (20x20x2 aluminium angle, 2 x 165, 2 x 290)", compound(ang_top), ALU)
+add("heat-module-angles-corner (20x20x2 aluminium angle, 4 x 72)", compound(ang_corner), ALU)
+add("heat-module-element-rails (20x20x2 aluminium angle, 2 x 198)", compound(ang_rails), ALU)
+cut_list.append(("heat-module angles", "angle 20x20x2 aluminum", 205, 2, "box bottom, outside the side walls"))
+cut_list.append(("heat-module angles", "angle 20x20x2 aluminum", round(2 * (bx - td - A_T), 1), 2, "box bottom, inside the end walls"))
+cut_list.append(("heat-module angles", "angle 20x20x2 aluminum", round(by1 - by0 - 2 * A_L, 1), 2, "lid, side walls"))
+cut_list.append(("heat-module angles", "angle 20x20x2 aluminum", round(2 * bx, 1), 2, "lid, end walls"))
+cut_list.append(("heat-module angles", "angle 20x20x2 aluminum", round(bz1 + A_T - A_L - (tz1 + A_L), 1), 4, "box corners"))
+cut_list.append(("heat-module angles", "angle 20x20x2 aluminum", round(by1 - by0 - 2 * (td + A_T), 1), 2, "element rails, inside the side walls"))
+cut_list.append(("heat-module angles", "angle 20x20x2 aluminum", round(2 * bx, 1), 1, "terminal plate foot"))
+
+# the element: a catalog open-coil element on its frame, lying along X on the rails' top legs; terminals out the right end
+el, ew, eh, ez0 = P["hm_elem_l"], P["hm_elem_w"], P["hm_elem_h"], P["hm_elem_z0"]
+ey0 = (by0 + by1) / 2 - ew / 2
+elem = box(-el / 2, el / 2, ey0, ey0 + ew, ez0, ez0 + eh)
+elem = elem.union(box(el / 2, bx + 12.0, tc[0] - 10.0, tc[0] + 10.0, tc[1] - 6.0, tc[1] + 6.0))   # the two terminals, through the right wall's opening
+add("heat-module-element (bought, 279838 class open-coil element on its frame, envelope)", elem, BOUGHT)
+assert ez0 >= tz1 + A_L - A_T - 1e-6 and ez0 + eh <= wz1 - P["m4_nut_h"] - 2, "the element must sit on the rails under the lid's nuts"
+assert -el / 2 >= -bx + td + A_T + 2 and ey0 >= by0 + td + A_T and ey0 + ew <= by1 - td - A_T, "the element must fit inside the box"
+# the collar: a 125 flanged starting collar on the lid, its rim 3 under the hood's gasket; four M4 through the flange
+ch0 = bz1
+collar = cq.Workplane("XY").center(0, cy).circle(cd_ / 2).circle(cd_ / 2 - 0.6).extrude(P["hm_collar_top"] - ch0).translate((0, 0, ch0))
+collar = collar.union(cq.Workplane("XY").center(0, cy).circle(P["hm_collar_flange_d"] / 2).circle(cd_ / 2 - 0.6).extrude(1.0).translate((0, 0, ch0)))
+for (cx_, cy_) in ((70.0, cy), (-70.0, cy), (0.0, cy + 70.0), (0.0, cy - 70.0)):
+    collar = collar.cut(cq.Workplane("XY").center(cx_, cy_).circle(2.25).extrude(4).translate((0, 0, ch0 - 1)))
+    joint((cx_, cy_, ch0 + 1.0), (0, 0, 1), (cx_, cy_, wz1))
+add("heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)", collar, DUCT)
+assert P["hm_collar_top"] + 3.0 <= P["riser_z0"], "the collar must stop 3 under the hood"
+P["hm_collar_area"] = math.pi * (cd_ / 2) ** 2
+P["hm_inlet_area"] = (iy[1] - iy[0]) * (iz[1] - iz[0])
+# the thermostats: high-limit and thermal cut-off from the 279816 class kit, on brackets on the lid beside the collar
+thermos = []
+for sx in (-1, 1):
+    brk_t = box(sx * tx_ - 7.0, sx * tx_ + 7.0, ty_ - 27.0, ty_ + 27.0, bz1, bz1 + 2.0)      # mounting bracket, holes 40 apart
+    body = box(sx * tx_ - 11.0, sx * tx_ + 11.0, ty_ - 11.0, ty_ + 11.0, bz1 + 2.0, bz1 + 15.0)   # the disc thermostat's body
+    t_ = brk_t.union(body)
+    for k in (-20.0, 20.0):
+        t_ = t_.cut(cq.Workplane("XY").center(sx * tx_, ty_ + k).circle(2.25).extrude(5).translate((0, 0, bz1 - 1)))
+        joint((sx * tx_, ty_ + k, bz1 + 2.0), (0, 0, 1), (sx * tx_, ty_ + k, wz1))
+    thermos.append(t_)
+assert tx_ - 11.0 >= P["hm_collar_flange_d"] / 2 + 3.0 and tx_ + 11.0 <= bx - A_L - 2.0, "thermostats between the collar's flange and the lid's side angles"
+add("heat-module-thermostats (bought, 279816 class high-limit and thermal cut-off, envelopes)", compound(thermos), BOUGHT)
+# the terminal plate behind the box: 1.5 mm, 100 tall, on an angle foot bolted to the tray; DIN rail on its rear face
+py_, ph_ = P["hm_plate_y"], P["hm_plate_h"]
+RAIL_ZC = tz1 + ph_ / 2
+plate_holes_hm = [(x, Z_BOT, P["m4_hole"]) for x in (-120.0, 0.0, 120.0)] + [(x, RAIL_ZC, P["m4_hole"]) for x in (-120.0, 120.0)]
+plate_xz("heat-module-terminal-plate", -bx, bx, tz1, tz1 + ph_, py_, 1.5, holes=plate_holes_hm, r=P["small_corner_r"])
+a = angle_x(-bx, bx, py_ + 1.5, +1, tz1, +1)
+for x in (-120.0, 0.0, 120.0):
+    a = hole_y(a, x, Z_BOT)
+    joint((x, py_, Z_BOT), (0, -1, 0), (x, py_ + 1.5 + A_T, Z_BOT))
+for x in HM_BX:
+    a = hole_z(a, x, py_ + 1.5 + A_L / 2)
+    joint((x, py_ + 1.5 + A_L / 2, tz1 + A_T), (0, 0, 1), (x, py_ + 1.5 + A_L / 2, e + es))
+add("heat-module-terminal-angle (20x20x2 aluminium angle, 290)", a, ALU)
+
+
+def din_rail(x0, x1, y_face, zc):
+    """A 35 x 7.5 top-hat DIN rail along X with its web on a vertical plate's face at y_face; the devices clip on at y_face + 7.5."""
+    web = box(x0, x1, y_face, y_face + 1.0, zc - 12.5, zc + 12.5)
+    sides = box(x0, x1, y_face, y_face + 7.5, zc - 13.5, zc - 12.5).union(box(x0, x1, y_face, y_face + 7.5, zc + 12.5, zc + 13.5))
+    brims = box(x0, x1, y_face + 6.5, y_face + 7.5, zc - 17.5, zc - 13.5).union(box(x0, x1, y_face + 6.5, y_face + 7.5, zc + 13.5, zc + 17.5))
+    return web.union(sides).union(brims)
+
+
+def din_devices(items, x0, y_face, zc):
+    """Device envelopes clipped on a rail from x0 rightward: items are (label, width, height across the rail, depth off the plate)."""
+    sols, x = [], x0
+    for (label, w, h, d) in items:
+        sols.append(box(x, x + w, y_face + 7.5, y_face + 7.5 + d, zc - h / 2, zc + h / 2))
+        x += w
+    return sols, x
+
+
+hm_rail_y = py_ + 1.5
+hm_rail = din_rail(-140.0, 140.0, hm_rail_y, RAIL_ZC)
+for x in (-120.0, 120.0):
+    hm_rail = hm_rail.cut(cq.Workplane("XZ").center(x, RAIL_ZC).circle(3.15).extrude(-4).translate((0, hm_rail_y - 1, 0)))
+    joint((x, py_, RAIL_ZC), (0, -1, 0), (x, hm_rail_y + 1.0, RAIL_ZC))
+add("heat-module-din-rail (bought, 35 x 7.5 top hat, 280)", hm_rail, HARDWARE)
+CLAMP = ("end clamp", 9.5, 44.0, 33.0)
+HM_DEVICES = [CLAMP, ("X_HM mains: 4 x UK 6 N (L1, L2, N, PE)", 32.8, 47.0, 42.0), ("K_HEAT: LC1D18 class contactor", 45.0, 77.0, 86.0),
+              ("partition", 2.0, 47.0, 42.0), ("X_HM SELV: 4 x UK 2.5 N", 24.8, 41.0, 36.0), ("CS1 current switch", 60.0, 40.0, 30.0), CLAMP]
+hm_dev, hm_dev_x1 = din_devices(HM_DEVICES, -140.0, hm_rail_y, RAIL_ZC)
+add("heat-module-devices (bought, envelopes: 2 end clamps, X_HM mains and SELV strips, partition, K_HEAT, CS1)", compound(hm_dev), BOUGHT)
+assert hm_dev_x1 <= 140.0, "the heat module's devices must fit its rail"
+assert hm_rail_y + 7.5 + max(d for (_, _, _, d) in HM_DEVICES) + 15.0 <= D, "the heat module's devices must stay 15 clear of the rear panel"
+# the module's bonding stud and all its M4 hardware
+stud = place(hex_bolt_m6(16.0), (140.0, 680.0, e + es), (0, 0, -1))
+stud = stud.union(place(nut(P["m6_nut_af"], P["m6_nut_h"], 6.2), (140.0, 680.0, tz1), (0, 0, 1))).union(place(nut(P["m6_nut_af"], P["m6_nut_h"], 6.2), (140.0, 680.0, tz1 + 5.0 + 2.0), (0, 0, 1)))
+add("heat-module-bonding-stud (bought, M6 x 16 hex bolt, 2 nuts, star washers; the PE ring terminal goes between the nuts)", stud, HARDWARE)
+add(f"heat-module-hardware (bought, {len(hm_hw)} x M4 x 8 button head, {len(hm_nuts)} nuts, 4 T-nuts for the 6 mm slot)", compound(hm_hw + hm_nuts), HARDWARE)
+HM_TOP_LIMIT = P["riser_z0"] - 3.0
+
+# ---------------------------------------------------------------------------
+# Common power module (draft 7): a plate on the rear faces of the two rear cross rails, left of the riser, behind the
+# rear upper panel; five short DIN rails across it, mains on the lower three under a cover, SELV on the upper two above
+# a barrier. Serviced with the rear upper panel off. The cord and the bay harness come up through grommets in the bay
+# ceiling; the console harness goes up through a grommet in the top panel.
+# ---------------------------------------------------------------------------
+pm_hw, pm_nuts = [], []
+
+
+def pjoint(p_head, n, p_nut=None, length=8.0):
+    pm_hw.append(place(button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], length, 2.5), p_head, n))
+    if p_nut is not None:
+        pm_nuts.append(place(m4n_, p_nut, tuple(-c for c in n)))
+
+
+pz0, pz1, pxc = P["pm_z0"], P["pm_z1"], PM_X0 + PM_W / 2
+pm_face = PM_Y + tp                                                       # the plate's rear face: rails, standoffs and the barrier sit on it
+pm_rail_x = (PM_X0 + 5.0, PM_X0 + PM_W - 5.0)
+pm_bolt_x = (pm_rail_x[0] + 20.0, pm_rail_x[1] - 20.0)
+so_pts = [(PM_X0 + 10.0, P["pm_cover_z0"] + 10.0), (PM_X0 + PM_W - 10.0, P["pm_cover_z0"] + 10.0),
+          (PM_X0 + 10.0, P["pm_cover_z1"] - 10.0), (PM_X0 + PM_W - 10.0, P["pm_cover_z1"] - 10.0)]
+pm_holes = [(x, zc, P["m6_hole"]) for x in (PM_X0 + 15.0, PM_X0 + PM_W - 15.0) for zc in (bt - e / 2, Hb - e / 2)]   # M6 into the cross rails' rear slots
+pm_holes += [(x, zc, P["m4_hole"]) for zc in P["pm_rails_z"] for x in pm_bolt_x]                                     # the five rails
+pm_holes += [(x, z, P["m4_hole"]) for (x, z) in so_pts]                                                               # cover standoffs
+pm_holes += [(x, P["pm_barrier_z"] + A_L / 2, P["m4_hole"]) for x in (pxc - 45.0, pxc + 45.0)]                        # barrier angle
+pm_holes += [(PM_X0 + PM_W - 15.0, pz1 - 40.0, 6.6)]                                                                  # ground stud
+plate_xz("power-module-plate", PM_X0, PM_X0 + PM_W, pz0, pz1, PM_Y, tp, holes=pm_holes, bolt_side=+1)
+assert PM_X0 + PM_W + 10.0 <= -P["riser_w"] / 2, "the power module plate must clear the riser"
+assert pz0 <= bt - e + 10.0 and pz1 >= Hb - e + 10.0, "the plate must reach both cross rails"
+rails_pm, devs_pm = [], []
+PM_DEVICES = {
+    "A1": [CLAMP, ("X1 cord: 4 x UK 6 N (L1, L2, N, PE)", 32.8, 47.0, 42.0), ("CB1: 1P MCB", 17.5, 90.0, 60.0), ("F1: UK 5-HESI fuse terminal", 8.2, 65.0, 50.0), CLAMP],
+    "A2": [CLAMP, ("PSU: HDR-60-24", 52.5, 90.0, 54.5), ("K_MOTOR: LC1K0910BD class mini contactor", 45.0, 58.0, 57.0), CLAMP],
+    "A3": [CLAMP, ("X2 heat module mains: 4 x UK 6 N", 32.8, 47.0, 42.0), ("X3 motor and S1: 5 x UK 2.5 N", 31.0, 41.0, 36.0), CLAMP],
+    "B1": [CLAMP, ("RLY_MOTOR, RLY_HEAT, RLY_HEAT_LO: 3 x 38.51 class", 18.6, 93.0, 70.0), ("PTC1 to PTC3 in fuse terminals", 24.6, 65.0, 50.0), ("F2: UK 5-HESI", 8.2, 65.0, 50.0), ("X4 heat module SELV: 4 x UK 2.5 N", 24.8, 41.0, 36.0), CLAMP],
+    "B2": [CLAMP, ("X5 chassis switches: 10 x UK 2.5 N", 62.0, 41.0, 36.0), ("X6 sensors: 6 x UK 2.5 N", 37.2, 41.0, 36.0), CLAMP],
+}
+pm_dev_depth = 0.0
+for rail_name, zc in zip(("A1", "A2", "A3", "B1", "B2"), P["pm_rails_z"]):
+    r_ = din_rail(pm_rail_x[0], pm_rail_x[1], pm_face, zc)
+    for x in pm_bolt_x:
+        r_ = r_.cut(cq.Workplane("XZ").center(x, zc).circle(3.15).extrude(-4).translate((0, pm_face - 1, 0)))
+        pjoint((x, PM_Y, zc), (0, -1, 0), (x, pm_face + 1.0, zc))
+    rails_pm.append(r_)
+    sols, x1_ = din_devices(PM_DEVICES[rail_name], pm_rail_x[0], pm_face, zc)
+    assert x1_ <= pm_rail_x[1], f"rail {rail_name} devices overrun the rail"
+    pm_dev_depth = max(pm_dev_depth, max(d for (_, _, _, d) in PM_DEVICES[rail_name]))
+    add(f"power-module-rail-{rail_name}-devices (bought, envelopes: " + ", ".join(lbl for (lbl, _, _, _) in PM_DEVICES[rail_name] if lbl != "end clamp") + ", 2 end clamps)", compound(sols), BOUGHT)
+add("power-module-din-rails (bought, 5 x 35 x 7.5 top hat, 140)", compound(rails_pm), HARDWARE)
+assert pm_face + 7.5 + pm_dev_depth + 15.0 <= D, "the power module's devices must stay 15 clear of the rear upper panel"
+assert P["pm_rails_z"][2] + 47.0 / 2 + 5.0 <= P["pm_barrier_z"] <= P["pm_rails_z"][3] - 93.0 / 2 - 5.0, "the barrier must sit between the mains and SELV devices"
+# the barrier: an angle on the plate at the SELV boundary carrying a 1.5 mm shelf out to the devices' depth
+bz_ = P["pm_barrier_z"]
+ba = angle_x(PM_X0, PM_X0 + PM_W, pm_face, +1, bz_, +1)
+for x in (pxc - 45.0, pxc + 45.0):
+    ba = hole_y(ba, x, bz_ + A_L / 2)
+    pjoint((x, PM_Y, bz_ + A_L / 2), (0, -1, 0), (x, pm_face + A_T, bz_ + A_L / 2))
+    ba = hole_z(ba, x, pm_face + A_L / 2)
+    pjoint((x, pm_face + A_L / 2, bz_ + A_T + tp), (0, 0, 1), (x, pm_face + A_L / 2, bz_))
+add("power-module-barrier-angle (20x20x2 aluminium angle, 150)", ba, ALU)
+cut_list.append(("power-module-barrier-angle", "angle 20x20x2 aluminum", PM_W, 1, "mains to SELV barrier, on the plate"))
+plate_xy("power-module-barrier", PM_X0, PM_X0 + PM_W, pm_face + A_T, pm_face + 7.5 + pm_dev_depth, bz_ + A_T, tp,
+         holes=[(x, pm_face + A_L / 2, P["m4_hole"]) for x in (pxc - 45.0, pxc + 45.0)], r=P["small_corner_r"])
+# the cover over the mains rails: 1.5 mm on four M4 x 75 standoffs
+cz0, cz1, so_len = P["pm_cover_z0"], P["pm_cover_z1"], P["pm_cover_standoff"]
+cover_y = pm_face + so_len
+plate_xz("power-module-cover", PM_X0, PM_X0 + PM_W, cz0, cz1, cover_y, tp, holes=[(x, z, P["m4_hole"]) for (x, z) in so_pts])
+standoffs = []
+so_bar = hexagon(7.0, so_len).cut(cq.Workplane("XY").circle(2.1).extrude(10).translate((0, 0, -1))).cut(cq.Workplane("XY").circle(2.1).extrude(10).translate((0, 0, so_len - 9)))   # M4 bores, threads not drawn
+for (x, z) in so_pts:
+    standoffs.append(place(so_bar, (x, pm_face, z), (0, 1, 0)))
+    pjoint((x, PM_Y, z), (0, -1, 0))                     # plate to standoff
+    pjoint((x, cover_y + tp, z), (0, 1, 0))              # cover to standoff
+add("power-module-standoffs (bought, 4 x M4 x 75 hex standoffs, female both ends)", compound(standoffs), HARDWARE)
+assert cover_y + tp + 15.0 <= D, "the cover must stay 15 clear of the rear upper panel"
+assert cz1 <= bz_, "the cover ends at the barrier"
+assert cz0 >= bt + tp + P["m6_washer_t"] + P["m6_head_h"] + 2.0, "the cover must clear the bay ceiling's bolt heads on the rear rail"
+gs = (PM_X0 + PM_W - 15.0, pz1 - 40.0)
+stud = place(hex_bolt_m6(16.0), (gs[0], PM_Y, gs[1]), (0, -1, 0))
+stud = stud.union(place(nut(P["m6_nut_af"], P["m6_nut_h"], 6.2), (gs[0], pm_face, gs[1]), (0, 1, 0))).union(place(nut(P["m6_nut_af"], P["m6_nut_h"], 6.2), (gs[0], pm_face + 7.0, gs[1]), (0, 1, 0)))
+add("power-module-ground-stud (bought, M6 x 16 hex bolt, 2 nuts, star washers; the cord's PE ring terminal goes between the nuts)", stud, HARDWARE)
+add(f"power-module-hardware (bought, {len(pm_hw)} x M4 x 8 button head, {len(pm_nuts)} nuts)", compound(pm_hw + pm_nuts), HARDWARE)
+# the grommets: rubber, straddling the 1.5 mm plate
+grommets = []
+for (gx, gy, gd), gz in ((P["grommet_cord"], bt + tp / 2), (P["grommet_harness"], bt + tp / 2), (P["grommet_console"], Hb + tp / 2)):
+    g_ = cq.Workplane("XY").center(gx, gy).circle(gd / 2 - 0.1).circle(gd / 2 - 3.5).extrude(tp).translate((0, 0, gz - tp / 2))                # the neck, in the hole
+    for z_ in (gz - tp / 2 - 1.25, gz + tp / 2):                                                                                            # a flange either side of the plate
+        g_ = g_.union(cq.Workplane("XY").center(gx, gy).circle(gd / 2 + 3.0).circle(gd / 2 - 3.5).extrude(1.25).translate((0, 0, z_)))
+    grommets.append(g_)
+add("grommets (bought, 3 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1)", compound(grommets), RUBBER)
+
+# cord: strain relief bushing through the base pan at the rear left (body inside the bay, locknut under the pan), the cord
+# up through the bay and the ceiling grommet to X1 on the power module, and down under the pan to the back on the height the feet give
 cx, cyy = P["cord_x"], P["cord_y"]
 bush = hexagon(24.0, 8.0).union(cq.Workplane("XY").circle(10.0).extrude(10).translate((0, 0, 8)).edges(">Z").fillet(3.0))
 bush = bush.union(cq.Workplane("XY").circle(10.9).extrude(P["t_base"] + 5.5).translate((0, 0, -P["t_base"] - 5)))     # thread through the pan, as long as the locknut
@@ -1130,17 +1570,51 @@ bush = bush.union(hexagon(26.0, 5.0).translate((0, 0, -P["t_base"] - 5)))       
 bush = bush.cut(cq.Workplane("XY").circle(4.6).extrude(40).translate((0, 0, -20)))                                    # the cord passes through
 add("cord-bushing (bought, PG16 strain relief)", place(bush, (cx, cyy, 0.0), (0, 0, 1)), RUBBER)
 cord_z = -P["t_base"] - 10.5         # centre line of the run under the pan: 1 mm under the locknut, 3 above the floor with the feet run in
-cord = cq.Workplane("XY").center(cx, cyy).circle(4.5).extrude(e - cord_z).translate((0, 0, cord_z))                   # up into the power module
+cord = cq.Workplane("XY").center(cx, cyy).circle(4.5).extrude(P["cord_top_z"] - cord_z).translate((0, 0, cord_z))     # up through the bay and the ceiling grommet to X1
 cord = cord.union(cq.Workplane("XZ").center(cx, cord_z).circle(4.5).extrude(-(D + 70 - cyy)).translate((0, cyy, 0)))  # back under the pan, 70 past the panel
 cord = cord.union(cq.Workplane("XY").add(cq.Solid.makeSphere(4.5, cq.Vector(cx, cyy, cord_z))))                      # the bend
 add("power-cord (bought)", cord, RUBBER)
 assert cord_z - 4.5 > -(P["foot_height"] + P["t_base"]), "the cord must clear the floor under the pan"
+assert abs(P["grommet_cord"][0] - cx) < 1e-9 and abs(P["grommet_cord"][1] - cyy) < 1e-9, "the cord's grommet sits over its bushing"
+assert P["cord_top_z"] < P["pm_rails_z"][0] - 47.0 / 2, "the cord ends under X1"
+
+# rollers: four catalog drum rollers on ISO 7379 shoulder screws through the bulkheads (7b). The shoulder bears on the
+# bulkhead and the nut clamps it there; the roller turns on the shoulder between a 1.0 shim under the head and a spacer
+# against the bulkhead, with 0.5 end float. Front rollers flush with the drum's front end, rear ones 1.5 proud of its
+# rear end, so one 35 shoulder serves both.
 roller_w = 25.0   # catalog roller width, measured at V-106
+SH, THR, SP = P["roller_stud_shoulder"], P["roller_stud_thread"], P["roller_spacer"]
+roller_y = {"front": y0d + P["roller_inset"], "rear": y0d + L - P["roller_inset_rear"] - roller_w}
+
+
+def shoulder_screw():
+    """ISO 7379 10 x 35 M8 along +Z: head above z 0, shoulder z -35..0, thread below; the shim and spacer are separate."""
+    head = cq.Workplane("XY").circle(P["roller_stud_head_d"] / 2).extrude(P["roller_stud_head_h"]).edges(">Z").chamfer(0.8)
+    head = head.cut(hexagon(5.0, 4.0).translate((0, 0, P["roller_stud_head_h"] - 3.5)))
+    shoulder = cq.Workplane("XY").circle(5.0).extrude(SH + 0.5).translate((0, 0, -SH))
+    thread = cq.Workplane("XY").circle(4.0).extrude(THR + 0.5).translate((0, 0, -SH - THR)).faces("<Z").chamfer(0.6)
+    return head.union(shoulder).union(thread)
+
+
+stud_hw = []
 for i, (x, z, d) in enumerate(rollers):
-    r = cq.Workplane("XZ").center(x, z).circle(P["roller_d"] / 2).extrude(-roller_w).translate((0, y0d + L - P["roller_inset"] - roller_w, 0))
-    add(f"roller-rear-{i+1} (bought)", r, BOUGHT)
-    r = cq.Workplane("XZ").center(x, z).circle(P["roller_d"] / 2).extrude(-roller_w).translate((0, y0d + P["roller_inset"], 0))
-    add(f"roller-front-{i+1} (bought)", r, BOUGHT)
+    for end, sgn, bulk_face in (("front", +1, P["front_bulk_y"] + tb), ("rear", -1, P["rear_bulk_y"])):
+        ry0 = roller_y[end]
+        r = cq.Workplane("XZ").center(x, z).circle(P["roller_d"] / 2).circle(P["roller_bore_d"] / 2).extrude(-roller_w).translate((0, ry0, 0))
+        add(f"roller-{end}-{i+1} (bought)", r, BOUGHT)
+        n = (0, sgn, 0)
+        head_face = bulk_face + sgn * SH                                   # the shoulder's step bears on the bulkhead's drum-side face
+        stud_hw.append(place(shoulder_screw(), (x, head_face, z), n))
+        shim_y = ry0 + roller_w if sgn > 0 else ry0 - 1.0                  # 1.0 shim between the roller and the head
+        stud_hw.append(cq.Workplane("XZ").center(x, z).circle(8.0).circle(5.25).extrude(-1.0).translate((0, shim_y, 0)))
+        spc_y = bulk_face if sgn > 0 else bulk_face - SP                    # spacer 16 x 10.5 x 8.5 between the bulkhead and the roller
+        stud_hw.append(cq.Workplane("XZ").center(x, z).circle(8.0).circle(5.25).extrude(-SP).translate((0, spc_y, 0)))
+        far = bulk_face - sgn * tb                                          # the bulkhead's far face: washer and nut
+        stud_hw.append(place(cq.Workplane("XY").circle(8.0).circle(4.2).extrude(1.6), (x, far, z), (0, -sgn, 0)))
+        stud_hw.append(place(nut(13.0, 6.5, 8.2), (x, far - sgn * 1.6, z), (0, -sgn, 0)))
+        assert abs((spc_y + SP if sgn > 0 else spc_y) - (ry0 if sgn > 0 else ry0 + roller_w)) < 1e-6, "the spacer must reach the roller"
+        assert abs(abs(head_face - (shim_y + 1.0 if sgn > 0 else shim_y)) - 0.5) < 1e-6, "the roller's end float must be 0.5"
+add("hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)", compound(stud_hw), HARDWARE)
 
 # belt: the drawn path, offset to the belt's thickness, extruded to its width
 edges_ = []
@@ -1219,6 +1693,10 @@ add("hardware-idler-brackets (bought, 4 x M6 x 12 hex, nuts, through the base pa
 # ---------------------------------------------------------------------------
 # Export
 # ---------------------------------------------------------------------------
+# the whole heat module must pass under the hood (230) and the mid rear end rail (260) when the tray slides out the back
+hm_zmax = max((s_.val() if hasattr(s_, "val") else s_).BoundingBox().zmax for n, s_, _, _, _ in parts if n.startswith("heat-module"))
+assert hm_zmax <= HM_TOP_LIMIT + 1e-6, f"heat module reaches {hm_zmax}, over the hood's {P['riser_z0']} less 3"
+P["hm_zmax"] = hm_zmax
 assy = cq.Assembly(name="osa-dryer")
 for name, solid, color, plate, t in parts:
     assy.add(solid, name=name, color=color)
@@ -1339,3 +1817,5 @@ print("drum axis Z", P["drum_axis_z"], " H_body", P["H_body"], " H_total", round
       " lint slot area", round(P["lint_slot_area"]), " hood section", round(P["hood_area"]))
 print("drum sheet flat", round(P["drum_flat_w"], 1), "x", P["drum_l"], " belt drawn length", round(P["belt_len_est"], 1),
       " belt crosses the ceiling at X", round(P["belt_cross_left"], 2), "and", round(P["belt_cross_right"], 2), " feet", P["foot_height"])
+print("drum", round(P["drum_rpm"], 1), "rpm", " heat module top", round(P["hm_zmax"], 1), " collar area", round(P["hm_collar_area"]),
+      " inlet area", round(P["hm_inlet_area"]), " felt arcs", round(P["felt_long_len"]), "and", round(P["felt_short_len"]))

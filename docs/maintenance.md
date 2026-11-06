@@ -70,14 +70,14 @@ Unplug the dryer before opening any panel. The plug is the disconnect.
 - What to order: the filter from `bom.csv`.
 - How long: 1 min. No tools.
 
-### Drum support rollers (bom: CH-ROLLERS)
+### Drum support rollers and glides (bom: CH-ROLLERS, CH-ROLLER-STUDS, CH-GLIDES)
 
-- What fails: rollers flat-spot and their bearings dry out.
-- Roughly when: 10 to 20 years.
-- What it looks or sounds like: a thump once per drum turn (a flat roller), a rumble that changes with load, a drum that is hard to turn by hand with the belt off.
-- How to confirm: belt off, turn the drum by hand: it should coast. Front panel off, look at each roller: flat spots, cracks, a bearing that wobbles.
-- What to order: CH-ROLLERS, all four at once.
-- How long: 1 h.
+- What fails: rollers flat-spot and their bores dry out; a stud's nut works loose; a glide pad wears through and the drum walks against a bulkhead.
+- Roughly when: 10 to 20 years for the rollers; a loose nut in the first year if it was not torqued; glides 10 to 15 years.
+- What it looks or sounds like: a thump once per drum turn (a flat roller), a rumble that changes with load, a drum that is hard to turn by hand with the belt off, a scrape at a ring face (a worn glide).
+- How to confirm: belt off, turn the drum by hand: it should coast and have about 1 mm of end play between the glides. Front panel off, look at each roller: flat spots, cracks, play on its stud. Each front stud's nut is in front of the front bulkhead beside the lint duct; the rear ones are behind the rear bulkhead (rear upper panel off).
+- What to order: CH-ROLLERS, all four at once; a stud set if a shoulder is scored; glides in pairs.
+- How long: 1 h. A roller comes off its stud with the nut, the washer and the spacer; the drum is lifted a few mm with a block under it while that corner is bare.
 
 ### Drum sheet, rings, and seam (bom: CH-DRUM-SHEET, CH-DRUM-RINGS, CH-DRUM-HW)
 
@@ -88,13 +88,13 @@ Unplug the dryer before opening any panel. The plug is the disconnect.
 - What to order: hardware from CH-DRUM-HW; a new sheet (CH-DRUM-SHEET) if the wall is damaged, reusing the rings and baffles.
 - How long: 20 min for bolts; a day for a new sheet, which is the drum build in the build guide done again.
 
-### Felt seals
+### Felt seals (bom: CH-FELT)
 
-- What fails: the felt wears thin, lifts at the ends, and lets lint and air leak around the drum.
+- What fails: the felt wears thin, lifts at the ends next to the glides, and lets lint and air leak around the drum.
 - Roughly when: 10 to 15 years.
 - What it looks or sounds like: lint collecting in the base of the cabinet, a scraping sound at the drum edge, longer dry times (air bypassing the drum).
-- How to confirm: front panel off; the felt should be continuous, bonded down, and the drum edge should ride on it, not on metal.
-- What to order: the felt seals from `bom.csv` in the stated width.
+- How to confirm: front panel off (and rear upper panel off for the rear seal); each felt is two arcs with a glide in each gap, and should be continuous between the glides, bonded down, with the ring face riding on it, not on metal.
+- What to order: the felt from `bom.csv`, cut to the two arc lengths or the two DXFs.
 - How long: 1.5 h, including the adhesive's cure time stated on its tube.
 
 ### Door switches S1 and S2 (bom: CPM-S1, CPM-S2)
@@ -115,7 +115,7 @@ Unplug the dryer before opening any panel. The plug is the disconnect.
 - What it looks or sounds like: motor runs, STAT_AIRFLOW never comes on, no heat ever; or heat drops out at random with a healthy blower.
 - How to confirm: pull the tube and blow through it; check the tap on the blower housing is clear. With the motor running, measure X5:3 to X5:4: 0 V across the switch means it is closed (good); 24 V across it means it is open while air is moving.
 - What to order: CPM-PS1, same setpoint and pressure direction. Write the setpoint from commissioning on the label.
-- How long: 20 min. Rear lower panel off, two wires at X5, one tube.
+- How long: 20 min. Rear upper panel off for X5 (the power module is behind it, draft 7), rear lower panel off for the tube on the blower housing.
 
 ### Exhaust thermal fuse TF2 (bom: CPM-TF2)
 

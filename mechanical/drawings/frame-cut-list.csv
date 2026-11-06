@@ -18,8 +18,10 @@ rail-top-rear,40x40,610.0,1,end rail
 rail-top-left,40x40,670.0,1,side rail
 rail-top-right,40x40,670.0,1,side rail
 rail-top-rearcross,40x40,610.0,1,rear bulkhead cross rail
-tray-rail-1,20x20,360.0,1,2020 tray rail
-tray-rail-2,20x20,360.0,1,2020 tray rail
+tray-rail-1,20x20,750.0,1,"2020 tray rail, on the bottom end rails"
+tray-rail-2,20x20,750.0,1,"2020 tray rail, on the bottom end rails"
+felt-seal-long,"10 mm polyester felt, 18 wide strip",1282,2,"or cut to drawings/felt-seal-long.dxf; one per bulkhead, round the bottom"
+felt-seal-short,"10 mm polyester felt, 18 wide strip",396,2,"or cut to drawings/felt-seal-short.dxf; one per bulkhead, over the top"
 console-post-1,40x40,200.0,1,console post
 console-post-2,40x40,200.0,1,console post
 console-post-3,40x40,200.0,1,console post
@@ -29,6 +31,14 @@ console-rail-rear,40x40,610.0,1,console end rail
 console-rail-left,40x40,58.5,1,console side rail
 console-rail-right,40x40,58.5,1,console side rail
 baffle-1..3,angle 40x40x3 aluminum,480.0,3,"drum baffles, drilled on the drill press"
-belt (bought),"PJ poly-V, 5 ribs",2232,1,"length of the drawn path round the drum, the pulley and the idler; pick the nearest catalog J length (V-012)"
+belt (bought),"PJ poly-V, 5 ribs",2222,1,"length of the drawn path round the drum, the pulley and the idler; pick the nearest catalog J length (V-012)"
+heat-module angles,angle 20x20x2 aluminum,205,2,"box bottom, outside the side walls"
+heat-module angles,angle 20x20x2 aluminum,283.0,2,"box bottom, inside the end walls"
+heat-module angles,angle 20x20x2 aluminum,165.0,2,"lid, side walls"
+heat-module angles,angle 20x20x2 aluminum,290.0,2,"lid, end walls"
+heat-module angles,angle 20x20x2 aluminum,72.0,4,box corners
+heat-module angles,angle 20x20x2 aluminum,198.0,2,"element rails, inside the side walls"
+heat-module angles,angle 20x20x2 aluminum,290.0,1,terminal plate foot
+power-module-barrier-angle,angle 20x20x2 aluminum,150.0,1,"mains to SELV barrier, on the plate"
 idler-arm,flat bar 25x4 aluminum,175.4,1,"idler arm, two 8.5 holes and one 5.2 hole on the drill press"
 "idler-bracket, spring-bracket",angle 40x40x3 aluminum,50,2,"idler pivot and spring anchor, bolted through the base pan"

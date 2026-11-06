@@ -1,10 +1,10 @@
 # Common power module: wiring
 
-Draft 1, 2026-11-05. Status: paper design. Nothing has been built or tested. The KiCad schematic in `electrical/schematic/` is drawn from this document and must agree with it.
+Draft 2, 2026-11-06 (draft 1 2026-11-05). Status: paper design. Nothing has been built or tested. The KiCad schematic in `electrical/schematic/` is drawn from this document and must agree with it. Draft 2 changes only where the parts sit: the module is a plate with five short DIN rails behind the rear bulkhead, reached with the rear upper panel off (`DECISIONS.md` 2026-11-06, `docs/design-rules.md` section 4); every designator, terminal number and wire is as in draft 1. K_MOTOR becomes a mini contactor (LC1K0910BD class) for depth.
 
-The common power module is the metal box at the rear of the base that every build gets, whatever makes the heat. It takes the cord in, makes the 24 V rail, runs the motor, holds the interlock chain, and ends at two terminal strips for the heat module and two connectors for the control module. The ladder drawings `ladder-common-power-module.svg` and `ladder-heat-modules.svg` are the picture of this document; regenerate them with `ladder.py` after any change here.
+The common power module is the plate behind the rear bulkhead, left of the riser duct, that every build gets, whatever makes the heat. It takes the cord in, makes the 24 V rail, runs the motor, holds the interlock chain, and ends at two terminal strips for the heat module and two connectors for the control module. The ladder drawings `ladder-common-power-module.svg` and `ladder-heat-modules.svg` are the picture of this document; regenerate them with `ladder.py` after any change here.
 
-Every designator below appears on the ladder, in the BOM, and on the labels inside the box.
+Every designator below appears on the ladder, in the BOM, and on the labels on the plate and the cover.
 
 ## 1. Parts by designator
 
@@ -33,9 +33,9 @@ Every designator below appears on the ladder, in the BOM, and on the labels insi
 | T_LO | Cycling thermostat, low | Same, lower L-rating | 2 tabs |
 | J1 | Control connector | Mini-Fit Jr. 16-circuit receptacle housing with female crimp terminals, on a 250 mm flying lead | per `controls/uci-spec.md` 5.4 |
 | J2 | Sensor connector | JST XH 8-position housing with female crimp terminals, on a 250 mm flying lead | per `controls/uci-spec.md` 5.5 |
-| M1 | Motor (outside the box) | 120 V, 1/4 to 1/3 hp, 1725 rpm class, built-in thermal protector | L, N, PE |
+| M1 | Motor (in the bay) | 120 V, 1/4 to 1/3 hp, 1725 rpm class, built-in thermal protector | L, N, PE |
 
-Mounting: two DIN rails. Rail A (mains): X1, CB1, F1, K_MOTOR, X2, X3, and the PSU at the end of the rail with its output leads crossing to rail B through a grommeted slot in the barrier. Rail B (SELV): RLY_MOTOR, RLY_HEAT, RLY_HEAT_LO, PTC1 to PTC3, F2, X4, X5, X6. A laser-cut steel barrier stands between the rails, full height of the box, with one grommeted slot for the PSU output leads. The rails and the barrier are bonded to the box with star washers on bare metal.
+Mounting (draft 2): five 140 mm DIN rails across a 150 x 720 laser-cut steel plate on the rear faces of the cabinet's two rear cross rails, devices facing the back. Rail A is three rails under a cover: A1 (360 from the floor) X1, CB1, F1; A2 (470) the PSU and K_MOTOR; A3 (580) X2, X3. The PSU's output leads cross the barrier through a grommeted notch. Rail B is two rails above the barrier: B1 (700) RLY_MOTOR, RLY_HEAT, RLY_HEAT_LO, PTC1 to PTC3, F2, X4; B2 (820) X5, X6. The barrier is a 20x20x2 aluminium angle on the plate at 640 carrying a 1.5 mm steel shelf out to the devices' depth; the cover is 1.5 mm steel on four M4 x 75 standoffs over A1 to A3. The rails, the barrier, the cover and the plate are bonded to the ground stud at the plate's top right with star washers on bare metal, and the plate to the frame through its four M6. The cord comes up through the bay ceiling's grommet to X1; the bay harness (X2, X3, X5's door and air switch lines) goes down through the second ceiling grommet; the J1 and J2 leads go up through the top panel's grommet into the console. Device sizes in the model are from datasheets and listings (V-112).
 
 ## 2. Terminal map
 
@@ -44,7 +44,7 @@ Mounting: two DIN rails. Rail A (mains): X1, CB1, F1, K_MOTOR, X2, X3, and the P
 | X1:1 | L1 | mains | cord black |
 | X1:2 | L2 | mains | cord red (240 V cord only; empty on a 120 V cord) |
 | X1:3 | N | mains | cord white |
-| X1:4 | PE | mains | cord green; also the box ground stud |
+| X1:4 | PE | mains | cord green; also the plate's ground stud |
 | X2:1 | L1 to heat module | mains | heat module tray |
 | X2:2 | L2 to heat module | mains | heat module tray (electric module only) |
 | X2:3 | N to heat module | mains | heat module tray |
@@ -81,7 +81,7 @@ Colors follow the US convention on the mains side and NFPA 79 style on the DC si
 | 1 | cord L1 | X1:1 | 10 AWG (cord) | black | 240 V cord. A 120 V cord is 14 AWG. |
 | 2 | cord L2 | X1:2 | 10 AWG (cord) | red | 240 V cord only |
 | 3 | cord N | X1:3 | 10 AWG (cord) | white | |
-| 4 | cord PE | X1:4 | 10 AWG (cord) | green | ring terminal on the box ground stud, then X1:4 |
+| 4 | cord PE | X1:4 | 10 AWG (cord) | green | ring terminal on the plate's ground stud, then X1:4 |
 | 5 | X1:1 | X2:1 | 10 AWG, 105 °C | black | carries element current on the electric build |
 | 6 | X1:2 | X2:2 | 10 AWG, 105 °C | red | |
 | 7 | X1:3 | X2:3 | 10 AWG, 105 °C | white | |
@@ -98,7 +98,7 @@ Colors follow the US convention on the mains side and NFPA 79 style on the DC si
 | 18 | X1:4 | PSU PE | 18 AWG | green | |
 | 19 | PSU +V | +24V bus (rail B distribution block) | 18 AWG | blue | through the barrier slot |
 | 20 | PSU -V | 0V bus (rail B distribution block) | 18 AWG | white/blue | through the barrier slot |
-| 21 | 0V bus | box ground stud | 18 AWG | green | the one bond between 0V and PE |
+| 21 | 0V bus | plate ground stud | 18 AWG | green | the one bond between 0V and PE |
 | 22 | +24V bus | X5:1 | 18 AWG | blue | S2 feed |
 | 23 | X5:2 | 24V_ILK bus | 18 AWG | blue | S2 return; label the bus 24V_ILK |
 | 24 | 24V_ILK bus | RLY_MOTOR 11 | 18 AWG | blue | |
@@ -148,11 +148,11 @@ All mains terminations are crimped ferrules (into screw or spring blocks) or cri
 
 ## 4. Separation, bonding, and labels
 
-- Rail A carries mains; rail B carries SELV. The barrier between them is full height, and the only crossing is the PSU output through a grommet. No SELV wire runs along a mains bundle. Where the J1 and J2 leads leave the box, they leave through their own grommet, not the cord's.
-- The box, both rails, the barrier, the lid, the heat module tray, and every panel carrying anything electrical are bonded to X1:4 through the ground stud, each with its own ring terminal and a star washer on bare metal. One bond each; no daisy chains through hinges or slides.
+- Rails A1 to A3 carry mains; rails B1 and B2 carry SELV. The barrier between them runs the plate's full width out to the devices' depth, and the only crossing is the PSU output through a grommeted notch. No SELV wire runs along a mains bundle. The J1 and J2 leads leave through the top panel's grommet, the bay harness through its own ceiling grommet, never the cord's.
+- The plate, every rail, the barrier, the cover, the heat module tray (its own M6 stud), and every panel carrying anything electrical are bonded to X1:4 through the ground stud, each with its own ring terminal and a star washer on bare metal. One bond each; no daisy chains through hinges or slides.
 - 0V is bonded to PE once, by wire 21. Nothing else connects 0V to the frame, including the control module faceplate (which is bonded to the panel, not to 0V).
 - Every terminal block is numbered as in section 2 with a printed marker strip. Every wire carries its number from section 3 on a heat-shrink or wrap-around label at both ends. The ladder drawing and this document are fixed to the inside of the lid in a plastic sleeve.
-- A label on the lid: "Unplug the dryer before opening. 240 V inside. Rail A is mains. Rail B is 24 V."
+- A label on the cover: "Unplug the dryer before opening. 240 V inside. Rails A1 to A3 under this cover are mains. Rails B1 and B2 above are 24 V."
 
 ## 5. Cord variants
 

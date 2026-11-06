@@ -641,7 +641,7 @@ for path in step_files:
         if opp:
             n1, a1, c1 = opp[0]
             t = abs(sum((a - b2) * c for a, b2, c in zip(c0, c1, n0)))
-            if t <= 8.5 and a0 > 0.5 * a1 and a1 > 0.5 * a0 and abs(m["volume"] - a0 * t) < 0.5 * m["volume"]:   # and nothing much outside the two faces
+            if t <= 10.5 and a0 > 0.5 * a1 and a1 > 0.5 * a0 and abs(m["volume"] - a0 * t) < 0.5 * m["volume"]:   # and nothing much outside the two faces (10.5: the rear felt is 10 thick, draft 7)
                 m["flat"] = 1
                 m["thickness"] = t
                 m["normal"] = n0
@@ -735,16 +735,31 @@ CLEAR_PAIRS = [
     ("console-face", "console-cap"), ("front-bulkhead", "bay-ceiling"), ("rear-bulkhead", "bay-ceiling"),
     ("lint-duct", "rail-mid-front-left"), ("lint-duct", "rail-mid-front-right"), ("lint-duct", "front-bulkhead"),
     ("lint-duct", "front-upper-panel"), ("riser-duct", "rear-bulkhead"), ("riser-duct", "rail-mid-rear"),
-    ("riser-duct", "bay-ceiling"), ("heat-module (envelope)", "heat-module-tray"), ("heat-module (envelope)", "bay-ceiling"),
+    ("riser-duct", "bay-ceiling"), ("heat-module-top", "bay-ceiling"), ("heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)", "riser-duct"),
+    ("heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)", "hood-gasket (bought, 3 mm foam ring 150 x 125, glued under the hood)"),
+    ("heat-module-wall-front", "idler-spring (bought, extension spring)"), ("heat-module-tray", "idler-spring (bought, extension spring)"),
+    ("heat-module-devices (bought, envelopes: 2 end clamps, X_HM mains and SELV strips, partition, K_HEAT, CS1)", "rear-lower-panel"),
+    ("heat-module-thermostats (bought, 279816 class high-limit and thermal cut-off, envelopes)", "riser-duct"),
+    ("heat-module-tray", "tray-rail-1"), ("heat-module-tray", "rail-bottom-rear"), ("heat-module-terminal-plate", "heat-module-wall-rear"),
+    ("power-module-plate", "riser-duct"), ("power-module-plate", "rail-mid-rearcross"), ("power-module-plate", "post-3"),
+    ("power-module-cover", "rear-upper-panel"), ("power-module-plate", "bay-ceiling"),
+    ("power-module-rail-B1-devices (bought, envelopes: RLY_MOTOR, RLY_HEAT, RLY_HEAT_LO: 3 x 38.51 class, PTC1 to PTC3 in fuse terminals, F2: UK 5-HESI, X4 heat module SELV: 4 x UK 2.5 N, 2 end clamps)", "rear-upper-panel"),
+    ("power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)", "power-module-cover"),
+    ("power-cord (bought)", "bay-ceiling"), ("power-cord (bought)", "grommets (bought, 3 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1)"),
+    ("power-cord (bought)", "power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)"),
+    ("hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)", "lint-duct"),
+    ("hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)", "drum-sheet"),
+    ("hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)", "roller-front-1 (bought)"),
+    ("drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)", "drum-ring-front"), ("drum-glides-rear (bought, 2 x nylon drum glide pads, 45 x 20 x 9.5)", "drum-ring-rear"),
+    ("drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)", "felt-seal-front-long"), ("drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)", "felt-seal-front-short"),
     ("motor (bought)", "base-pan"), ("blower (bought)", "front-bulkhead"), ("blower (bought)", "lint-duct-transition"),
-    ("pulley (bought)", "bay-ceiling"), ("exhaust-duct (bought)", "rear-lower-panel"), ("power-module (envelope)", "side-panel-left"),
-    ("power-module (envelope)", "bay-ceiling"), ("drum-sheet", "front-upper-panel"),
+    ("pulley (bought)", "bay-ceiling"), ("exhaust-duct (bought)", "rear-lower-panel"), ("exhaust-duct (bought)", "tray-rail-2"), ("drum-sheet", "front-upper-panel"),
     ("belt (bought, PJ 5 rib)", "drum-sheet"), ("belt (bought, PJ 5 rib)", "pulley (bought)"), ("belt (bought, PJ 5 rib)", "idler-pulley (bought, flat idler 40 with bearing)"),
     ("belt (bought, PJ 5 rib)", "bay-ceiling"), ("belt (bought, PJ 5 rib)", "motor (bought)"), ("belt (bought, PJ 5 rib)", "heat-module-tray"),
     ("door-hinge-1-fixed (bought, flag hinge, pinned half)", "door-disc"), ("door-hinge-2-swing (bought, flag hinge, lift-off half)", "door-ring"),
-    ("door-seal (bought, OEM door seal)", "door-ring"), ("felt-seal-rear", "drum-ring-rear"), ("felt-seal-front", "drum-ring-front"),
-    ("felt-seal-front", "drum-sheet"), ("felt-seal-rear", "drum-sheet"), ("tier0-faceplate", "console-face"),
-    ("riser-duct", "heat-module (envelope)"), ("riser-duct", "rail-mid-rearcross"), ("riser-duct", "heat-module-tray"),
+    ("door-seal (bought, OEM door seal)", "door-ring"), ("felt-seal-rear-long", "drum-ring-rear"), ("felt-seal-front-long", "drum-ring-front"),
+    ("felt-seal-front-long", "drum-sheet"), ("felt-seal-rear-long", "drum-sheet"), ("felt-seal-front-short", "drum-ring-front"), ("tier0-faceplate", "console-face"),
+    ("riser-duct", "rail-mid-rearcross"), ("riser-duct", "heat-module-tray"), ("riser-duct", "belt (bought, PJ 5 rib)"),
     ("lint-duct", "hardware-door-ring (bought, 8 x M4 x 8 button head, nuts)"), ("console-post-1", "top-panel"),
     ("console-post-1", "console-cheek-left"), ("console-rail-front", "console-cap"), ("console-rear", "rear-upper-panel"),
     ("console-cheek-left", "side-panel-left"), ("tier0-k1-relay-on-din-rail (bought)", "console-rail-front"),
@@ -845,7 +860,8 @@ def hole_on_rail(cx, cy, cz, axis):
 
 PANELS = ("side-panel-left", "side-panel-right", "front-upper-panel", "front-lower-panel", "rear-upper-panel",
           "rear-lower-panel", "top-panel", "base-pan", "bay-ceiling", "front-bulkhead", "rear-bulkhead",
-          "console-face", "console-rear", "console-cap", "console-cheek-left", "console-cheek-right")
+          "console-face", "console-rear", "console-cap", "console-cheek-left", "console-cheek-right",
+          "power-module-plate")   # draft 7: the plate's four M6 go into the two rear cross rails' rear slots
 # M6 holes that are bolted through with a nut instead of into a rail: the idler and spring brackets on the base pan
 # (design-rules 7a Drive) and the two fixed hinge leaves on the front upper panel (7a Door). Listed, not inferred.
 # The console's four foot bolts through the top panel land on the top rear cross rail and the rear top rail, so the
@@ -876,9 +892,9 @@ m4 = [g for g in m["cylinders"] if abs(g["r"] - 2.25) < 1e-3]
 gen("console-face", "the only M4 holes are the six UCI-D module holes (uci-spec 4.1, draft 5)", f"{len(m4)} M4 holes", len(m4) == 6)
 
 # V-011: every round feature has a named diameter
-ALLOWED_D = {4.5: "M4 clearance", 5.0: "louver slot ends (60 x 5)", 6.5: "M6 clearance", 8.5: "M8 clearance (feet studs)", 10.0: "inlet holes", 10.5: "roller shafts",
-             40.0: "lint slot ends (260 x 40)",
-             22.0: "cord strain relief bushing", 106.0: "exhaust port (102 duct + 2 each side)", 460.0: "door opening",
+ALLOWED_D = {4.5: "M4 clearance", 5.0: "louver slot ends (60 x 5)", 6.5: "M6 clearance", 6.6: "M6 bonding studs (nutted)", 8.5: "M8 clearance (feet studs, roller studs)", 10.0: "inlet holes",
+             40.0: "lint slot ends (260 x 40)", 30.0: "bay harness grommet", 126.0: "collar opening (125 collar + 1)",
+             22.0: "cord strain relief bushing, cord and console grommets", 106.0: "exhaust port (102 duct + 2 each side)", 460.0: "door opening",
              470.0: "door ring bore", 480.0: "front panel ring opening", 540.0: "door disc / drum ring bore", 560.0: "door ring",
              616.4: "splice inside", 618.4: "drum ring / sheet inside", 620.0: "drum outside",
              12.0: "plate corner radius 6 / timer shaft holes", 6.0: "corner radius 3 (cheeks, tabs, splice, idler arm ends)", 20.0: "faceplate corner radius 10",
@@ -913,6 +929,15 @@ try:
         return outer["w"] * outer["h"] - sum(l["w"] * l["h"] for l in inner), outer
     a_riser, riser_sec = section_area("riser-duct", (0, 0, 400), (0, 0, 1), (1, 0, 0), (0, 1, 0))
     a_hood, hood_sec = section_area("riser-duct", (0, 630, 0), (0, 1, 0), (1, 0, 0), (0, 0, 1))
+    # draft 7: the heat module's collar (a thin round tube, cut level at Z 200: the air is the inner circle) and its inlet
+    # opening (the one rectangle cut in the left wall)
+    collar_name = [n for n in assembly if n.startswith("heat-module-collar")][0]
+    c_lps, _ = section_loops(assembly[collar_name]["shape"], (0, 0, 200), (0, 0, 1), (1, 0, 0), (0, 1, 0))
+    c_in = min([l for l in c_lps if l["type"] == "circle"], key=lambda l: l["w"])
+    a_collar = math.pi * (c_in["w"] / 2) ** 2
+    lw_lps = parts["heat-module-wall-left"]["loops"]
+    lw_outer = max(lw_lps, key=lambda l: l["w"] * l["h"])
+    a_hm_inlet = max(l["w"] * l["h"] for l in lw_lps if l["type"] == "rect" and l is not lw_outer)
     lint = parts["lint-duct"]
     a_lint = lint["sx"] * lint["sy"]
     slot = [l for l in parts["front-bulkhead"]["loops"] if l["type"] == "sector"][0]
@@ -921,7 +946,7 @@ try:
     a_inlet = sum(math.pi * g["r"] ** 2 for g in inlet)
     port = [l for l in parts["rear-lower-panel"]["loops"] if l["type"] == "circle" and abs(l["w"] - 106) < 0.011][0]
     a_exh = a_outlet   # the duct itself, 102 round
-    areas = dict(riser=a_riser, riser_hood=a_hood, lint_duct=a_lint, lint_slot=a_slot, inlet_field=a_inlet, exhaust_duct=a_exh)
+    areas = dict(module_inlet=a_hm_inlet, module_collar=a_collar, riser=a_riser, riser_hood=a_hood, lint_duct=a_lint, lint_slot=a_slot, inlet_field=a_inlet, exhaust_duct=a_exh)
     gen("air path", "V-013: every opening in the air path is at least the blower outlet (102 round, %.0f mm2)" % a_outlet,
         ", ".join(f"{k} {v:.0f}" for k, v in areas.items()), all(v >= a_outlet - 0.5 for v in areas.values()))
 except Exception as ex:

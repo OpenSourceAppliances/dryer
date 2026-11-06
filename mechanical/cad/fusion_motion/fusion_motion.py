@@ -31,9 +31,10 @@ What moves and how (all as-built joints, so nothing is displaced when the joint 
     START button     slider along its axis, 3 mm press
     heat module tray slider along Y, tray and module envelope together, 250 mm pull-out toward the back
 Everything else is grounded. The belt is drawn on its path and does not deform.
-Draft 3, 2026-11-06 (draft 1 made its own barebones faceplate, knobs and hinge pin; draft 2 jointed the model's own;
+Draft 4, 2026-11-06 (draft 1 made its own barebones faceplate, knobs and hinge pin; draft 2 jointed the model's own;
 draft 3 follows model draft 6: vertical console face, the tray slides out the back, the rear lower panel is left out
-of the moved poses).
+of the moved poses; draft 4 follows model draft 7: the whole heat module, every "heat-module" part, rides the tray;
+20 pulley; appearances for the new parts).
 Units in the API are cm; the numbers below are written in mm and converted.
 """
 import math
@@ -62,7 +63,7 @@ DRUM_GROUP = ("drum-sheet", "drum-ring-front", "drum-ring-rear", "drum-splice",
               "hardware-drum-tabs", "hardware-drum-seam", "hardware-drum-baffles")
 DOOR_GROUP = ("door-disc", "door-handle", "door-seal", "door-catch-strike", "door-hinge-2-swing",
               "hardware-door-hinge-2", "hardware-door-handle")
-TRAY_GROUP = ("heat-module-tray", "heat-module (envelope)")
+TRAY_GROUP = ("heat-module",)    # every part whose name starts with this slides out with the tray (draft 7: tray, box, element, collar, terminal plate, devices, hardware)
 ARM_GROUP = ("idler-arm", "hardware-idler-axle")
 SINGLE_MOVERS = ("pulley (bought", "roller-front-1", "roller-front-2", "roller-rear-1", "roller-rear-2",
                  "idler-pulley", "tier0-knob-dry-time", "tier0-knob-heat-time", "tier0-selector (bought", "tier0-start-button")
@@ -165,10 +166,16 @@ def slider(root, occ_moving, occ_fixed, geo, name, positive_dir):
     return j
 
 
-def rigid_group(root, names, label):
+def rigid_group(root, names, label, by_prefix=False):
+    """One rigid group of the named occurrences; with by_prefix, every occurrence whose name starts with any of the names."""
     coll = adsk.core.ObjectCollection.create()
-    for n in names:
-        coll.add(occ_by_name(root, n))
+    if by_prefix:
+        for o in root.allOccurrences:
+            if any(o.component.name.startswith(n) for n in names):
+                coll.add(o)
+    else:
+        for n in names:
+            coll.add(occ_by_name(root, n))
     rg = root.rigidGroups.add(coll, True)
     rg.name = label
     return rg
@@ -210,7 +217,7 @@ def build():
     # --- motor shaft: the pulley spins on the motor. The blower housing stays put (its wheel, which turns, is not drawn)
     motor = occ_by_name(root, "motor (bought")
     pulley = occ_by_name(root, "pulley (bought")
-    revolute(root, pulley, motor, cyl_face(pulley, 15.0, Y_AXIS, largest=True), "pulley")
+    revolute(root, pulley, motor, cyl_face(pulley, 10.0, Y_AXIS, largest=True), "pulley")   # 20 pulley (draft 7)
     log.append("pulley")
 
     # --- idler: the arm pivots on its bracket (not animated), the pulley spins on the arm
@@ -248,8 +255,8 @@ def build():
     slider(root, btn, occ_by_name(root, "tier0-start-body"), geo, "start button", positive_dir=(-N[0], -N[1], -N[2]))   # positive = pressed in
     log.append("Tier 0 knobs, selector, START")
 
-    # --- heat module tray: slides out the front with the module on it (250 mm)
-    rigid_group(root, TRAY_GROUP, "heat module on its tray")
+    # --- heat module tray: slides out the back with the whole module on it (250 mm)
+    rigid_group(root, TRAY_GROUP, "heat module on its tray", by_prefix=True)
     tray = occ_by_name(root, "heat-module-tray")
     rail = occ_by_name(root, "tray-rail-1")
     faces = [f for f in tray.bRepBodies.item(0).faces if f.geometry.surfaceType == adsk.core.SurfaceTypes.PlaneSurfaceType]
@@ -307,7 +314,7 @@ def pose(t):
     """Joint values at a fraction t (0..1) of the demonstration."""
     drum = 2 * math.pi * t                                    # one drum turn over the demonstration
     _set_rot("drum", drum)
-    _set_rot("pulley", drum * 620.0 / 30.0)                   # belt ratio, drum to pulley
+    _set_rot("pulley", drum * 620.0 / 20.0)                   # belt ratio, drum to the 20 pulley (draft 7)
     _set_rot("idler", -drum * 620.0 / 40.0)                   # backside idler turns the other way
     for n in ("roller-front-1", "roller-front-2", "roller-rear-1", "roller-rear-2"):
         _set_rot(n, -drum * 310.0 / 30.0)                     # rollers roll on the sheet
@@ -400,16 +407,22 @@ APPEARANCES = [
                                        "rear-upper-panel", "rear-lower-panel", "top-panel", "console-face", "console-cap",
                                        "console-cheek-left", "console-cheek-right", "console-rear", "door-disc")),
     ("Paint - Enamel Glossy (Dark Grey)", ("door-ring",)),
-    ("Aluminum - Anodized Rough (Grey)", ("post-", "rail-", "tray-rail-", "console-post", "console-rail")),
-    ("Steel - Galvanized (Small)", ("front-bulkhead", "rear-bulkhead", "bay-ceiling", "base-pan", "heat-module-tray",
-                                    "lint-duct", "riser-duct", "blower (bought", "power-module (envelope)", "motor-mount-")),
+    ("Aluminum - Anodized Rough (Grey)", ("post-", "rail-", "tray-rail-", "console-post", "console-rail", "heat-module-angles-",
+                                          "heat-module-element-rails", "heat-module-terminal-angle", "power-module-barrier-angle")),
+    ("Steel - Galvanized (Small)", ("front-bulkhead", "rear-bulkhead", "bay-ceiling", "base-pan", "heat-module-tray", "heat-module-wall-",
+                                    "heat-module-top", "heat-module-terminal-plate", "heat-module-collar", "power-module-plate",
+                                    "power-module-barrier", "power-module-cover", "lint-duct", "riser-duct", "blower (bought", "motor-mount-")),
     ("Stainless Steel - Brushed Linear Long", ("drum-sheet", "drum-ring-front", "drum-ring-rear", "drum-splice")),
     ("Aluminum - Satin", ("baffle-", "exhaust-duct", "idler-arm", "idler-bracket", "spring-bracket")),
-    ("Rubber - Hard", ("roller-", "belt (bought", "feet (bought", "cord-bushing", "power-cord")),
-    ("Rubber - Soft", ("door-seal",)),
+    ("Rubber - Hard", ("roller-", "belt (bought", "feet (bought", "cord-bushing", "power-cord", "grommets (bought")),
+    ("Rubber - Soft", ("door-seal", "hood-gasket")),
     ("Fabric (Grey)", ("felt-seal-",)),
+    ("Plastic - Matte (White)", ("drum-glides-",)),
     ("Paint - Metallic (Dark Grey)", ("motor (bought",)),
-    ("Steel - Satin", ("pulley (bought", "heat-module (envelope)", "idler-pulley", "idler-spring", "hardware-", "console-brackets")),
+    ("Steel - Satin", ("pulley (bought", "heat-module-element", "heat-module-din-rail", "heat-module-bonding-stud", "heat-module-hardware",
+                       "power-module-din-rails", "power-module-standoffs", "power-module-ground-stud", "power-module-hardware",
+                       "idler-pulley", "idler-spring", "hardware-", "console-brackets", "tray-rail-brackets")),
+    ("Plastic - Matte (Black)", ("heat-module-devices", "heat-module-thermostats", "power-module-rail-")),
     ("Stainless Steel - Satin", ("door-hinge-", "door-handle", "door-catch")),
     ("Aluminum - Brushed Linear", ("tier0-faceplate",)),
     ("Plastic - Matte (Black)", ("tier0-knob-", "tier0-selector", "tier0-start-body", "tier0-k1-relay")),

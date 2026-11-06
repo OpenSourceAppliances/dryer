@@ -33,33 +33,58 @@ lint-duct,front-upper-panel,5.0
 riser-duct,rear-bulkhead,7.0
 riser-duct,rail-mid-rear,6.5
 riser-duct,bay-ceiling,2.0
-heat-module (envelope),heat-module-tray,0.5
-heat-module (envelope),bay-ceiling,71.0
+heat-module-top,bay-ceiling,128.5
+"heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)",riser-duct,3.0
+"heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)","hood-gasket (bought, 3 mm foam ring 150 x 125, glued under the hood)",0.0
+heat-module-wall-front,"idler-spring (bought, extension spring)",5.0
+heat-module-tray,"idler-spring (bought, extension spring)",3.0
+"heat-module-devices (bought, envelopes: 2 end clamps, X_HM mains and SELV strips, partition, K_HEAT, CS1)",rear-lower-panel,21.0
+"heat-module-thermostats (bought, 279816 class high-limit and thermal cut-off, envelopes)",riser-duct,43.5
+heat-module-tray,tray-rail-1,0.0
+heat-module-tray,rail-bottom-rear,23.06
+heat-module-terminal-plate,heat-module-wall-rear,7.0
+power-module-plate,riser-duct,12.974
+power-module-plate,rail-mid-rearcross,0.0
+power-module-plate,post-3,57.414
+power-module-cover,rear-upper-panel,20.5
+power-module-plate,bay-ceiling,1.0
+"power-module-rail-B1-devices (bought, envelopes: RLY_MOTOR, RLY_HEAT, RLY_HEAT_LO: 3 x 38.51 class, PTC1 to PTC3 in fuse terminals, F2: UK 5-HESI, X4 heat module SELV: 4 x UK 2.5 N, 2 end clamps)",rear-upper-panel,19.5
+"power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)",power-module-cover,7.5
+power-cord (bought),bay-ceiling,6.5
+power-cord (bought),"grommets (bought, 3 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1)",3.0
+power-cord (bought),"power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)",16.5
+"hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)",lint-duct,4.192
+"hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)",drum-sheet,22.0
+"hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)",roller-front-1 (bought),0.0
+"drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)",drum-ring-front,0.5
+"drum-glides-rear (bought, 2 x nylon drum glide pads, 45 x 20 x 9.5)",drum-ring-rear,0.5
+"drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)",felt-seal-front-long,0.458
+"drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)",felt-seal-front-short,0.458
 motor (bought),base-pan,50.0
 blower (bought),front-bulkhead,55.057
 blower (bought),lint-duct-transition,0.0
-pulley (bought),bay-ceiling,165.0
+pulley (bought),bay-ceiling,169.0
 exhaust-duct (bought),rear-lower-panel,2.0
-power-module (envelope),side-panel-left,5.0
-power-module (envelope),bay-ceiling,80.0
+exhaust-duct (bought),tray-rail-2,57.747
 drum-sheet,front-upper-panel,49.2
 "belt (bought, PJ 5 rib)",drum-sheet,0.0
 "belt (bought, PJ 5 rib)",pulley (bought),0.0
 "belt (bought, PJ 5 rib)","idler-pulley (bought, flat idler 40 with bearing)",0.0
 "belt (bought, PJ 5 rib)",bay-ceiling,13.565
-"belt (bought, PJ 5 rib)",motor (bought),6.0
-"belt (bought, PJ 5 rib)",heat-module-tray,41.761
+"belt (bought, PJ 5 rib)",motor (bought),4.162
+"belt (bought, PJ 5 rib)",heat-module-tray,46.573
 "door-hinge-1-fixed (bought, flag hinge, pinned half)",door-disc,1.775
 "door-hinge-2-swing (bought, flag hinge, lift-off half)",door-ring,1.523
 "door-seal (bought, OEM door seal)",door-ring,2.0
-felt-seal-rear,drum-ring-rear,2.0
-felt-seal-front,drum-ring-front,0.5
-felt-seal-front,drum-sheet,2.2
-felt-seal-rear,drum-sheet,2.506
+felt-seal-rear-long,drum-ring-rear,0.0
+felt-seal-front-long,drum-ring-front,0.5
+felt-seal-front-long,drum-sheet,2.2
+felt-seal-rear-long,drum-sheet,2.2
+felt-seal-front-short,drum-ring-front,0.5
 tier0-faceplate,console-face,0.0
-riser-duct,heat-module (envelope),1.0
 riser-duct,rail-mid-rearcross,2.0
 riser-duct,heat-module-tray,168.5
+riser-duct,"belt (bought, PJ 5 rib)",40.0
 lint-duct,"hardware-door-ring (bought, 8 x M4 x 8 button head, nuts)",0.5
 console-post-1,top-panel,0.0
 console-post-1,console-cheek-left,0.0
@@ -69,7 +94,7 @@ console-cheek-left,side-panel-left,0.0
 tier0-k1-relay-on-din-rail (bought),console-rail-front,82.0
 tier0-k1-relay-on-din-rail (bought),top-panel,23.0
 power-cord (bought),"cord-bushing (bought, PG16 strain relief)",0.1
-power-cord (bought),"feet (bought, 4 x M8 leveling feet, 50 pad)",45.5
+power-cord (bought),"feet (bought, 4 x M8 leveling feet, 50 pad)",20.5
 power-cord (bought),base-pan,6.0
 "feet (bought, 4 x M8 leveling feet, 50 pad)",base-pan,0.0
 "hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts)",front-bulkhead,2.5

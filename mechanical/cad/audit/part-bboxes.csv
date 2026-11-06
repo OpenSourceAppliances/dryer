@@ -18,15 +18,22 @@ rail-top-rear,-305.0,305.0,710.0,750.0,960.0,1000.0
 rail-top-left,-345.0,-305.0,40.0,710.0,960.0,1000.0
 rail-top-right,305.0,345.0,40.0,710.0,960.0,1000.0
 rail-top-rearcross,-305.0,305.0,611.5,651.5,960.0,1000.0
-tray-rail-1,-170.0,-150.0,340.0,700.0,40.0,60.0
-tray-rail-2,150.0,170.0,340.0,700.0,40.0,60.0
+tray-rail-1,-170.0,-150.0,-0.0,750.0,40.0,60.0
+tray-rail-2,150.0,170.0,-0.0,750.0,40.0,60.0
+"tray-rail-brackets (bought, 4 x 2020 inside corner brackets)",-190.0,190.0,11.5,738.5,40.0,60.0
+"hardware-tray-rails (bought, 8 x M4 x 8 button head, T-nuts for the 6 and 8 mm slots)",-185.8,185.8,16.2,733.8,34.5,53.8
 "feet (bought, 4 x M8 leveling feet, 50 pad)",-350.0,350.0,-5.0,755.0,-19.5,35.0
 front-bulkhead,-305.0,305.0,40.0,41.5,265.0,995.0
 "hardware-front-bulkhead (bought, 7 x M6 x 12 hex, washers, T-nuts)",-281.0,281.0,29.5,47.1,274.0,986.0
 rear-bulkhead,-305.0,305.0,610.0,611.5,265.0,995.0
 "hardware-rear-bulkhead (bought, 10 x M6 x 12 hex, washers, T-nuts)",-281.0,281.0,604.4,622.0,274.0,986.0
-felt-seal-rear,-291.0,291.0,602.0,610.0,340.5,922.5
-felt-seal-front,-291.0,291.0,41.5,49.5,340.5,922.5
+felt-seal-rear-long,-291.0,291.0,600.0,610.0,340.5,819.43
+felt-seal-rear-short,-187.93,187.93,600.0,610.0,839.94,922.5
+felt-seal-front-long,-291.0,291.0,41.5,49.5,340.5,819.43
+felt-seal-front-short,-187.93,187.93,41.5,49.5,839.94,922.5
+"drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)",-221.14,221.14,41.5,49.5,809.17,852.64
+"drum-glides-rear (bought, 2 x nylon drum glide pads, 45 x 20 x 9.5)",-221.14,221.14,600.5,610.0,809.17,852.64
+"hardware-drum-glides (bought, 4 x M4 x 8 and 4 x M4 x 10 button head, nuts)",-211.93,211.93,37.8,613.7,818.62,843.19
 bay-ceiling,-343.5,343.5,42.0,750.0,300.0,301.5
 "hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts)",-331.0,331.0,74.0,736.0,289.5,307.1
 base-pan,-343.5,343.5,-0.0,750.0,-1.5,0.0
@@ -88,7 +95,8 @@ door-disc,-270.0,270.0,-13.5,-11.5,361.5,901.5
 "door-seal (bought, OEM door seal)",-246.0,246.0,-11.5,-5.5,385.5,877.5
 "door-catch (bought, magnetic catch)",256.0,268.0,-10.0,-3.5,625.5,637.5
 door-catch-strike (bought),256.0,268.0,-11.5,-10.5,625.5,637.5
-riser-duct,-150.0,150.0,560.0,703.5,230.0,821.5
+riser-duct,-150.0,150.0,448.0,703.5,230.0,821.5
+"hood-gasket (bought, 3 mm foam ring 150 x 125, glued under the hood)",-75.0,75.0,450.0,600.0,227.0,230.0
 lint-duct,-168.0,168.0,5.0,38.0,150.0,445.0
 lint-duct-transition,-110.0,110.0,38.0,84.0,50.0,190.0
 drum-sheet,-310.0,310.0,49.2,600.8,321.5,941.5
@@ -104,19 +112,51 @@ drum-splice,-29.96,29.96,53.0,597.0,938.24,940.7
 motor (bought),-70.0,70.0,184.0,394.0,50.0,210.0
 "motor-mount-1 (bought, cradle)",-35.0,35.0,215.0,245.0,0.0,58.8
 "motor-mount-2 (bought, cradle)",-35.0,35.0,335.0,365.0,0.0,58.8
-pulley (bought),-15.0,15.0,394.0,416.0,105.0,135.0
+pulley (bought),-11.0,11.0,394.0,416.0,109.0,131.0
 blower (bought),-110.0,270.0,84.0,190.0,10.0,230.0
-heat-module-tray,-160.0,160.0,420.0,670.0,60.0,61.5
-heat-module (envelope),-140.0,140.0,440.0,650.0,62.0,229.0
-power-module (envelope),-340.0,-170.0,450.0,700.0,40.0,220.0
 exhaust-duct (bought),179.0,281.0,190.0,750.0,99.0,201.0
-"cord-bushing (bought, PG16 strain relief)",-265.01,-234.99,677.0,703.0,-6.5,18.0
-power-cord (bought),-254.5,-245.5,685.5,820.0,-16.5,40.0
-roller-rear-1 (bought),-200.0,-140.0,575.0,600.0,307.05,367.05
-roller-front-1 (bought),-200.0,-140.0,50.0,75.0,307.05,367.05
-roller-rear-2 (bought),140.0,200.0,575.0,600.0,307.05,367.05
-roller-front-2 (bought),140.0,200.0,50.0,75.0,307.05,367.05
-"belt (bought, PJ 5 rib)",-313.5,313.5,396.0,408.0,101.5,945.0
+heat-module-tray,-170.0,170.0,420.0,700.0,60.0,61.5
+heat-module-wall-left,-145.0,-143.5,422.0,627.0,61.5,170.0
+heat-module-wall-right,143.5,145.0,422.0,627.0,61.5,170.0
+heat-module-wall-front,-143.5,143.5,422.0,423.5,61.5,170.0
+heat-module-wall-rear,-143.5,143.5,625.5,627.0,61.5,170.0
+heat-module-top,-145.0,145.0,422.0,627.0,170.0,171.5
+"heat-module-angles-bottom (20x20x2 aluminium angle, 2 x 205 outside, 2 x 283 inside)",-165.0,165.0,422.0,627.0,61.5,81.5
+"heat-module-angles-top (20x20x2 aluminium angle, 2 x 165, 2 x 290)",-147.0,147.0,420.0,629.0,153.5,173.5
+"heat-module-angles-corner (20x20x2 aluminium angle, 4 x 72)",-147.0,147.0,420.0,629.0,81.5,153.5
+"heat-module-element-rails (20x20x2 aluminium angle, 2 x 198)",-143.5,143.5,425.5,623.5,61.5,81.5
+"heat-module-element (bought, 279838 class open-coil element on its frame, envelope)",-133.5,157.0,429.5,619.5,81.5,132.5
+"heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)",-77.5,77.5,447.5,602.5,171.5,227.0
+"heat-module-thermostats (bought, 279816 class high-limit and thermal cut-off, envelopes)",-121.0,121.0,473.0,527.0,171.5,186.5
+heat-module-terminal-plate,-145.0,145.0,634.0,635.5,61.5,161.5
+"heat-module-terminal-angle (20x20x2 aluminium angle, 290)",-145.0,145.0,635.5,655.5,61.5,81.5
+"heat-module-din-rail (bought, 35 x 7.5 top hat, 280)",-140.0,140.0,635.5,643.0,94.0,129.0
+"heat-module-devices (bought, envelopes: 2 end clamps, X_HM mains and SELV strips, partition, K_HEAT, CS1)",-140.0,43.6,643.0,729.0,73.0,150.0
+"heat-module-bonding-stud (bought, M6 x 16 hex bolt, 2 nuts, star washers; the PE ring terminal goes between the nuts)",134.0,146.0,674.0,686.0,54.4,76.0
+"heat-module-hardware (bought, 64 x M4 x 8 button head, 60 nuts, 4 T-nuts for the 6 mm slot)",-163.8,163.8,417.8,649.3,55.5,175.7
+power-module-plate,-300.0,-150.0,651.5,653.0,270.0,990.0
+"hardware-power-module-plate (bought, 4 x M6 x 12 hex, washers, T-nuts)",-291.0,-159.0,641.0,658.6,274.0,986.0
+"power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)",-295.0,-217.5,660.5,720.5,315.0,405.0
+"power-module-rail-A2-devices (bought, envelopes: PSU: HDR-60-24, K_MOTOR: LC1K0910BD class mini contactor, 2 end clamps)",-295.0,-178.5,660.5,717.5,425.0,515.0
+"power-module-rail-A3-devices (bought, envelopes: X2 heat module mains: 4 x UK 6 N, X3 motor and S1: 5 x UK 2.5 N, 2 end clamps)",-295.0,-212.2,660.5,702.5,556.5,603.5
+"power-module-rail-B1-devices (bought, envelopes: RLY_MOTOR, RLY_HEAT, RLY_HEAT_LO: 3 x 38.51 class, PTC1 to PTC3 in fuse terminals, F2: UK 5-HESI, X4 heat module SELV: 4 x UK 2.5 N, 2 end clamps)",-295.0,-199.8,660.5,730.5,653.5,746.5
+"power-module-rail-B2-devices (bought, envelopes: X5 chassis switches: 10 x UK 2.5 N, X6 sensors: 6 x UK 2.5 N, 2 end clamps)",-295.0,-176.8,660.5,696.5,798.0,842.0
+"power-module-din-rails (bought, 5 x 35 x 7.5 top hat, 140)",-295.0,-155.0,653.0,660.5,342.5,837.5
+"power-module-barrier-angle (20x20x2 aluminium angle, 150)",-300.0,-150.0,653.0,673.0,640.0,660.0
+power-module-barrier,-300.0,-150.0,655.0,730.5,642.0,643.5
+power-module-cover,-300.0,-150.0,728.0,729.5,310.0,640.0
+"power-module-standoffs (bought, 4 x M4 x 75 hex standoffs, female both ends)",-294.04,-155.96,653.0,728.0,316.5,633.5
+"power-module-ground-stud (bought, M6 x 16 hex bolt, 2 nuts, star washers; the cord's PE ring terminal goes between the nuts)",-171.0,-159.0,645.9,667.5,944.0,956.0
+"power-module-hardware (bought, 22 x M4 x 8 button head, 14 nuts)",-293.8,-156.2,649.3,731.7,316.2,823.8
+"grommets (bought, 3 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1)",-289.0,-182.0,672.0,708.0,298.75,1002.75
+"cord-bushing (bought, PG16 strain relief)",-290.01,-259.99,677.0,703.0,-6.5,18.0
+power-cord (bought),-279.5,-270.5,685.5,820.0,-16.5,320.0
+roller-front-1 (bought),-210.17,-150.17,50.0,75.0,313.16,373.16
+roller-rear-1 (bought),-210.17,-150.17,576.5,601.5,313.16,373.16
+roller-front-2 (bought),150.17,210.17,50.0,75.0,313.16,373.16
+roller-rear-2 (bought),150.17,210.17,576.5,601.5,313.16,373.16
+"hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)",-188.17,188.17,28.5,623.0,335.16,351.16
+"belt (bought, PJ 5 rib)",-313.5,313.5,396.0,408.0,106.5,945.0
 "idler-pulley (bought, flat idler 40 with bearing)",-82.0,-38.0,394.5,409.5,143.0,187.0
 "idler-arm (flat bar 25x4, cut to length)",-129.43,-45.57,390.0,394.0,10.57,179.43
 "hardware-idler-axle (bought, M8 x 30 bolt, nut)",-67.51,-52.49,385.0,414.5,158.5,171.5
