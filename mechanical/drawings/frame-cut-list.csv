@@ -21,4 +21,6 @@ rail-top-rearcross,40x40,610.0,1,rear bulkhead cross rail
 tray-rail-1,20x20,360.0,1,2020 tray rail
 tray-rail-2,20x20,360.0,1,2020 tray rail
 baffle-1..3,angle 40x40x3 aluminum,480.0,3,"drum baffles, drilled on the drill press"
-belt (bought),"PJ poly-V, 4 or 5 ribs",2214,1,two-pulley estimate before the idler; pick the nearest catalog J length (V-012)
+belt (bought),"PJ poly-V, 5 ribs",2232,1,"length of the drawn path round the drum, the pulley and the idler; pick the nearest catalog J length (V-012)"
+idler-arm,flat bar 25x4 aluminum,175.4,1,"idler arm, two 8.5 holes and one 5.2 hole on the drill press"
+"idler-bracket, spring-bracket",angle 40x40x3 aluminum,50,2,"idler pivot and spring anchor, bolted through the base pan"

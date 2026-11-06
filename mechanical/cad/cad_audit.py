@@ -6,7 +6,7 @@
 <outdir> is the folder osa_dryer_cad.py wrote (it holds step/ and drawings/). The audit reads only the
 files on disk, never the live model, so it checks what a builder downloads. It uses the OpenCascade
 kernel through OCP (the same kernel FreeCAD uses) and ezdxf for the drawings, and writes into
-<outdir>/audit/:
+mechanical/cad/audit/ (next to this script):
 
   measured-parts.csv       one row per STEP part: solids, validity, closed shells, bounding box, volume,
                            surface area, face and edge counts, thickness and normal for flat parts
@@ -26,7 +26,8 @@ the script, it is not in that file; it is still measured and listed.
 With --fusion, a CSV written by fusion_audit.py (the same measurements taken inside Autodesk Fusion
 with its own kernel) is compared body by body and feature by feature.
 
-Exit code 1 on any FAIL. Draft 3, 2026-11-05.
+Exit code 1 on any FAIL. Draft 4, 2026-11-06: rounded-rectangle outlines (laser corner radii), the T-slot
+profiles' bores and corner radii, engraving excluded from the diameter list, the pan's bracket holes.
 """
 import csv
 import glob
@@ -72,7 +73,7 @@ FUSION_CSV = None
 if "--fusion" in sys.argv:
     FUSION_CSV = sys.argv[sys.argv.index("--fusion") + 1]
 HERE = os.path.dirname(os.path.abspath(__file__))
-AUD = os.path.join(OUT, "audit")
+AUD = os.path.join(HERE, "audit")      # next to this script, whatever <outdir> is
 os.makedirs(AUD, exist_ok=True)
 
 results = []     # (id, part, check, expected, measured, status, source)
@@ -287,7 +288,8 @@ def face_cylinders(shape):
 # 2D loops: from a STEP section and from a DXF, classified the same way
 # ---------------------------------------------------------------------------
 class Seg:
-    """A line (kind L) or an arc (kind A) in 2D. Arcs are counter-clockwise from a0 to a1 (radians)."""
+    """A line (kind L) or an arc (kind A) in 2D. An arc's geometry is the counter-clockwise sweep from a0 to a1 (radians),
+    whichever way the loop traverses it; p0 and p1 are its ends in traversal order."""
 
     def __init__(self, kind, p0, p1, c=None, r=None, a0=None, a1=None):
         self.kind, self.p0, self.p1, self.c, self.r, self.a0, self.a1 = kind, p0, p1, c, r, a0, a1
@@ -303,7 +305,7 @@ class Seg:
     def reversed(self):
         if self.kind == "L":
             return Seg("L", self.p1, self.p0)
-        return Seg("A", self.p1, self.p0, self.c, self.r, self.a1, self.a0)   # same arc, opposite direction (marked by a1<a0 handled in sweep via abs)
+        return Seg("A", self.p1, self.p0, self.c, self.r, self.a0, self.a1)   # the same arc, walked the other way
 
 
 def dist(a, b):
@@ -343,15 +345,37 @@ def chain_loops(segs, tol=1e-3):
     return loops, open_count
 
 
+def loop_bbox(loop):
+    """Bounding box of a loop, including the extreme points of its arcs."""
+    xs, ys = [], []
+    for s in loop:
+        xs += [s.p0[0], s.p1[0]]
+        ys += [s.p0[1], s.p1[1]]
+        if s.kind == "A":
+            a0, sw = s.a0, s.sweep()
+            for k in range(-4, 9):   # every quarter-turn direction the arc passes through
+                a = k * math.pi / 2
+                d = (a - a0) % (2 * math.pi)
+                if d <= sw + 1e-9:
+                    xs.append(s.c[0] + s.r * math.cos(a))
+                    ys.append(s.c[1] + s.r * math.sin(a))
+    return min(xs), min(ys), max(xs), max(ys)
+
+
 def classify(loop):
-    """-> dict(type, cx, cy, w, h, extra). Types: circle, rect, slot, polygon, other."""
+    """-> dict(type, cx, cy, w, h, extra). Types: circle, rect, rrect (rounded rectangle), rpoly (polygon with rounded
+    corners), slot, polygon, other. Sizes include the arcs' extreme points."""
     kinds = [s.kind for s in loop]
     # merge consecutive arcs on the same circle
     merged = []
     for s in loop:
         if merged and s.kind == "A" and merged[-1].kind == "A" and dist(s.c, merged[-1].c) < 1e-3 and abs(s.r - merged[-1].r) < 1e-3:
             m = merged[-1]
-            merged[-1] = Seg("A", m.p0, s.p1, m.c, m.r, m.a0, m.a0 + m.sweep() + s.sweep())
+            # the two CCW pieces join at one angle; the merged arc runs CCW from the piece that starts first
+            if abs(((m.a1 - s.a0) + math.pi) % (2 * math.pi) - math.pi) < 1e-6:
+                merged[-1] = Seg("A", m.p0, s.p1, m.c, m.r, m.a0, m.a0 + m.sweep() + s.sweep())
+            else:
+                merged[-1] = Seg("A", m.p0, s.p1, m.c, m.r, s.a0, s.a0 + s.sweep() + m.sweep())
         else:
             merged.append(s)
     loop = merged
@@ -374,6 +398,21 @@ def classify(loop):
                     verts=[(round(x, 3), round(y, 3)) for x, y in pts])
     arcs = [s for s in loop if s.kind == "A"]
     lines = [s for s in loop if s.kind == "L"]
+    def quarter(a):
+        return abs(a.sweep() - math.pi / 2) < 1e-3
+    if len(arcs) == 4 and len(lines) == 4 and all(abs(a.r - arcs[0].r) < 1e-3 for a in arcs) and all(quarter(a) for a in arcs):
+        r = arcs[0].r
+        cxs, cys = [a.c[0] for a in arcs], [a.c[1] for a in arcs]
+        ln = max(lines, key=lambda l: dist(l.p0, l.p1))
+        ang = math.degrees(math.atan2(ln.p1[1] - ln.p0[1], ln.p1[0] - ln.p0[0])) % 180.0
+        if ang < 1e-3 or abs(ang - 90) < 1e-3 or abs(ang - 180) < 1e-3:
+            w, h = max(cxs) - min(cxs) + 2 * r, max(cys) - min(cys) + 2 * r
+        else:   # turned: measure along and across the long line
+            ux, uy = (ln.p1[0] - ln.p0[0]) / dist(ln.p0, ln.p1), (ln.p1[1] - ln.p0[1]) / dist(ln.p0, ln.p1)
+            us = [c[0] * ux + c[1] * uy for c in zip(cxs, cys)]
+            vs = [-c[0] * uy + c[1] * ux for c in zip(cxs, cys)]
+            w, h = max(us) - min(us) + 2 * r, max(vs) - min(vs) + 2 * r
+        return dict(type="rrect", cx=(min(cxs) + max(cxs)) / 2, cy=(min(cys) + max(cys)) / 2, w=w, h=h, n=8, r=r, angle=round(ang, 3))
     if len(arcs) == 2 and len(lines) == 2 and abs(arcs[0].r - arcs[1].r) < 1e-3 \
             and all(abs(a.sweep() - math.pi) < 1e-3 for a in arcs):
         c0, c1 = arcs[0].c, arcs[1].c
@@ -382,10 +421,12 @@ def classify(loop):
         horizontal = abs(c0[1] - c1[1]) < 1e-3
         w, h = (length, 2 * r) if horizontal else (2 * r, length)
         return dict(type="slot", cx=(c0[0] + c1[0]) / 2, cy=(c0[1] + c1[1]) / 2, w=w, h=h, n=4)
-    xs = [p for s in loop for p in (s.p0[0], s.p1[0])]
-    ys = [p for s in loop for p in (s.p0[1], s.p1[1])]
-    return dict(type="other", cx=(min(xs) + max(xs)) / 2, cy=(min(ys) + max(ys)) / 2,
-                w=max(xs) - min(xs), h=max(ys) - min(ys), n=len(loop), kinds="".join(kinds))
+    if arcs and lines and all(abs(a.r - arcs[0].r) < 1e-3 for a in arcs) and all(a.sweep() <= math.pi + 1e-3 for a in arcs):
+        # a polygon with every corner rounded to one radius (the notched ceiling plate, the cheeks): size from the box
+        x0, y0, x1, y1 = loop_bbox(loop)
+        return dict(type="rpoly", cx=(x0 + x1) / 2, cy=(y0 + y1) / 2, w=x1 - x0, h=y1 - y0, n=len(lines), r=arcs[0].r)
+    x0, y0, x1, y1 = loop_bbox(loop)
+    return dict(type="other", cx=(x0 + x1) / 2, cy=(y0 + y1) / 2, w=x1 - x0, h=y1 - y0, n=len(loop), kinds="".join(kinds))
 
 
 def section_loops(shape, origin, normal, u_dir, v_dir):
@@ -402,6 +443,10 @@ def section_loops(shape, origin, normal, u_dir, v_dir):
         d = (p[0] - origin[0], p[1] - origin[1], p[2] - origin[2])
         return (sum(a * b for a, b in zip(d, u_dir)), sum(a * b for a, b in zip(d, v_dir)))
 
+    # is (u, v, normal) right-handed? If not, counter-clockwise in 3D about the normal is clockwise in (u, v)
+    w = (u_dir[1] * v_dir[2] - u_dir[2] * v_dir[1], u_dir[2] * v_dir[0] - u_dir[0] * v_dir[2], u_dir[0] * v_dir[1] - u_dir[1] * v_dir[0])
+    handed = 1.0 if (w[0] * normal[0] + w[1] * normal[1] + w[2] * normal[2]) > 0 else -1.0
+
     segs = []
     for e in edges_of(sec.Shape()):
         ad = BRepAdaptor_Curve(e)
@@ -415,7 +460,7 @@ def section_loops(shape, origin, normal, u_dir, v_dir):
             r = circ.Radius()
             # orientation of the circle in the plane: its axis along +normal or -normal
             ax = circ.Axis().Direction()
-            sgn = 1.0 if (ax.X() * normal[0] + ax.Y() * normal[1] + ax.Z() * normal[2]) > 0 else -1.0
+            sgn = (1.0 if (ax.X() * normal[0] + ax.Y() * normal[1] + ax.Z() * normal[2]) > 0 else -1.0) * handed
             a0 = math.atan2(p0[1] - c[1], p0[0] - c[0])
             a1 = math.atan2(p1[1] - c[1], p1[0] - c[0])
             if abs((t1 - t0) - 2 * math.pi) < 1e-6:
@@ -445,8 +490,12 @@ def dxf_loops(path):
     segs = []
     circles = []
     kinds = {}
+    cut_only = "CUT" in doc.layers      # a drawing with a CUT layer may carry labels and references on other layers
     for e in msp:
         k = e.dxftype()
+        if cut_only and e.dxf.layer != "CUT":
+            kinds[k + " (not CUT)"] = kinds.get(k + " (not CUT)", 0) + 1
+            continue
         kinds[k] = kinds.get(k, 0) + 1
         if k == "LINE":
             segs.append(Seg("L", (e.dxf.start.x, e.dxf.start.y), (e.dxf.end.x, e.dxf.end.y)))
@@ -461,9 +510,17 @@ def dxf_loops(path):
             c = (e.dxf.center.x, e.dxf.center.y)
             circles.append(dict(type="circle", cx=c[0], cy=c[1], w=2 * e.dxf.radius, h=2 * e.dxf.radius, n=1))
         elif k == "LWPOLYLINE":
-            pts = [(p[0], p[1]) for p in e.get_points()]
-            for a, b in zip(pts, pts[1:] + ([pts[0]] if e.closed else [])):
-                segs.append(Seg("L", a, b))
+            pts = [(p[0], p[1], p[2]) for p in e.get_points("xyb")]
+            pairs = list(zip(pts, pts[1:] + ([pts[0]] if e.closed else [])))
+            for a, b in pairs:
+                if abs(a[2]) < 1e-12:
+                    segs.append(Seg("L", (a[0], a[1]), (b[0], b[1])))
+                else:   # a bulge segment is an arc; ezdxf gives centre, angles and radius
+                    from ezdxf.math import bulge_to_arc
+                    c, sa, ea, r = bulge_to_arc((a[0], a[1]), (b[0], b[1]), a[2])
+                    p0 = (c[0] + r * math.cos(sa), c[1] + r * math.sin(sa))
+                    p1 = (c[0] + r * math.cos(ea), c[1] + r * math.sin(ea))
+                    segs.append(Seg("A", p0, p1, (c[0], c[1]), r, sa, ea))
         else:
             notes.append(f"{os.path.basename(path)}: entity {k} not handled by the audit")
     loops, open_count = chain_loops(segs)
@@ -558,11 +615,18 @@ for path in step_files:
     m["normal"] = None
     if big:
         n0, a0, c0 = big[0]
-        opp = [p for p in big[1:] if abs(abs(sum(a * b2 for a, b2 in zip(p[0], n0))) - 1) < 1e-6]
+        def facing(p):   # parallel, and straight across from the first face (a plate's two faces share their centre line)
+            if abs(abs(sum(a * b2 for a, b2 in zip(p[0], n0))) - 1) > 1e-6:
+                return False
+            d = tuple(a - b2 for a, b2 in zip(p[2], c0))
+            t_ = sum(a * b2 for a, b2 in zip(d, n0))
+            lateral = math.sqrt(sum((a - t_ * b2) ** 2 for a, b2 in zip(d, n0)))
+            return lateral < 0.5
+        opp = [p for p in big[1:] if facing(p)]
         if opp:
             n1, a1, c1 = opp[0]
             t = abs(sum((a - b2) * c for a, b2, c in zip(c0, c1, n0)))
-            if t <= 3.0 and a0 > 0.5 * a1 and a1 > 0.5 * a0:
+            if t <= 8.5 and a0 > 0.5 * a1 and a1 > 0.5 * a0 and abs(m["volume"] - a0 * t) < 0.5 * m["volume"]:   # and nothing much outside the two faces
                 m["flat"] = 1
                 m["thickness"] = t
                 m["normal"] = n0
@@ -598,6 +662,12 @@ for path in step_files:
         m["section_origin"] = origin
         m["section_u"], m["section_v"] = u, v
         loops, open_count = section_loops(shape, origin, n, u, v)
+        if not axis and loops:   # tilted plate: (0, 0) is the outline's centre, not the faces' centroid (engraving moves that)
+            outer = max(loops, key=lambda l: l["w"] * l["h"])
+            ox, oy = outer["cx"], outer["cy"]
+            for l in loops:
+                l["cx"] -= ox
+                l["cy"] -= oy
         m["loops"] = loops
         m["open_section_edges"] = open_count
     parts[name] = m
@@ -654,6 +724,12 @@ CLEAR_PAIRS = [
     ("motor (bought)", "base-pan"), ("blower (bought)", "front-bulkhead"), ("blower (bought)", "lint-duct-transition"),
     ("pulley (bought)", "bay-ceiling"), ("exhaust-duct (bought)", "rear-lower-panel"), ("power-module (envelope)", "side-panel-left"),
     ("power-module (envelope)", "bay-ceiling"), ("drum-sheet", "front-upper-panel"),
+    ("belt (bought, PJ 5 rib)", "drum-sheet"), ("belt (bought, PJ 5 rib)", "pulley (bought)"), ("belt (bought, PJ 5 rib)", "idler-pulley (bought, flat idler 40 with bearing)"),
+    ("belt (bought, PJ 5 rib)", "bay-ceiling"), ("belt (bought, PJ 5 rib)", "motor (bought)"), ("belt (bought, PJ 5 rib)", "heat-module-tray"),
+    ("door-hinge-1-fixed (bought, flag hinge, pinned half)", "door-disc"), ("door-hinge-2-swing (bought, flag hinge, lift-off half)", "door-ring"),
+    ("door-seal (bought, OEM door seal)", "door-ring"), ("felt-seal-rear", "drum-ring-rear"), ("tier0-faceplate", "console-face"),
+    ("feet (bought, 4 x M8 leveling feet, 50 pad)", "base-pan"), ("hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts)", "front-bulkhead"),
+    ("idler-pulley (bought, flat idler 40 with bearing)", "motor (bought)"), ("hardware-idler-axle (bought, M8 x 30 bolt, nut)", "motor (bought)"),
 ]
 for a, b in CLEAR_PAIRS:
     if a in assembly and b in assembly:
@@ -681,7 +757,7 @@ for name, m in parts.items():
         gen(name, "section edges all closed", m["open_section_edges"], m["open_section_edges"] == 0)
         loops = m["loops"]
         others = [l for l in loops if l["type"] == "other"]
-        gen(name, "every section loop is a circle, rectangle, slot or polygon", f"{len(loops)} loops, {len(others)} unclassified", not others)
+        gen(name, "every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon", f"{len(loops)} loops, {len(others)} unclassified", not others)
         # one outer loop: the one with the largest box; every other loop inside it; no two inner loops overlap
         if loops:
             outer = max(loops, key=lambda l: l["w"] * l["h"])
@@ -746,26 +822,41 @@ def hole_on_rail(cx, cy, cz, axis):
 
 PANELS = ("side-panel-left", "side-panel-right", "front-upper-panel", "front-lower-panel", "rear-upper-panel",
           "rear-lower-panel", "top-panel", "base-pan", "bay-ceiling", "front-bulkhead", "rear-bulkhead")
+# M6 holes that are bolted through with a nut instead of into a rail: the idler and spring brackets on the base pan
+# (design-rules 7a Drive) and the two fixed hinge leaves on the front upper panel (7a Door). Listed, not inferred.
+THROUGH_BOLTED = {"base-pan": [(-128.0, 370.0), (-102.0, 370.0), (55.0, 370.0), (75.0, 370.0)],
+                  "front-upper-panel": [(-266.0, 581.5), (-252.0, 581.5)]}
 for name in PANELS:
     m = parts[name]
     n = m["normal"]
     axis = tuple(abs(a) for a in n)
     holes = [g for g in m["cylinders"] if abs(g["r"] - 3.25) < 1e-3 and all(abs(abs(a) - b2) < 1e-6 for a, b2 in zip(g["dir"], axis))]
-    off = []
+    off, through = [], []
     for g in holes:
-        if not hole_on_rail(*g["mid"], axis):
+        if hole_on_rail(*g["mid"], axis):
+            continue
+        uv = (g["mid"][0], g["mid"][1]) if axis[2] > 0.5 else (g["mid"][0], g["mid"][2])
+        if any(abs(uv[0] - a) < TOL_POS and abs(uv[1] - b2) < TOL_POS for a, b2 in THROUGH_BOLTED.get(name, [])):
+            through.append(uv)
+        else:
             off.append(tuple(round(x, 1) for x in g["mid"]))
-    gen(name, "every M6 hole sits on a frame rail centre line", f"{len(holes)} M6 holes, {len(off)} off a rail" + (f": {off[:4]}" if off else ""), not off)
+    gen(name, "every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole)",
+        f"{len(holes)} M6 holes, {len(through)} through-bolted, {len(off)} off a rail" + (f": {off[:4]}" if off else ""), not off)
 
 # V-011: every round feature has a named diameter
-ALLOWED_D = {4.5: "M4 clearance", 5.0: "louver slot ends (60 x 5)", 6.5: "M6 clearance", 8.5: "M8 clearance", 10.0: "inlet holes", 10.5: "roller shafts",
+ALLOWED_D = {4.5: "M4 clearance", 5.0: "louver slot ends (60 x 5)", 6.5: "M6 clearance", 8.5: "M8 clearance (feet studs)", 10.0: "inlet holes", 10.5: "roller shafts",
              40.0: "lint slot ends (260 x 40)",
              22.0: "cord strain relief bushing", 106.0: "exhaust port (102 duct + 2 each side)", 460.0: "door opening",
              470.0: "door ring bore", 480.0: "front panel ring opening / drum ring bore", 540.0: "door disc", 560.0: "door ring",
-             616.4: "splice inside", 618.4: "drum ring / sheet inside", 620.0: "drum outside"}
+             616.4: "splice inside", 618.4: "drum ring / sheet inside", 620.0: "drum outside",
+             12.0: "plate corner radius 6 / timer shaft holes", 6.0: "corner radius 3 (cheeks, tabs, splice, idler arm ends)", 20.0: "faceplate corner radius 10",
+             4.0: "4040 corner radius 2 / timer yoke holes", 3.0: "2020 corner radius 1.5", 6.8: "4040 centre bore (tapped M8 for the feet)", 4.2: "2020 centre bore",
+             22.3: "22 mm panel devices", 500.0: "felt seal inside", 570.0: "felt seal outside"}
 bad_d = []
 for n, m in parts.items():
     for g in m["cylinders"]:
+        if g["length"] < 0.5:   # engraved lettering on the faceplate is 0.3 deep; its curves are not features
+            continue
         d = round(2 * g["r"], 3)
         if not any(abs(d - k) < 0.011 for k in ALLOWED_D):
             bad_d.append((n, d))
@@ -773,7 +864,7 @@ for n, d in dxfs.items():
     for l in d["loops"]:
         if l["type"] == "circle" and not any(abs(l["w"] - k) < 0.011 for k in ALLOWED_D):
             bad_d.append((n + ".dxf", round(l["w"], 3)))
-gen("all parts", "V-011: every round feature diameter is on the named list (" + ", ".join(f"{k:g} {v}" for k, v in sorted(ALLOWED_D.items())) + ")",
+gen("all parts", "V-011: every round feature deeper than 0.5 mm has a diameter on the named list (" + ", ".join(f"{k:g} {v}" for k, v in sorted(ALLOWED_D.items())) + ")",
     f"{len(bad_d)} off the list" + (f": {bad_d[:5]}" if bad_d else ""), not bad_d)
 
 # V-013: air path areas from the measured features, against the blower outlet (102 round)
@@ -959,13 +1050,20 @@ with open(os.path.join(HERE, "expected-dimensions.csv"), newline="", encoding="u
 # ---------------------------------------------------------------------------
 # Drum sheet and splice: unwrap the holes of the curved solids onto the flat pattern and compare with the DXF
 # ---------------------------------------------------------------------------
+DRUM_HOLE_DS = (4.5, 6.5)     # the drum parts' hole sizes (7b); their 3 mm corner radii are cylinders too, but not holes
+
+
+def is_hole_d(d):
+    return any(abs(d - k) < TOL_POS for k in DRUM_HOLE_DS)
+
+
 def unwrap_drum(m, r_mid, axis_z, ri, y_front, L, seam_deg=90.0):
     """Holes in the sheet (radial cylinders) and tab holes (cylinders along Y) -> flat (x, y) with x from the seam
     and y from the sheet's front edge. A tab is folded in at the sheet's inner surface (radius ri), so a tab hole's
     flat y is its radial distance inside that surface, before the front edge or beyond the rear edge."""
     out = []
     for g in m["cylinders"]:
-        if g["r"] > 100:       # the drum surfaces themselves
+        if g["r"] > 100 or not is_hole_d(2 * g["r"]):   # the drum surfaces themselves, and the tabs' corner radii
             continue
         if abs(abs(g["dir"][1]) - 1) < 1e-6:          # tab hole, axis along Y
             x, z = g["mid"][0], g["mid"][2] - axis_z
@@ -1036,7 +1134,7 @@ if "drum-splice" in parts and "drum-splice" in dxfs:
     edge_deg = 90 - math.degrees(math.asin(half_chord / ro))
     d = dxfs["drum-splice"]
     dcirc = [l for l in d["loops"] if l["type"] == "circle"]
-    holes = [g for g in m["cylinders"] if g["r"] < 100]
+    holes = [g for g in m["cylinders"] if g["r"] < 100 and is_hole_d(2 * g["r"])]
     matched, unmatched = 0, []
     left = list(dcirc)
     flat = []
@@ -1077,6 +1175,29 @@ if FUSION_CSV:
     bodies = [r for r in rows if r["record"] == "body"]
     fcyl = [r for r in rows if r["record"] == "cylinder"]
     fdist = [r for r in rows if r["record"] == "distance"]
+    # a hardware set is one named compound of many solids here and many bodies under one component in Fusion:
+    # add the bodies of an assembly component up before comparing (volumes add, boxes merge)
+    merged, order = {}, []
+    for r in bodies:
+        key = (r["file"], r["body"])
+        if r["file"] == "osa-dryer-assembly":
+            if key not in merged:
+                merged[key] = dict(r)
+                merged[key]["n_bodies"] = 1
+                order.append(key)
+            else:
+                m_ = merged[key]
+                m_["volume_mm3"] = str(float(m_["volume_mm3"]) + float(r["volume_mm3"]))
+                for k in ("xmin", "ymin", "zmin"):
+                    m_[k] = str(min(float(m_[k]), float(r[k])))
+                for k in ("xmax", "ymax", "zmax"):
+                    m_[k] = str(max(float(m_[k]), float(r[k])))
+                m_["is_solid"] = m_["is_solid"] if r["is_solid"] in ("1", "True", "true") else r["is_solid"]
+                m_["n_bodies"] += 1
+        else:
+            merged[key] = dict(r)
+            order.append(key)
+    bodies = [merged[k] for k in order]
     seen = set()
     for r in bodies:
         src, nm = r["file"], r["body"]
@@ -1096,7 +1217,8 @@ if FUSION_CSV:
             vol = ref["volume"]; bb = (ref["xmin"], ref["ymin"], ref["zmin"], ref["xmax"], ref["ymax"], ref["zmax"])
             nf = ref["faces"]
         fv = float(r["volume_mm3"])
-        fusion_rows.append((src, nm, "volume (mm3)", f"OCP {vol:.3f} / Fusion {fv:.3f}", "PASS" if abs(fv - vol) <= 1e-4 * max(vol, 1) + 0.05 else "FAIL"))
+        nb = r.get("n_bodies", 1)
+        fusion_rows.append((src, nm, "volume (mm3)" + (f" ({nb} bodies added)" if nb > 1 else ""), f"OCP {vol:.3f} / Fusion {fv:.3f}", "PASS" if abs(fv - vol) <= 1e-4 * max(vol, 1) + 0.05 else "FAIL"))
         fb = tuple(float(r[k]) for k in ("xmin", "ymin", "zmin", "xmax", "ymax", "zmax"))
         dev = max(abs(a - b2) for a, b2 in zip(fb, bb))
         fusion_rows.append((src, nm, "bounding box (mm)", f"max deviation {dev:.4f}", "PASS" if dev <= 0.02 else "FAIL"))

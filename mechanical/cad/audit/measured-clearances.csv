@@ -5,9 +5,9 @@ drum-sheet,bay-ceiling,20.0
 drum-sheet,side-panel-left,35.0
 drum-sheet,side-panel-right,35.0
 drum-sheet,top-panel,58.5
-drum-sheet,rail-top-left,138.26
-drum-sheet,rail-top-right,138.26
-drum-sheet,rail-top-front,21.03
+drum-sheet,rail-top-left,139.087
+drum-sheet,rail-top-right,139.087
+drum-sheet,rail-top-front,21.754
 drum-sheet,roller-front-1 (bought),0.0
 drum-sheet,roller-front-2 (bought),0.0
 drum-sheet,roller-rear-1 (bought),0.0
@@ -38,8 +38,23 @@ heat-module (envelope),bay-ceiling,78.0
 motor (bought),base-pan,50.0
 blower (bought),front-bulkhead,55.057
 blower (bought),lint-duct-transition,0.0
-pulley (bought),bay-ceiling,166.108
+pulley (bought),bay-ceiling,165.0
 exhaust-duct (bought),rear-lower-panel,2.0
 power-module (envelope),side-panel-left,5.0
 power-module (envelope),bay-ceiling,80.0
 drum-sheet,front-upper-panel,49.2
+"belt (bought, PJ 5 rib)",drum-sheet,0.0
+"belt (bought, PJ 5 rib)",pulley (bought),0.0
+"belt (bought, PJ 5 rib)","idler-pulley (bought, flat idler 40 with bearing)",0.0
+"belt (bought, PJ 5 rib)",bay-ceiling,13.565
+"belt (bought, PJ 5 rib)",motor (bought),6.0
+"belt (bought, PJ 5 rib)",heat-module-tray,41.761
+"door-hinge-1-fixed (bought, flag hinge, pinned half)",door-disc,1.775
+"door-hinge-2-swing (bought, flag hinge, lift-off half)",door-ring,1.523
+"door-seal (bought, OEM door seal)",door-ring,2.0
+felt-seal-rear,drum-ring-rear,2.0
+tier0-faceplate,console-face,0.0
+"feet (bought, 4 x M8 leveling feet, 50 pad)",base-pan,0.0
+"hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts)",front-bulkhead,2.5
+"idler-pulley (bought, flat idler 40 with bearing)",motor (bought),4.5
+"hardware-idler-axle (bought, M8 x 30 bolt, nut)",motor (bought),7.0

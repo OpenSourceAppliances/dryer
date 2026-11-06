@@ -74,6 +74,10 @@ Vendor part numbers go in `bom.csv` with two vendors each. These are the part fa
 
 The timers are wall-box devices. Their yoke (the steel strap with the slotted ears, about 106 mm long) sits against the back of the faceplate, held by the 6-32 screws that come with the timer, through the two 4 mm holes at 83.3 mm spacing, with nuts behind. The shaft comes through the 12 mm hole and the knob presses on from the front, exactly as it would through a wall plate. No wall plate is used.
 
+## In the CAD model
+
+`mechanical/cad/osa_dryer_cad.py` draws the module on the console face from the numbers in `mechanical/drawings/tier0_drawings.py`: the faceplate (`mechanical/step/tier0-faceplate.step`, with its legends engraved 0.3 mm), the two timers as their maker's body size behind their yokes, 40 mm skirted knobs, the 22 mm selector and START with their bodies and contact blocks, and K1 on its rail. In Fusion the knobs, the selector and START move (`mechanical/cad/fusion_motion/`). Drawing it found that the UCI envelope (240 x 120 x 120 behind the aperture) is deeper than the console wedge: straight back from the aperture there is about 20 mm at its bottom edge, 80 at its centre and 140 at its top edge before the top panel's plane, and K1 as drawn on its rail reaches 50 mm below that plane, into the drum compartment. Either the console gets a floor (and the module's deep parts sit high) or the envelope changes; `docs/verification.md` V-015.
+
 ## Still to do
 
 1. Buy one timer and measure the yoke length, the shaft diameter, and the knob diameter against the faceplate drawing. The body size is from the maker's sheet; the rest is not.
