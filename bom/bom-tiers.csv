@@ -1,0 +1,70 @@
+part_id,tier0,tier1,tier2,tier3,notes
+CPM-X1,1,1,1,1,
+CPM-X2,1,1,1,1,
+CPM-X3,1,1,1,1,
+CPM-X4-X6,1,1,1,1,
+CPM-CB1,1,1,1,1,
+CPM-F1,1,1,1,1,
+CPM-F2,1,1,1,1,
+CPM-PSU,1,1,1,1,
+CPM-K_MOTOR,1,1,1,1,
+CPM-RLY,1,1,1,1,RLY_HEAT and RLY_HEAT_LO are heat-enable chain: omit two of three only if a heat module will never be fitted
+CPM-PTC,1,1,1,1,
+CPM-S1,1,1,1,1,
+CPM-S2,1,1,1,1,
+CPM-PS1,1,1,1,1,heat-enable chain: omit only if a heat module will never be fitted
+CPM-TF2,1,1,1,1,heat-enable chain: omit only if a heat module will never be fitted
+CPM-T_HI,1,1,1,1,heat-enable chain: omit only if a heat module will never be fitted
+CPM-T_LO,1,1,1,1,heat-enable chain: omit only if a heat module will never be fitted
+CPM-DIN,1,1,1,1,
+CPM-BOX,1,1,1,1,
+CPM-CORD-240,1,1,1,1,electric build only
+CPM-CORD-120,1,1,1,1,"gas, heat pump, and no-heat builds only"
+CPM-STRAIN,1,1,1,1,
+CPM-GND,1,1,1,1,
+CPM-WIRE,1,1,1,1,
+CPM-TP,1,1,1,1,
+CPM-TERM,1,1,1,1,
+UCI-J1-HSG,1,1,1,1,
+UCI-J1-TERM,1,1,1,1,
+UCI-J2-HSG,1,1,1,1,
+UCI-J2-TERM,1,1,1,1,
+UCI-CRIMP,1,1,1,1,
+T0-TMR,1,0,0,0,Tier 0 control module
+T0-SW,1,0,0,0,Tier 0 control module
+T0-START,1,0,0,0,Tier 0 control module
+T0-K1,1,0,0,0,Tier 0 control module
+T0-PLUG-HSG,1,0,0,0,Tier 0 control module
+T0-PLUG-TERM,1,0,0,0,Tier 0 control module
+T0-FACE,1,0,0,0,Tier 0 control module
+T0-WIRE,1,0,0,0,Tier 0 control module
+CH-M1,1,1,1,1,
+T0-RAIL,1,0,0,0,Tier 0 control module
+T0-NUTS,1,0,0,0,Tier 0 control module
+CH-EXT-4040,1,1,1,1,
+CH-EXT-2020,1,1,1,1,
+CH-BRKT,1,1,1,1,
+CH-TNUT-M6,1,1,1,1,
+CH-BOLT-M6,1,1,1,1,
+CH-TNUT-M8,1,1,1,1,
+CH-FEET,1,1,1,1,
+CH-PLATES,1,1,1,1,
+CH-PULLEY,1,1,1,1,
+CH-BLOWER,1,1,1,1,
+CH-DUCTS,1,1,1,1,
+CH-EXHAUST,1,1,1,1,
+CH-HINGE,1,1,1,1,
+CH-LATCH,1,1,1,1,
+CH-DOORSEAL,1,1,1,1,
+CH-GASKET,1,1,1,1,
+CH-PAINT,1,1,1,1,
+CH-DRUM-SHEET,1,1,1,1,
+CH-DRUM-RINGS,1,1,1,1,
+CH-DRUM-SPLICE,1,1,1,1,
+CH-DRUM-BAFFLE,1,1,1,1,
+CH-DRUM-HW,1,1,1,1,
+CH-ROLLERS,1,1,1,1,
+CH-FELT,1,1,1,1,
+CH-BELT,1,1,1,1,
+CH-IDLER,1,1,1,1,
+CH-LINT,1,1,1,1,
