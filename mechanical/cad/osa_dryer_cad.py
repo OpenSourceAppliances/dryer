@@ -23,6 +23,7 @@ measurement unlocks which DXF. Do not cut a plate whose gate is open.
 import csv
 import math
 import os
+import re
 import sys
 
 import cadquery as cq
@@ -1221,11 +1222,31 @@ add("hardware-idler-brackets (bought, 4 x M6 x 12 hex, nuts, through the base pa
 assy = cq.Assembly(name="osa-dryer")
 for name, solid, color, plate, t in parts:
     assy.add(solid, name=name, color=color)
+
+
+def fix_step_header(path):
+    """The STEP writer stamps the file with the time of day, so an unchanged part came out as a changed file on every
+    run. Pin the stamp so the repository's diffs show geometry changes only (the model's draft is the version)."""
+    with open(path, "r", encoding="utf-8", errors="replace") as f:
+        head = f.read(400)
+    m = re.search(r"'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}'", head)
+    if not m:
+        return
+    with open(path, "r+b") as f:
+        data = f.read()
+        stamp = m.group(0).encode()
+        fixed = f"'draft-{DRAFT}'".encode().ljust(len(stamp), b" ")   # same length, so nothing else in the file moves
+        f.seek(0)
+        f.write(data.replace(stamp, fixed, 1))
+
+
 assy.save(os.path.join(OUT, "step", "osa-dryer-assembly.step"))
+fix_step_header(os.path.join(OUT, "step", "osa-dryer-assembly.step"))
 for name, solid, color, plate, t in parts:
     if "(" in name:   # bought parts, envelopes, hardware and cut-to-length catalog stock get no STEP of their own
         continue
     exporters.export(solid, os.path.join(OUT, "step", f"{name}.step"))
+    fix_step_header(os.path.join(OUT, "step", f"{name}.step"))
 
 with open(os.path.join(OUT, "drawings", "frame-cut-list.csv"), "w", newline="") as f:
     w = csv.writer(f)
@@ -1233,7 +1254,6 @@ with open(os.path.join(OUT, "drawings", "frame-cut-list.csv"), "w", newline="") 
     for row in cut_list:
         w.writerow(row)
 
-import re
 
 def export_view(shape, vname, pdir, turn):
     """Write a check view. The SVG exporter picks its own 'up', so each view is turned afterwards:
