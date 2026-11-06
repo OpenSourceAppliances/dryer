@@ -1,6 +1,6 @@
 # Common power module: wiring
 
-Draft 2, 2026-11-06 (draft 1 2026-11-05). Status: paper design. Nothing has been built or tested. The KiCad schematic in `electrical/schematic/` is drawn from this document and must agree with it. Draft 2 changes only where the parts sit: the module is a plate with five short DIN rails behind the rear bulkhead, reached with the rear upper panel off (`DECISIONS.md` 2026-11-06, `docs/design-rules.md` section 4); every designator, terminal number and wire is as in draft 1. K_MOTOR becomes a mini contactor (LC1K0910BD class) for depth.
+Draft 2, 2026-11-06 (draft 1 2026-11-05). Status: paper design. Nothing has been built or tested. This document and the two ladder drawings are the electrical design; no KiCad schematic is drawn (`DECISIONS.md` 2026-11-06). Draft 2 changes only where the parts sit: the module is a plate with five short DIN rails behind the rear bulkhead, reached with the rear upper panel off (`DECISIONS.md` 2026-11-06, `docs/design-rules.md` section 4); every designator, terminal number and wire is as in draft 1. K_MOTOR becomes a mini contactor (LC1K0910BD class) for depth.
 
 The common power module is the plate behind the rear bulkhead, left of the riser duct, that every build gets, whatever makes the heat. It takes the cord in, makes the 24 V rail, runs the motor, holds the interlock chain, and ends at two terminal strips for the heat module and two connectors for the control module. The ladder drawings `ladder-common-power-module.svg` and `ladder-heat-modules.svg` are the picture of this document; regenerate them with `ladder.py` after any change here.
 
@@ -167,7 +167,7 @@ The cord is listed appliance cord with a molded plug, entering through a listed 
 
 See `docs/design-rules.md` section 3.2 and `ladder-heat-modules.svg`. In short: the tray's own contactor or relay switches its own mains from X2; its coil is driven from X4:1 through whatever limits it adds on its side and returns to X4:2; it closes X4:3 to X4:4 while making heat; and its tray is bonded to X2:4.
 
-## 7. Needs a real-world check before the KiCad schematic is drawn
+## 7. Needs a real-world check before the parts are bought
 
 1. CB1 curve against the motor's starting current. A C-curve 10 A breaker should hold a 1/3 hp motor start; a B curve may not.
 2. F1 against the PSU's inrush. Supply makers state it; a 2 A time-delay fuse normally holds a 60 W supply.

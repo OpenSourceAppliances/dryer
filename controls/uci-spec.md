@@ -26,7 +26,7 @@ A control module is anything that covers that hole and plugs into those connecto
 
 This document defines the hole, the connectors, every pin, what the chassis guarantees without any help from the module, and what the module must and must not do.
 
-It does not define the power module schematic, the design of any particular board, or the build steps. Those live in `electrical/`, `controls/tier*/`, and `docs/` and must agree with this document. Where they disagree, this document wins until it is changed under section 12.
+It does not define the power module wiring, the design of any particular board, or the build steps. Those live in `electrical/`, `controls/tier*/`, and `docs/` and must agree with this document. Where they disagree, this document wins until it is changed under section 12.
 
 ## 2. Words used here
 
@@ -358,7 +358,7 @@ The heat choice and its start-up time are two lines in the module's human-readab
 
 ## 9. What a chassis provides, at block level
 
-This is what the power module does behind J1 and J2. The schematic in `electrical/schematic/` is the authority for the actual wiring; this section is what it must amount to.
+This is what the power module does behind J1 and J2. The wiring document and ladder drawings in `electrical/wiring/` are the authority for the actual wiring; this section is what they must amount to.
 
 The chassis has a common power module, which is the same whatever makes the heat, and a heat module, which is one of four: none, electric, gas, or heat pump. The common power module ends at a terminal called HEAT_EN (X4:1). The heat module interface is defined in `docs/design-rules.md` section 3.2 and the terminal map and wire list are in `electrical/wiring/common-power-module.md`; the chain is drawn here so it is visible end to end, and in `electrical/wiring/ladder-common-power-module.svg` as a drawing.
 

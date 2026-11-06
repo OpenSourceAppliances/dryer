@@ -15,6 +15,13 @@ Affects: which files or subsystems this changes.
 
 ---
 
+## 2026-11-06  Fusion holds the design of record; no KiCad schematic
+
+Decision: The mechanical design of record is the Autodesk Fusion archive `mechanical/fusion/osa-dryer-assembly-motion.f3d`: the model as imported from the script's STEP output, with its joints and appearances, checked for interference and re-measured by Fusion's own kernel. The CadQuery script stays the place every number lives and the way the files are regenerated; the STEP files and DXF flat patterns are the neutral exports anyone can open, FreeCAD included. No KiCad schematic is drawn: the electrical design is `electrical/wiring/common-power-module.md` with its terminal map and wire list, and the ladder drawings `ladder.py` writes. The empty `electrical/schematic/` folder goes.
+Why: Fusion is what the designer runs the checks in and what a builder will open, and its free personal license is enough for one dryer. Keeping the open exports beside it means nobody needs Fusion to cut a plate or read a dimension. A KiCad schematic of a two-relay, one-contactor machine would repeat the ladder drawings in a second format with nothing added; the wiring document already carries every terminal number and wire. What is given up: a native FreeCAD document and a KiCad project, which the charter named as the formats; a contributor who wants either can make them from the script and the wiring document.
+Charter: departs from "FreeCAD and KiCad as native formats" for this appliance, on the grounds above. The charter copy in the project knowledge needs a line saying an appliance may name its design-of-record tool in `DECISIONS.md` as long as open exports (parametric source, STEP, DXF, plain-text wiring) are kept beside it.
+Affects: `README.md`, `docs/design-rules.md`, `docs/verification.md` (V-002), `electrical/wiring/common-power-module.md`, `controls/uci-spec.md` section 9, the charter.
+
 ## 2026-11-06  Every bought part is drawn from published figures before the first build
 
 Decision: Until a part is in hand, the model draws it as an envelope or a representation taken from the maker's datasheet where there is one, otherwise from a seller's listing, and the verification plan names the measurement that confirms each figure (V-106, V-108, V-112 and the parts-in-hand gate). A figure that came from a listing rather than a datasheet is marked as such in the model and the BOM. Nothing is cut whose dimensions depend on an unconfirmed figure.

@@ -14,7 +14,7 @@ Changes in draft 4: numbers in 7a and 7b corrected to what the model and the dra
 
 Changes in draft 2: the heat source is a module and the builder picks one of four (none, electric, gas, heat pump); the cabinet base is the heat module bay; the heat module interface (section 3.2); the door switch has a contact in the motor line; a note on fastener heads.
 
-The charter sets the rules for every appliance. This document sets the rules for this one. The UCI-D spec (`controls/uci-spec.md`) sets the control interface. CAD, the schematic, the BOM, and the build guide must meet all three. Where this document and the charter disagree, the charter wins unless `DECISIONS.md` records why not.
+The charter sets the rules for every appliance. This document sets the rules for this one. The UCI-D spec (`controls/uci-spec.md`) sets the control interface. CAD, the wiring, the BOM, and the build guide must meet all three. The Fusion archive is the design of record and the script, STEP, DXF and the wiring document are its open form (`DECISIONS.md` 2026-11-06). Where this document and the charter disagree, the charter wins unless `DECISIONS.md` records why not.
 
 ## 1. One chassis, four heat choices
 
@@ -49,7 +49,7 @@ Everything in the dryer belongs to one of these, and each one comes out as a uni
 
 ## 3. Electrical architecture: the interlock chain
 
-This is the part of the design that decides whether the dryer is safe, so it is fixed here before any schematic is drawn. The ladder diagram and the part families are in `controls/uci-spec.md` section 9. This section states the rules behind it.
+This is the part of the design that decides whether the dryer is safe, so it is fixed here before any wiring is drawn. The ladder diagram and the part families are in `controls/uci-spec.md` section 9. This section states the rules behind it.
 
 ### 3.1 Rules
 
