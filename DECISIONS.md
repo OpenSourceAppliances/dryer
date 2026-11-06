@@ -15,6 +15,13 @@ Affects: which files or subsystems this changes.
 
 ---
 
+## 2026-11-06  UCI-D aperture 500 wide
+
+Decision: The UCI-D aperture grows from 240 x 120 to 500 x 120 (`controls/uci-spec.md` draft 5): faceplate 540 x 160 on six M4 screws (the 520 x 140 corner pattern plus one hole at the middle of each long edge), envelope 500 x 120 x 120 behind the panel plane. The Tier 0 faceplate (draft 3) spreads its two knobs, the selector and START across the plate. The console frame does not change.
+Why: The aperture is the one chassis dimension that every control module ever built for this dryer inherits, and 240 was sized to the four Tier 0 controls with nothing to spare. A later module would have had to choose between those controls and a display. 500 is what the console as drawn gives with margin (the posts' bracket bolt heads are 295 from the centre line each side, so the envelope clears them by 45), and it holds a 7 inch class display beside a row of buttons, or two Eurocard boards, or a Tier 3 screen. What is given up: a 540 mm plate needs six screws instead of four, and the Tier 0 plate is mostly blank aluminum.
+Charter: follows (the control interface is specified once and outlives the boards; a screen is a Tier 3 accessory and this gives it a place without touching the chassis).
+Affects: `controls/uci-spec.md` 4.1 to 4.3 and 10, `mechanical/drawings/tier0_drawings.py` and `tier0-faceplate.dxf` / `.svg`, `mechanical/cad/osa_dryer_cad.py`, `mechanical/cad/expected-dimensions.csv`, `docs/design-rules.md` 7a Console, `docs/verification.md` V-015, `controls/tier0-mechanical/README.md`, `bom/bom.csv` T0-FACE and CH-BOLT-M4.
+
 ## 2026-11-06  Every M4 is a button head with a hex socket
 
 Decision: All M4 fasteners on the dryer are button head socket screws (ISO 7380, 2.5 mm hex key): the drum's 76 tab and seam bolts, the door ring's eight, the hinge lift-off halves' four, the control faceplate's four, and the DIN rail and clamp screws to come. The M4 row of the fastener budget (design-rules section 8) changes from pan head Phillips to button head, and the service set gains a 2.5 mm hex key (and a 4 mm one for the two countersunk M6 hinge screws).

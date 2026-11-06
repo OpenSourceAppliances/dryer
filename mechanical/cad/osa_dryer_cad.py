@@ -74,7 +74,7 @@ P = dict(
     riser_w=260.0, riser_depth=50.0, riser_z0=230.0, hood_w=300.0, hood_y0=560.0, hood_h=28.0,
     # console: a vertical box at the rear of the top on its own 4040 sub-frame (draft 6), holding the full UCI envelope
     console_h=200.0, uci_ap_z_off=83.0,   # console depth: from the top rear cross rail to the back (set below). Aperture centre above the top panel: the module's nuts under the front rail, the faceplate under its bolts
-    uci_ap_w=240.0, uci_ap_h=120.0, uci_hole_x=260.0, uci_hole_y=140.0, uci_hole_d=4.5,
+    uci_ap_w=500.0, uci_ap_h=120.0, uci_hole_x=520.0, uci_hole_y=140.0, uci_hole_d=4.5,   # UCI-D draft 5: 500 wide, six holes (the corners plus two on the centre line)
     # fasteners
     m6_hole=6.5, m4_hole=4.5, panel_pitch=150.0,
     # bay layout (envelopes)
@@ -112,7 +112,7 @@ P = dict(
     # felt seal (7a Drum and door): 8 mm polyester felt annulus glued to the rear bulkhead; the front one waits on the lint slot decision (V-010 finding)
     felt_ri=273.0, felt_ro=291.0, felt_t=8.0,   # on the ring face between the 540 bore and the tab tips (293.2)
     # Tier 0 control module (controls/tier0-mechanical): faceplate numbers from mechanical/drawings/tier0_drawings.py
-    fp_w=280.0, fp_h=160.0, fp_r=10.0, fp_t=2.0,
+    fp_w=540.0, fp_h=160.0, fp_r=10.0, fp_t=2.0,
     knob_d=40.0, knob_skirt_h=3.0, knob_body_d=30.0, knob_h=20.0,
 )
 P["drum_rim_r"] = P["drum_d"] / 2
@@ -725,7 +725,7 @@ CONSOLE_C = (0.0, con_y0, con_z0 + P["uci_ap_z_off"])   # aperture centre on the
 N_FACE = (0.0, -1.0, 0.0)                           # outward normal of the face
 S_FACE = (0.0, 0.0, 1.0)                            # up the face
 AP_Z = CONSOLE_C[2]
-uci_pts = [(sx * P["uci_hole_x"] / 2, sy * P["uci_hole_y"] / 2) for sx in (-1, 1) for sy in (-1, 1)]
+uci_pts = [(sx * P["uci_hole_x"] / 2, sy * P["uci_hole_y"] / 2) for sx in (-1, 1) for sy in (-1, 1)] + [(0.0, sy * P["uci_hole_y"] / 2) for sy in (-1, 1)]
 post_bolt_z = (con_z0 + 28.5, con_z1 - e - 28.5)     # two bolts per post, clear of the brackets' legs (35)
 rail_bolt_x = pitch_points(-hw + e, hw - e, P["panel_pitch"], 60)
 face_holes = [(sx * (hw - e / 2), z, P["m6_hole"]) for sx in (-1, 1) for z in post_bolt_z] + [(x, con_z1 - e / 2, P["m6_hole"]) for x in rail_bolt_x]
@@ -771,7 +771,7 @@ add("tier0-faceplate", on_face(fp.translate((0, 0, fp_z0))), ALU, plate=True, t=
 # four M4 button heads hold the faceplate to the console face, nuts inside the console
 fp_bolts = [place(button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 10.0, 2.5), face_point(ux, uy, fp_z0 + FP_T), N_FACE) for (ux, uy) in uci_pts]
 fp_nuts = [place(nut(P["m4_nut_af"], P["m4_nut_h"], 4.2), face_point(ux, uy, 0.0), tuple(-c for c in N_FACE)) for (ux, uy) in uci_pts]
-add("hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts)", compound(fp_bolts + fp_nuts), HARDWARE)
+add(f"hardware-tier0-faceplate (bought, {len(uci_pts)} x M4 x 10 button head, nuts)", compound(fp_bolts + fp_nuts), HARDWARE)
 
 fp_top = fp_z0 + FP_T           # outer surface of the faceplate, in face coordinates
 

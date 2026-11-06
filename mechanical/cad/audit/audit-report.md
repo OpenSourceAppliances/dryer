@@ -3,7 +3,7 @@
 Produced by `mechanical/cad/cad_audit.py` from the STEP and DXF files on disk. Every number below was measured from the files, not read from the script.
 
 Parts measured: 58 STEP files, 127 named solids in the assembly, 23 DXF drawings.
-Document checks: 364, generic checks: 468, Fusion comparisons: 711. **Failures: 0.**
+Document checks: 366, generic checks: 468, Fusion comparisons: 0. **Failures: 0.**
 
 ## 1. Values stated in the documents, against the files
 
@@ -184,12 +184,14 @@ Document checks: 364, generic checks: 468, Fusion comparisons: 711. **Failures: 
 | K-001 | console-face | thickness | 1.5 | 1.5 | PASS | 7a all flat plates 1.5 |
 | K-002 | console-face | normal | 0,1,0 | (-0.0, -1.0, -0.0) | PASS | 7a: vertical, facing front |
 | K-003 | console-face | outline 690;200 | 1 | rrect 690.000 x 200.000 | PASS | 7a: 690 wide between the cheeks, 200 tall from the top panel to the top of the frame |
-| K-004 | console-face | loop rect;0;1084.5;240;120 | 1 | 1 | PASS | uci-spec 4.1 aperture 240 x 120, centred 83 above the top panel's top: the module's nuts clear the front rail (1161.5), the faceplate clears the rail bolts |
-| K-005 | console-face | hole_at 4.5;-130;1014.5 | 1 | (-130.000, 1014.500) d 4.500 | PASS | uci-spec 4.1 holes on 260 x 140 |
-| K-006 | console-face | hole_at 4.5;130;1014.5 | 1 | (130.000, 1014.500) d 4.500 | PASS | uci-spec 4.1 |
-| K-007 | console-face | hole_at 4.5;-130;1154.5 | 1 | (-130.000, 1154.500) d 4.500 | PASS | uci-spec 4.1 |
-| K-008 | console-face | hole_at 4.5;130;1154.5 | 1 | (130.000, 1154.500) d 4.500 | PASS | uci-spec 4.1 |
-| K-009 | console-face | holes 4.5 | 4 | 4 | PASS | uci-spec 4.1 four holes |
+| K-004 | console-face | loop rect;0;1084.5;500;120 | 1 | 1 | PASS | uci-spec 4.1 (draft 5) aperture 500 x 120, centred 83 above the top panel's top: the module's nuts clear the front rail (1161.5), the faceplate clears the rail bolts |
+| K-005 | console-face | hole_at 4.5;-260;1014.5 | 1 | (-260.000, 1014.500) d 4.500 | PASS | uci-spec 4.1 holes on 520 x 140 and the centre line |
+| K-006 | console-face | hole_at 4.5;260;1014.5 | 1 | (260.000, 1014.500) d 4.500 | PASS | uci-spec 4.1 |
+| K-007 | console-face | hole_at 4.5;-260;1154.5 | 1 | (-260.000, 1154.500) d 4.500 | PASS | uci-spec 4.1 |
+| K-008 | console-face | hole_at 4.5;260;1154.5 | 1 | (260.000, 1154.500) d 4.500 | PASS | uci-spec 4.1 |
+| K-008b | console-face | hole_at 4.5;0;1014.5 | 1 | (0.000, 1014.500) d 4.500 | PASS | uci-spec 4.1: the two centre-line holes |
+| K-008c | console-face | hole_at 4.5;0;1154.5 | 1 | (0.000, 1154.500) d 4.500 | PASS | uci-spec 4.1 |
+| K-009 | console-face | holes 4.5 | 6 | 6 | PASS | uci-spec 4.1 six holes |
 | K-010 | console-face | min y | 610 | 610.0 | PASS | 7a: on the front faces of the front posts (611.5), 1.5 thick |
 | K-011 | console-face | min z | 1001.5 | 1001.5 | PASS | 7a: on the top panel |
 | K-012 | console-face | max z | 1201.5 | 1201.5 | PASS | 7a: to the top of the frame |
@@ -359,14 +361,14 @@ Document checks: 364, generic checks: 468, Fusion comparisons: 711. **Failures: 
 | H-023c | felt-seal-front | loop circle;0;631.5;582;582 | 1 | 1 | PASS | 7b Seals |
 | H-023d | felt-seal-front | max y | 49.5 | 49.5 | PASS | 7b Seals: on the front bulkhead's back (41.5), ring face at 50 |
 | H-024 | tier0-faceplate | thickness | 2 | 2.0 | PASS | tier0 README: 2 mm aluminum |
-| H-025 | tier0-faceplate | outline 280;160 | 1 | rrect 280.000 x 160.000 | PASS | tier0 README: 280 x 160 |
-| H-026 | tier0-faceplate | holes 4.5 | 8 | 8 | PASS | tier0_drawings: 4 mounting, 2 DIN rail standoffs, 2 cable ties |
+| H-025 | tier0-faceplate | outline 540;160 | 1 | rrect 540.000 x 160.000 | PASS | tier0 README: 540 x 160 (UCI-D draft 5) |
+| H-026 | tier0-faceplate | holes 4.5 | 10 | 10 | PASS | tier0_drawings: 6 mounting, 2 DIN rail standoffs, 2 cable ties |
 | H-027 | tier0-faceplate | holes 12 | 2 | 2 | PASS | tier0_drawings: two timer shaft holes |
 | H-028 | tier0-faceplate | holes 4 | 4 | 4 | PASS | tier0_drawings: four yoke holes at 83.3 |
 | H-029 | tier0-faceplate | holes 22.3 | 2 | 2 | PASS | tier0_drawings: two 22 mm devices |
-| H-030 | tier0-faceplate | hole_at 12;-80;1084.5 | 1 | (-80.000, 1084.500) d 12.000 | PASS | tier0_drawings: DRY TIME shaft on the faceplate's centre line, the aperture centre (1084.5) |
-| H-031 | tier0-faceplate | hole_at 22.3;90;1104.5 | 1 | (90.000, 1104.500) d 22.300 | PASS | tier0_drawings (faceplate draft 2): START, 20 above the centre line so K1 fits below the 22 mm devices |
-| H-031b | tier0-faceplate | hole_at 4.5;25;1060.5 | 1 | (25.000, 1060.500) d 4.500 | PASS | tier0_drawings (faceplate draft 2): K1 rail standoff, 24 below the centre line; the socket hangs 36 below it, to the aperture's edge |
+| H-030 | tier0-faceplate | hole_at 12;-150;1084.5 | 1 | (-150.000, 1084.500) d 12.000 | PASS | tier0_drawings (faceplate draft 3): DRY TIME shaft at X -150 on the faceplate's centre line, the aperture centre (1084.5) |
+| H-031 | tier0-faceplate | hole_at 22.3;130;1104.5 | 1 | (130.000, 1104.500) d 22.300 | PASS | tier0_drawings (faceplate draft 3): START at X 130, 20 above the centre line so K1 fits below the 22 mm devices |
+| H-031b | tier0-faceplate | hole_at 4.5;50;1060.5 | 1 | (50.000, 1060.500) d 4.500 | PASS | tier0_drawings (faceplate draft 3): K1 rail standoff at X 50, 24 below the centre line; the socket hangs 36 below it, to the aperture's edge |
 | H-032 | clearance | clearance tier0-faceplate;console-face | 0 | 0.0 | PASS | uci-spec 4.1: faceplate on the chassis panel |
 | H-034 | clearance | clearance feet (bought, 4 x M8 leveling feet, 50 pad);base-pan | 0 | 0.0 | PASS | 7c Feet: hex against the pan |
 | H-035 | clearance | clearance hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts);front-bulkhead | 2.5 | 2.5 | PASS | 7b: bolt tips at 44, bulkhead back face at 41.5 |
@@ -441,14 +443,14 @@ Document checks: 364, generic checks: 468, Fusion comparisons: 711. **Failures: 
 | console-face | one solid | 1 | PASS |
 | console-face | valid B-rep (BRepCheck) | 1 | PASS |
 | console-face | closed shells | 1 | PASS |
-| console-face | volume positive | 163260.0 | PASS |
+| console-face | volume positive | 116412.3 | PASS |
 | console-face | in the assembly with the same volume and place | True | PASS |
 | console-face | section edges all closed | 0 | PASS |
-| console-face | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 14 loops, 0 unclassified | PASS |
-| console-face | every cut lies inside the outline | 13 | PASS |
+| console-face | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 16 loops, 0 unclassified | PASS |
+| console-face | every cut lies inside the outline | 15 | PASS |
 | console-face | no two cuts overlap | 0 overlapping pairs | PASS |
 | console-face.dxf | DXF entities join into closed loops | 0 open chains | PASS |
-| console-face.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 14 matched, 0 only in STEP, 0 only in DXF | PASS |
+| console-face.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 16 matched, 0 only in STEP, 0 only in DXF | PASS |
 | console-face.dxf | DXF drawn in world coordinates or about the origin | offset (0.00, 0.00) | PASS |
 | console-post-1 | one solid | 1 | PASS |
 | console-post-1 | valid B-rep (BRepCheck) | 1 | PASS |
@@ -790,14 +792,14 @@ Document checks: 364, generic checks: 468, Fusion comparisons: 711. **Failures: 
 | tier0-faceplate | one solid | 1 | PASS |
 | tier0-faceplate | valid B-rep (BRepCheck) | 1 | PASS |
 | tier0-faceplate | closed shells | 1 | PASS |
-| tier0-faceplate | volume positive | 87020.2 | PASS |
+| tier0-faceplate | volume positive | 170156.6 | PASS |
 | tier0-faceplate | in the assembly with the same volume and place | True | PASS |
 | tier0-faceplate | section edges all closed | 0 | PASS |
-| tier0-faceplate | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 17 loops, 0 unclassified | PASS |
-| tier0-faceplate | every cut lies inside the outline | 16 | PASS |
+| tier0-faceplate | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 19 loops, 0 unclassified | PASS |
+| tier0-faceplate | every cut lies inside the outline | 18 | PASS |
 | tier0-faceplate | no two cuts overlap | 0 overlapping pairs | PASS |
 | tier0-faceplate.dxf | DXF entities join into closed loops | 0 open chains | PASS |
-| tier0-faceplate.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 17 matched, 0 only in STEP, 0 only in DXF | PASS |
+| tier0-faceplate.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 19 matched, 0 only in STEP, 0 only in DXF | PASS |
 | tier0-faceplate.dxf | DXF drawn in world coordinates or about the origin | offset (0.00, 1084.50) | PASS |
 | top-panel | one solid | 1 | PASS |
 | top-panel | valid B-rep (BRepCheck) | 1 | PASS |
@@ -837,7 +839,7 @@ Document checks: 364, generic checks: 468, Fusion comparisons: 711. **Failures: 
 | console-cap | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 10 M6 holes, 0 through-bolted, 0 off a rail | PASS |
 | console-cheek-left | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 5 M6 holes, 0 through-bolted, 0 off a rail | PASS |
 | console-cheek-right | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 5 M6 holes, 0 through-bolted, 0 off a rail | PASS |
-| console-face | the only M4 holes are the four UCI-D module holes (uci-spec 4.1) | 4 M4 holes | PASS |
+| console-face | the only M4 holes are the six UCI-D module holes (uci-spec 4.1, draft 5) | 6 M4 holes | PASS |
 | all parts | V-011: every round feature deeper than 0.5 mm has a diameter on the named list (3 2020 corner radius 1.5, 4 4040 corner radius 2 / timer yoke holes, 4.2 2020 centre bore, 4.5 M4 clearance, 5 louver slot ends (60 x 5), 6 corner radius 3 (cheeks, tabs, splice, idler arm ends), 6.5 M6 clearance, 6.8 4040 centre bore (tapped M8 for the feet), 8.5 M8 clearance (feet studs), 10 inlet holes, 10.5 roller shafts, 12 plate corner radius 6 / timer shaft holes, 20 faceplate corner radius 10, 22 cord strain relief bushing, 22.3 22 mm panel devices, 40 lint slot ends (260 x 40), 106 exhaust port (102 duct + 2 each side), 460 door opening, 470 door ring bore, 476 lint slot inner arc (radius 238), 480 front panel ring opening, 532 lint slot outer arc (radius 266), 540 door disc / drum ring bore, 546 felt seal inside (radius 273), 560 door ring, 582 felt seal outside (radius 291), 616.4 splice inside, 618.4 drum ring / sheet inside, 620 drum outside) | 0 off the list | PASS |
 | air path | V-013: every opening in the air path is at least the blower outlet (102 round, 8171 mm2) | riser 13000, riser_hood 8400, lint_duct 11088, lint_slot 8867, inlet_field 9896, exhaust_duct 8171 | PASS |
 | assembly | no two solids overlap by more than 1 mm3 (file re-import) | 127 solids, 0 overlaps | PASS |
@@ -846,724 +848,6 @@ Document checks: 364, generic checks: 468, Fusion comparisons: 711. **Failures: 
 | drum-sheet.dxf | flat pattern outline is the sheet's unrolled mid-surface length by its length plus the tabs | rpoly 1945.274 x 582.000, 244 edges; unrolled 1945.274 | PASS |
 | drum-splice.dxf | every hole in the curved splice unwraps onto a hole in the flat strip (0.05 mm) | 16 matched, 0 solid-only, 0 DXF-only | PASS |
 | drum-splice.dxf | flat strip outline equals the curved strip's arc length by its length | 60.000 x 544.000; arc 60.010 x 544.000 | PASS |
-
-## 3. The same files measured inside Autodesk Fusion
-
-Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running inside Fusion. CHECK means the two kernels count faces differently (Fusion may split or merge periodic faces); it is not a geometry difference.
-
-| file | body | comparison | values | result |
-|---|---|---|---|---|
-| base-pan | Body1 | volume (mm3) | OCP 770723.386 / Fusion 770723.386 | PASS |
-| base-pan | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| base-pan | Body1 | face count | OCP 39 / Fusion 39 | PASS |
-| base-pan | Body1 | solid body | 1 | PASS |
-| bay-ceiling | Body1 | volume (mm3) | OCP 689357.831 / Fusion 689357.831 | PASS |
-| bay-ceiling | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| bay-ceiling | Body1 | face count | OCP 48 / Fusion 48 | PASS |
-| bay-ceiling | Body1 | solid body | 1 | PASS |
-| console-cap | Body1 | volume (mm3) | OCP 146545.150 / Fusion 146545.150 | PASS |
-| console-cap | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-cap | Body1 | face count | OCP 20 / Fusion 20 | PASS |
-| console-cap | Body1 | solid body | 1 | PASS |
-| console-cheek-left | Body1 | volume (mm3) | OCP 42473.148 / Fusion 42473.148 | PASS |
-| console-cheek-left | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-cheek-left | Body1 | face count | OCP 15 / Fusion 15 | PASS |
-| console-cheek-left | Body1 | solid body | 1 | PASS |
-| console-cheek-right | Body1 | volume (mm3) | OCP 42473.148 / Fusion 42473.148 | PASS |
-| console-cheek-right | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-cheek-right | Body1 | face count | OCP 15 / Fusion 15 | PASS |
-| console-cheek-right | Body1 | solid body | 1 | PASS |
-| console-face | Body1 | volume (mm3) | OCP 163260.023 / Fusion 163260.023 | PASS |
-| console-face | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-face | Body1 | face count | OCP 26 / Fusion 26 | PASS |
-| console-face | Body1 | solid body | 1 | PASS |
-| console-post-1 | Body1 | volume (mm3) | OCP 217723.512 / Fusion 217723.512 | PASS |
-| console-post-1 | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-post-1 | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| console-post-1 | Body1 | solid body | 1 | PASS |
-| console-post-2 | Body1 | volume (mm3) | OCP 217723.512 / Fusion 217723.512 | PASS |
-| console-post-2 | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-post-2 | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| console-post-2 | Body1 | solid body | 1 | PASS |
-| console-post-3 | Body1 | volume (mm3) | OCP 217723.512 / Fusion 217723.512 | PASS |
-| console-post-3 | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-post-3 | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| console-post-3 | Body1 | solid body | 1 | PASS |
-| console-post-4 | Body1 | volume (mm3) | OCP 217723.512 / Fusion 217723.512 | PASS |
-| console-post-4 | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-post-4 | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| console-post-4 | Body1 | solid body | 1 | PASS |
-| console-rail-front | Body1 | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| console-rail-front | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-rail-front | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| console-rail-front | Body1 | solid body | 1 | PASS |
-| console-rail-left | Body1 | volume (mm3) | OCP 63684.127 / Fusion 63684.127 | PASS |
-| console-rail-left | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-rail-left | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| console-rail-left | Body1 | solid body | 1 | PASS |
-| console-rail-rear | Body1 | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| console-rail-rear | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-rail-rear | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| console-rail-rear | Body1 | solid body | 1 | PASS |
-| console-rail-right | Body1 | volume (mm3) | OCP 63684.127 / Fusion 63684.127 | PASS |
-| console-rail-right | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-rail-right | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| console-rail-right | Body1 | solid body | 1 | PASS |
-| console-rear | Body1 | volume (mm3) | OCP 208107.949 / Fusion 208107.949 | PASS |
-| console-rear | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| console-rear | Body1 | face count | OCP 18 / Fusion 18 | PASS |
-| console-rear | Body1 | solid body | 1 | PASS |
-| door-disc | Body1 | volume (mm3) | OCP 457916.974 / Fusion 457916.974 | PASS |
-| door-disc | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| door-disc | Body1 | face count | OCP 7 / Fusion 7 | PASS |
-| door-disc | Body1 | solid body | 1 | PASS |
-| door-ring | Body1 | volume (mm3) | OCP 145225.618 / Fusion 145225.618 | PASS |
-| door-ring | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| door-ring | Body1 | face count | OCP 14 / Fusion 14 | PASS |
-| door-ring | Body1 | solid body | 1 | PASS |
-| drum-ring-front | Body1 | volume (mm3) | OCP 141703.202 / Fusion 141703.202 | PASS |
-| drum-ring-front | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| drum-ring-front | Body1 | face count | OCP 34 / Fusion 34 | PASS |
-| drum-ring-front | Body1 | solid body | 1 | PASS |
-| drum-ring-rear | Body1 | volume (mm3) | OCP 141703.202 / Fusion 141703.202 | PASS |
-| drum-ring-rear | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| drum-ring-rear | Body1 | face count | OCP 34 / Fusion 34 | PASS |
-| drum-ring-rear | Body1 | solid body | 1 | PASS |
-| drum-sheet | Body1 | volume (mm3) | OCP 873714.067 / Fusion 873712.681 | PASS |
-| drum-sheet | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| drum-sheet | Body1 | face count | OCP 600 / Fusion 570 | CHECK |
-| drum-sheet | Body1 | solid body | 1 | PASS |
-| drum-splice | Body1 | volume (mm3) | OCP 32383.401 / Fusion 32384.592 | PASS |
-| drum-splice | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| drum-splice | Body1 | face count | OCP 26 / Fusion 26 | PASS |
-| drum-splice | Body1 | solid body | 1 | PASS |
-| felt-seal-front | Body1 | volume (mm3) | OCP 255147.589 / Fusion 255147.589 | PASS |
-| felt-seal-front | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| felt-seal-front | Body1 | face count | OCP 4 / Fusion 4 | PASS |
-| felt-seal-front | Body1 | solid body | 1 | PASS |
-| felt-seal-rear | Body1 | volume (mm3) | OCP 255147.589 / Fusion 255147.589 | PASS |
-| felt-seal-rear | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| felt-seal-rear | Body1 | face count | OCP 4 / Fusion 4 | PASS |
-| felt-seal-rear | Body1 | solid body | 1 | PASS |
-| front-bulkhead | Body1 | volume (mm3) | OCP 404709.830 / Fusion 404709.830 | PASS |
-| front-bulkhead | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| front-bulkhead | Body1 | face count | OCP 24 / Fusion 24 | PASS |
-| front-bulkhead | Body1 | solid body | 1 | PASS |
-| front-lower-panel | Body1 | volume (mm3) | OCP 242871.113 / Fusion 242871.113 | PASS |
-| front-lower-panel | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| front-lower-panel | Body1 | face count | OCP 242 / Fusion 242 | PASS |
-| front-lower-panel | Body1 | solid body | 1 | PASS |
-| front-upper-panel | Body1 | volume (mm3) | OCP 493333.246 / Fusion 493333.246 | PASS |
-| front-upper-panel | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| front-upper-panel | Body1 | face count | OCP 37 / Fusion 37 | PASS |
-| front-upper-panel | Body1 | solid body | 1 | PASS |
-| heat-module-tray | Body1 | volume (mm3) | OCP 120000.000 / Fusion 120000.000 | PASS |
-| heat-module-tray | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| heat-module-tray | Body1 | face count | OCP 6 / Fusion 6 | PASS |
-| heat-module-tray | Body1 | solid body | 1 | PASS |
-| lint-duct-transition | Body1 | volume (mm3) | OCP 1416800.000 / Fusion 1416800.000 | PASS |
-| lint-duct-transition | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| lint-duct-transition | Body1 | face count | OCP 6 / Fusion 6 | PASS |
-| lint-duct-transition | Body1 | solid body | 1 | PASS |
-| lint-duct | Body1 | volume (mm3) | OCP 3270960.000 / Fusion 3270960.000 | PASS |
-| lint-duct | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| lint-duct | Body1 | face count | OCP 6 / Fusion 6 | PASS |
-| lint-duct | Body1 | solid body | 1 | PASS |
-| osa-dryer-assembly | post-1 | volume (mm3) | OCP 1088617.560 / Fusion 1088617.559 | PASS |
-| osa-dryer-assembly | post-1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | post-1 | solid body | 1 | PASS |
-| osa-dryer-assembly | post-2 | volume (mm3) | OCP 1088617.560 / Fusion 1088617.559 | PASS |
-| osa-dryer-assembly | post-2 | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | post-2 | solid body | 1 | PASS |
-| osa-dryer-assembly | post-3 | volume (mm3) | OCP 1088617.560 / Fusion 1088617.559 | PASS |
-| osa-dryer-assembly | post-3 | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | post-3 | solid body | 1 | PASS |
-| osa-dryer-assembly | post-4 | volume (mm3) | OCP 1088617.560 / Fusion 1088617.559 | PASS |
-| osa-dryer-assembly | post-4 | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | post-4 | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-bottom-front | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| osa-dryer-assembly | rail-bottom-front | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-bottom-front | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-bottom-rear | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| osa-dryer-assembly | rail-bottom-rear | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-bottom-rear | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-bottom-left | volume (mm3) | OCP 729373.765 / Fusion 729373.765 | PASS |
-| osa-dryer-assembly | rail-bottom-left | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-bottom-left | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-bottom-right | volume (mm3) | OCP 729373.765 / Fusion 729373.765 | PASS |
-| osa-dryer-assembly | rail-bottom-right | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-bottom-right | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-mid-front-left | volume (mm3) | OCP 146963.371 / Fusion 146963.370 | PASS |
-| osa-dryer-assembly | rail-mid-front-left | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-mid-front-left | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-mid-front-right | volume (mm3) | OCP 146963.371 / Fusion 146963.370 | PASS |
-| osa-dryer-assembly | rail-mid-front-right | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-mid-front-right | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-mid-rear | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| osa-dryer-assembly | rail-mid-rear | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-mid-rear | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-mid-left | volume (mm3) | OCP 729373.765 / Fusion 729373.765 | PASS |
-| osa-dryer-assembly | rail-mid-left | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-mid-left | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-mid-right | volume (mm3) | OCP 729373.765 / Fusion 729373.765 | PASS |
-| osa-dryer-assembly | rail-mid-right | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-mid-right | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-mid-rearcross | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| osa-dryer-assembly | rail-mid-rearcross | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-mid-rearcross | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-top-front | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| osa-dryer-assembly | rail-top-front | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-top-front | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-top-rear | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| osa-dryer-assembly | rail-top-rear | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-top-rear | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-top-left | volume (mm3) | OCP 729373.765 / Fusion 729373.765 | PASS |
-| osa-dryer-assembly | rail-top-left | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-top-left | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-top-right | volume (mm3) | OCP 729373.765 / Fusion 729373.765 | PASS |
-| osa-dryer-assembly | rail-top-right | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-top-right | solid body | 1 | PASS |
-| osa-dryer-assembly | rail-top-rearcross | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| osa-dryer-assembly | rail-top-rearcross | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rail-top-rearcross | solid body | 1 | PASS |
-| osa-dryer-assembly | tray-rail-1 | volume (mm3) | OCP 72929.578 / Fusion 72929.578 | PASS |
-| osa-dryer-assembly | tray-rail-1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | tray-rail-1 | solid body | 1 | PASS |
-| osa-dryer-assembly | tray-rail-2 | volume (mm3) | OCP 72929.578 / Fusion 72929.578 | PASS |
-| osa-dryer-assembly | tray-rail-2 | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | tray-rail-2 | solid body | 1 | PASS |
-| osa-dryer-assembly | feet (bought, 4 x M8 leveling feet, 50 pad) | volume (mm3) (4 bodies added) | OCP 93105.692 / Fusion 93105.692 | PASS |
-| osa-dryer-assembly | feet (bought, 4 x M8 leveling feet, 50 pad) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | feet (bought, 4 x M8 leveling feet, 50 pad) | solid body | 1 | PASS |
-| osa-dryer-assembly | front-bulkhead | volume (mm3) | OCP 404709.830 / Fusion 404709.830 | PASS |
-| osa-dryer-assembly | front-bulkhead | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | front-bulkhead | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-front-bulkhead (bought, 7 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (7 bodies added) | OCP 6009.126 / Fusion 6009.126 | PASS |
-| osa-dryer-assembly | hardware-front-bulkhead (bought, 7 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-front-bulkhead (bought, 7 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | rear-bulkhead | volume (mm3) | OCP 652302.104 / Fusion 652302.104 | PASS |
-| osa-dryer-assembly | rear-bulkhead | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rear-bulkhead | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-rear-bulkhead (bought, 10 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (10 bodies added) | OCP 8584.466 / Fusion 8584.466 | PASS |
-| osa-dryer-assembly | hardware-rear-bulkhead (bought, 10 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-rear-bulkhead (bought, 10 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | felt-seal-rear | volume (mm3) | OCP 255147.589 / Fusion 255147.589 | PASS |
-| osa-dryer-assembly | felt-seal-rear | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | felt-seal-rear | solid body | 1 | PASS |
-| osa-dryer-assembly | felt-seal-front | volume (mm3) | OCP 255147.589 / Fusion 255147.589 | PASS |
-| osa-dryer-assembly | felt-seal-front | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | felt-seal-front | solid body | 1 | PASS |
-| osa-dryer-assembly | bay-ceiling | volume (mm3) | OCP 689357.831 / Fusion 689357.831 | PASS |
-| osa-dryer-assembly | bay-ceiling | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | bay-ceiling | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (20 bodies added) | OCP 17168.933 / Fusion 17168.932 | PASS |
-| osa-dryer-assembly | hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | base-pan | volume (mm3) | OCP 770723.386 / Fusion 770723.386 | PASS |
-| osa-dryer-assembly | base-pan | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | base-pan | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-base-pan (bought, 20 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (20 bodies added) | OCP 17168.933 / Fusion 17168.932 | PASS |
-| osa-dryer-assembly | hardware-base-pan (bought, 20 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-base-pan (bought, 20 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | side-panel-left | volume (mm3) | OCP 1123510.182 / Fusion 1123510.182 | PASS |
-| osa-dryer-assembly | side-panel-left | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | side-panel-left | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-side-panel-left (bought, 29 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (29 bodies added) | OCP 24894.953 / Fusion 24894.951 | PASS |
-| osa-dryer-assembly | hardware-side-panel-left (bought, 29 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-side-panel-left (bought, 29 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | side-panel-right | volume (mm3) | OCP 1123510.182 / Fusion 1123510.182 | PASS |
-| osa-dryer-assembly | side-panel-right | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | side-panel-right | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-side-panel-right (bought, 29 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (29 bodies added) | OCP 24894.953 / Fusion 24894.951 | PASS |
-| osa-dryer-assembly | hardware-side-panel-right (bought, 29 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-side-panel-right (bought, 29 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | front-upper-panel | volume (mm3) | OCP 493333.246 / Fusion 493333.246 | PASS |
-| osa-dryer-assembly | front-upper-panel | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | front-upper-panel | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-front-upper-panel (bought, 16 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (16 bodies added) | OCP 13735.146 / Fusion 13735.146 | PASS |
-| osa-dryer-assembly | hardware-front-upper-panel (bought, 16 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-front-upper-panel (bought, 16 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | front-lower-panel | volume (mm3) | OCP 242871.113 / Fusion 242871.113 | PASS |
-| osa-dryer-assembly | front-lower-panel | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | front-lower-panel | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-front-lower-panel (bought, 8 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (8 bodies added) | OCP 6867.573 / Fusion 6867.573 | PASS |
-| osa-dryer-assembly | hardware-front-lower-panel (bought, 8 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-front-lower-panel (bought, 8 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | rear-upper-panel | volume (mm3) | OCP 764957.703 / Fusion 764957.703 | PASS |
-| osa-dryer-assembly | rear-upper-panel | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rear-upper-panel | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-rear-upper-panel (bought, 18 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (18 bodies added) | OCP 15452.040 / Fusion 15452.039 | PASS |
-| osa-dryer-assembly | hardware-rear-upper-panel (bought, 18 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-rear-upper-panel (bought, 18 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | rear-lower-panel | volume (mm3) | OCP 240240.871 / Fusion 240240.871 | PASS |
-| osa-dryer-assembly | rear-lower-panel | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | rear-lower-panel | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-rear-lower-panel (bought, 8 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (8 bodies added) | OCP 6867.573 / Fusion 6867.573 | PASS |
-| osa-dryer-assembly | hardware-rear-lower-panel (bought, 8 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-rear-lower-panel (bought, 8 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | top-panel | volume (mm3) | OCP 775208.154 / Fusion 775208.154 | PASS |
-| osa-dryer-assembly | top-panel | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | top-panel | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-top-panel (bought, 16 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (16 bodies added) | OCP 13735.146 / Fusion 13735.146 | PASS |
-| osa-dryer-assembly | hardware-top-panel (bought, 16 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-top-panel (bought, 16 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | console-post-1 | volume (mm3) | OCP 217723.512 / Fusion 217723.512 | PASS |
-| osa-dryer-assembly | console-post-1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-post-1 | solid body | 1 | PASS |
-| osa-dryer-assembly | console-post-2 | volume (mm3) | OCP 217723.512 / Fusion 217723.512 | PASS |
-| osa-dryer-assembly | console-post-2 | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-post-2 | solid body | 1 | PASS |
-| osa-dryer-assembly | console-post-3 | volume (mm3) | OCP 217723.512 / Fusion 217723.512 | PASS |
-| osa-dryer-assembly | console-post-3 | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-post-3 | solid body | 1 | PASS |
-| osa-dryer-assembly | console-post-4 | volume (mm3) | OCP 217723.512 / Fusion 217723.512 | PASS |
-| osa-dryer-assembly | console-post-4 | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-post-4 | solid body | 1 | PASS |
-| osa-dryer-assembly | console-rail-front | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| osa-dryer-assembly | console-rail-front | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-rail-front | solid body | 1 | PASS |
-| osa-dryer-assembly | console-rail-rear | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| osa-dryer-assembly | console-rail-rear | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-rail-rear | solid body | 1 | PASS |
-| osa-dryer-assembly | console-rail-left | volume (mm3) | OCP 63684.127 / Fusion 63684.127 | PASS |
-| osa-dryer-assembly | console-rail-left | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-rail-left | solid body | 1 | PASS |
-| osa-dryer-assembly | console-rail-right | volume (mm3) | OCP 63684.127 / Fusion 63684.127 | PASS |
-| osa-dryer-assembly | console-rail-right | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-rail-right | solid body | 1 | PASS |
-| osa-dryer-assembly | console-brackets (bought, 12 x 4040 inside corner brackets) | volume (mm3) (12 bodies added) | OCP 104526.425 / Fusion 104526.425 | PASS |
-| osa-dryer-assembly | console-brackets (bought, 12 x 4040 inside corner brackets) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-brackets (bought, 12 x 4040 inside corner brackets) | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-console-brackets (bought, 24 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (24 bodies added) | OCP 20602.719 / Fusion 20602.718 | PASS |
-| osa-dryer-assembly | hardware-console-brackets (bought, 24 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-console-brackets (bought, 24 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | console-face | volume (mm3) | OCP 163260.023 / Fusion 163260.023 | PASS |
-| osa-dryer-assembly | console-face | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-face | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-console-face (bought, 8 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (8 bodies added) | OCP 6867.573 / Fusion 6867.573 | PASS |
-| osa-dryer-assembly | hardware-console-face (bought, 8 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-console-face (bought, 8 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | console-rear | volume (mm3) | OCP 208107.949 / Fusion 208107.949 | PASS |
-| osa-dryer-assembly | console-rear | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-rear | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-console-rear (bought, 8 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (8 bodies added) | OCP 6867.573 / Fusion 6867.573 | PASS |
-| osa-dryer-assembly | hardware-console-rear (bought, 8 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-console-rear (bought, 8 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | console-cap | volume (mm3) | OCP 146545.150 / Fusion 146545.150 | PASS |
-| osa-dryer-assembly | console-cap | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-cap | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-console-cap (bought, 10 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (10 bodies added) | OCP 8584.466 / Fusion 8584.466 | PASS |
-| osa-dryer-assembly | hardware-console-cap (bought, 10 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-console-cap (bought, 10 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | console-cheek-left | volume (mm3) | OCP 42473.148 / Fusion 42473.148 | PASS |
-| osa-dryer-assembly | console-cheek-left | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-cheek-left | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-console-cheek-left (bought, 5 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (5 bodies added) | OCP 4292.233 / Fusion 4292.233 | PASS |
-| osa-dryer-assembly | hardware-console-cheek-left (bought, 5 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-console-cheek-left (bought, 5 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | console-cheek-right | volume (mm3) | OCP 42473.148 / Fusion 42473.148 | PASS |
-| osa-dryer-assembly | console-cheek-right | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | console-cheek-right | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-console-cheek-right (bought, 5 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (5 bodies added) | OCP 4292.233 / Fusion 4292.233 | PASS |
-| osa-dryer-assembly | hardware-console-cheek-right (bought, 5 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-console-cheek-right (bought, 5 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | tier0-faceplate | volume (mm3) | OCP 87020.179 / Fusion 87020.179 | PASS |
-| osa-dryer-assembly | tier0-faceplate | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | tier0-faceplate | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts) | volume (mm3) (8 bodies added) | OCP 1181.045 / Fusion 1181.045 | PASS |
-| osa-dryer-assembly | hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | tier0-knob-dry-time (bought) | volume (mm3) | OCP 15189.251 / Fusion 15189.251 | PASS |
-| osa-dryer-assembly | tier0-knob-dry-time (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | tier0-knob-dry-time (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | tier0-timer-dry-time (bought) | volume (mm3) | OCP 90563.210 / Fusion 90563.210 | PASS |
-| osa-dryer-assembly | tier0-timer-dry-time (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | tier0-timer-dry-time (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | tier0-knob-heat-time (bought) | volume (mm3) | OCP 15189.251 / Fusion 15189.251 | PASS |
-| osa-dryer-assembly | tier0-knob-heat-time (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | tier0-knob-heat-time (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | tier0-timer-heat-time (bought) | volume (mm3) | OCP 90563.210 / Fusion 90563.210 | PASS |
-| osa-dryer-assembly | tier0-timer-heat-time (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | tier0-timer-heat-time (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | tier0-selector-body (bought) | volume (mm3) (2 bodies added) | OCP 34073.174 / Fusion 34073.174 | PASS |
-| osa-dryer-assembly | tier0-selector-body (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | tier0-selector-body (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | tier0-selector (bought) | volume (mm3) | OCP 2878.124 / Fusion 2878.124 | PASS |
-| osa-dryer-assembly | tier0-selector (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | tier0-selector (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | tier0-start-body (bought) | volume (mm3) (2 bodies added) | OCP 34073.174 / Fusion 34073.174 | PASS |
-| osa-dryer-assembly | tier0-start-body (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | tier0-start-body (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | tier0-start-button (bought) | volume (mm3) | OCP 2984.142 / Fusion 2984.142 | PASS |
-| osa-dryer-assembly | tier0-start-button (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | tier0-start-button (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | tier0-k1-relay-on-din-rail (bought) | volume (mm3) | OCP 127556.372 / Fusion 127556.372 | PASS |
-| osa-dryer-assembly | tier0-k1-relay-on-din-rail (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | tier0-k1-relay-on-din-rail (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | door-ring | volume (mm3) | OCP 145225.618 / Fusion 145225.618 | PASS |
-| osa-dryer-assembly | door-ring | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | door-ring | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-door-ring (bought, 8 x M4 x 8 button head, nuts) | volume (mm3) (16 bodies added) | OCP 2161.029 / Fusion 2161.028 | PASS |
-| osa-dryer-assembly | hardware-door-ring (bought, 8 x M4 x 8 button head, nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-door-ring (bought, 8 x M4 x 8 button head, nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | door-disc | volume (mm3) | OCP 457916.974 / Fusion 457916.974 | PASS |
-| osa-dryer-assembly | door-disc | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | door-disc | solid body | 1 | PASS |
-| osa-dryer-assembly | door-hinge-1-fixed (bought, flag hinge, pinned half) | volume (mm3) | OCP 17840.613 / Fusion 17840.613 | PASS |
-| osa-dryer-assembly | door-hinge-1-fixed (bought, flag hinge, pinned half) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | door-hinge-1-fixed (bought, flag hinge, pinned half) | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-door-hinge-1 (bought, 2 x M6 x 16 countersunk, nuts) | volume (mm3) (4 bodies added) | OCP 1692.210 / Fusion 1692.210 | PASS |
-| osa-dryer-assembly | hardware-door-hinge-1 (bought, 2 x M6 x 16 countersunk, nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-door-hinge-1 (bought, 2 x M6 x 16 countersunk, nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | door-hinge-2-swing (bought, flag hinge, lift-off half) | volume (mm3) | OCP 10700.959 / Fusion 10700.959 | PASS |
-| osa-dryer-assembly | door-hinge-2-swing (bought, flag hinge, lift-off half) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | door-hinge-2-swing (bought, flag hinge, lift-off half) | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-door-hinge-2 (bought, 2 x M4 x 8 button head into the tapped leaf) | volume (mm3) (2 bodies added) | OCP 357.340 / Fusion 357.340 | PASS |
-| osa-dryer-assembly | hardware-door-hinge-2 (bought, 2 x M4 x 8 button head into the tapped leaf) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-door-hinge-2 (bought, 2 x M4 x 8 button head into the tapped leaf) | solid body | 1 | PASS |
-| osa-dryer-assembly | door-handle (bought, D handle 128 centres) | volume (mm3) | OCP 30386.464 / Fusion 30386.454 | PASS |
-| osa-dryer-assembly | door-handle (bought, D handle 128 centres) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | door-handle (bought, D handle 128 centres) | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-door-handle (bought, 2 x M4 x 10 button head into the handle) | volume (mm3) (2 bodies added) | OCP 407.605 / Fusion 407.605 | PASS |
-| osa-dryer-assembly | hardware-door-handle (bought, 2 x M4 x 10 button head into the handle) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-door-handle (bought, 2 x M4 x 10 button head into the handle) | solid body | 1 | PASS |
-| osa-dryer-assembly | door-seal (bought, OEM door seal) | volume (mm3) | OCP 81939.020 / Fusion 81939.020 | PASS |
-| osa-dryer-assembly | door-seal (bought, OEM door seal) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | door-seal (bought, OEM door seal) | solid body | 1 | PASS |
-| osa-dryer-assembly | door-catch (bought, magnetic catch) | volume (mm3) | OCP 936.000 / Fusion 936.000 | PASS |
-| osa-dryer-assembly | door-catch (bought, magnetic catch) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | door-catch (bought, magnetic catch) | solid body | 1 | PASS |
-| osa-dryer-assembly | door-catch-strike (bought) | volume (mm3) | OCP 144.000 / Fusion 144.000 | PASS |
-| osa-dryer-assembly | door-catch-strike (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | door-catch-strike (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | riser-duct | volume (mm3) | OCP 8530900.000 / Fusion 8530900.000 | PASS |
-| osa-dryer-assembly | riser-duct | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | riser-duct | solid body | 1 | PASS |
-| osa-dryer-assembly | lint-duct | volume (mm3) | OCP 3270960.000 / Fusion 3270960.000 | PASS |
-| osa-dryer-assembly | lint-duct | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | lint-duct | solid body | 1 | PASS |
-| osa-dryer-assembly | lint-duct-transition | volume (mm3) | OCP 1416800.000 / Fusion 1416800.000 | PASS |
-| osa-dryer-assembly | lint-duct-transition | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | lint-duct-transition | solid body | 1 | PASS |
-| osa-dryer-assembly | drum-sheet | volume (mm3) | OCP 873714.067 / Fusion 873712.681 | PASS |
-| osa-dryer-assembly | drum-sheet | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | drum-sheet | solid body | 1 | PASS |
-| osa-dryer-assembly | drum-ring-front | volume (mm3) | OCP 141703.202 / Fusion 141703.202 | PASS |
-| osa-dryer-assembly | drum-ring-front | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | drum-ring-front | solid body | 1 | PASS |
-| osa-dryer-assembly | drum-ring-rear | volume (mm3) | OCP 141703.202 / Fusion 141703.202 | PASS |
-| osa-dryer-assembly | drum-ring-rear | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | drum-ring-rear | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts) | volume (mm3) (120 bodies added) | OCP 16207.714 / Fusion 16207.710 | PASS |
-| osa-dryer-assembly | hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | drum-splice | volume (mm3) | OCP 32383.401 / Fusion 32384.592 | PASS |
-| osa-dryer-assembly | drum-splice | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | drum-splice | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-drum-seam (bought, 16 x M4 x 8 button head, nuts) | volume (mm3) (32 bodies added) | OCP 4322.057 / Fusion 4322.056 | PASS |
-| osa-dryer-assembly | hardware-drum-seam (bought, 16 x M4 x 8 button head, nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-drum-seam (bought, 16 x M4 x 8 button head, nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | baffle-1 (angle, cut to length) | volume (mm3) | OCP 110481.803 / Fusion 110481.803 | PASS |
-| osa-dryer-assembly | baffle-1 (angle, cut to length) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | baffle-1 (angle, cut to length) | solid body | 1 | PASS |
-| osa-dryer-assembly | baffle-2 (angle, cut to length) | volume (mm3) | OCP 110481.803 / Fusion 110481.803 | PASS |
-| osa-dryer-assembly | baffle-2 (angle, cut to length) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | baffle-2 (angle, cut to length) | solid body | 1 | PASS |
-| osa-dryer-assembly | baffle-3 (angle, cut to length) | volume (mm3) | OCP 110481.803 / Fusion 110481.803 | PASS |
-| osa-dryer-assembly | baffle-3 (angle, cut to length) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | baffle-3 (angle, cut to length) | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-drum-baffles (bought, 12 x M6 x 12 button head, nuts) | volume (mm3) (24 bodies added) | OCP 10142.813 / Fusion 10142.807 | PASS |
-| osa-dryer-assembly | hardware-drum-baffles (bought, 12 x M6 x 12 button head, nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-drum-baffles (bought, 12 x M6 x 12 button head, nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | motor (bought) | volume (mm3) | OCP 3047064.106 / Fusion 3047064.106 | PASS |
-| osa-dryer-assembly | motor (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | motor (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | motor-mount-1 (bought, cradle) | volume (mm3) | OCP 110278.955 / Fusion 110278.955 | PASS |
-| osa-dryer-assembly | motor-mount-1 (bought, cradle) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | motor-mount-1 (bought, cradle) | solid body | 1 | PASS |
-| osa-dryer-assembly | motor-mount-2 (bought, cradle) | volume (mm3) | OCP 110278.955 / Fusion 110278.955 | PASS |
-| osa-dryer-assembly | motor-mount-2 (bought, cradle) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | motor-mount-2 (bought, cradle) | solid body | 1 | PASS |
-| osa-dryer-assembly | pulley (bought) | volume (mm3) | OCP 12673.537 / Fusion 12673.537 | PASS |
-| osa-dryer-assembly | pulley (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | pulley (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | blower (bought) | volume (mm3) | OCP 4753032.300 / Fusion 4753032.300 | PASS |
-| osa-dryer-assembly | blower (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | blower (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | heat-module-tray | volume (mm3) | OCP 120000.000 / Fusion 120000.000 | PASS |
-| osa-dryer-assembly | heat-module-tray | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | heat-module-tray | solid body | 1 | PASS |
-| osa-dryer-assembly | heat-module (envelope) | volume (mm3) | OCP 9508800.000 / Fusion 9508800.000 | PASS |
-| osa-dryer-assembly | heat-module (envelope) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | heat-module (envelope) | solid body | 1 | PASS |
-| osa-dryer-assembly | power-module (envelope) | volume (mm3) | OCP 7650000.000 / Fusion 7650000.000 | PASS |
-| osa-dryer-assembly | power-module (envelope) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | power-module (envelope) | solid body | 1 | PASS |
-| osa-dryer-assembly | exhaust-duct (bought) | volume (mm3) | OCP 4575918.196 / Fusion 4575918.196 | PASS |
-| osa-dryer-assembly | exhaust-duct (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | exhaust-duct (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | cord-bushing (bought, PG16 strain relief) | volume (mm3) | OCP 8877.396 / Fusion 8877.396 | PASS |
-| osa-dryer-assembly | cord-bushing (bought, PG16 strain relief) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | cord-bushing (bought, PG16 strain relief) | solid body | 1 | PASS |
-| osa-dryer-assembly | power-cord (bought) | volume (mm3) | OCP 11456.840 / Fusion 11456.840 | PASS |
-| osa-dryer-assembly | power-cord (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | power-cord (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | roller-rear-1 (bought) | volume (mm3) | OCP 70685.835 / Fusion 70685.835 | PASS |
-| osa-dryer-assembly | roller-rear-1 (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | roller-rear-1 (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | roller-front-1 (bought) | volume (mm3) | OCP 70685.835 / Fusion 70685.835 | PASS |
-| osa-dryer-assembly | roller-front-1 (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | roller-front-1 (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | roller-rear-2 (bought) | volume (mm3) | OCP 70685.835 / Fusion 70685.835 | PASS |
-| osa-dryer-assembly | roller-rear-2 (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | roller-rear-2 (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | roller-front-2 (bought) | volume (mm3) | OCP 70685.835 / Fusion 70685.835 | PASS |
-| osa-dryer-assembly | roller-front-2 (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | roller-front-2 (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | belt (bought, PJ 5 rib) | volume (mm3) | OCP 93764.559 / Fusion 93764.559 | PASS |
-| osa-dryer-assembly | belt (bought, PJ 5 rib) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | belt (bought, PJ 5 rib) | solid body | 1 | PASS |
-| osa-dryer-assembly | idler-pulley (bought, flat idler 40 with bearing) | volume (mm3) | OCP 18849.085 / Fusion 18849.085 | PASS |
-| osa-dryer-assembly | idler-pulley (bought, flat idler 40 with bearing) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | idler-pulley (bought, flat idler 40 with bearing) | solid body | 1 | PASS |
-| osa-dryer-assembly | idler-arm (flat bar 25x4, cut to length) | volume (mm3) | OCP 16879.089 / Fusion 16879.089 | PASS |
-| osa-dryer-assembly | idler-arm (flat bar 25x4, cut to length) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | idler-arm (flat bar 25x4, cut to length) | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-idler-axle (bought, M8 x 30 bolt, nut) | volume (mm3) | OCP 2443.760 / Fusion 2443.760 | PASS |
-| osa-dryer-assembly | hardware-idler-axle (bought, M8 x 30 bolt, nut) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-idler-axle (bought, M8 x 30 bolt, nut) | solid body | 1 | PASS |
-| osa-dryer-assembly | idler-bracket (angle 40x40x3, cut to length) | volume (mm3) | OCP 11180.667 / Fusion 11180.666 | PASS |
-| osa-dryer-assembly | idler-bracket (angle 40x40x3, cut to length) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | idler-bracket (angle 40x40x3, cut to length) | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-idler-pivot (bought, M8 x 25 bolt, nut) | volume (mm3) | OCP 1865.707 / Fusion 1865.707 | PASS |
-| osa-dryer-assembly | hardware-idler-pivot (bought, M8 x 25 bolt, nut) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-idler-pivot (bought, M8 x 25 bolt, nut) | solid body | 1 | PASS |
-| osa-dryer-assembly | spring-bracket (angle 40x40x3, cut to length) | volume (mm3) | OCP 8977.190 / Fusion 8977.190 | PASS |
-| osa-dryer-assembly | spring-bracket (angle 40x40x3, cut to length) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | spring-bracket (angle 40x40x3, cut to length) | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-idler-spring-posts (bought, 2 x M5 shoulder posts) | volume (mm3) (2 bodies added) | OCP 1256.637 / Fusion 1256.637 | PASS |
-| osa-dryer-assembly | hardware-idler-spring-posts (bought, 2 x M5 shoulder posts) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-idler-spring-posts (bought, 2 x M5 shoulder posts) | solid body | 1 | PASS |
-| osa-dryer-assembly | idler-spring (bought, extension spring) | volume (mm3) | OCP 7580.847 / Fusion 7580.847 | PASS |
-| osa-dryer-assembly | idler-spring (bought, extension spring) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | idler-spring (bought, extension spring) | solid body | 1 | PASS |
-| osa-dryer-assembly | hardware-idler-brackets (bought, 4 x M6 x 12 hex, nuts, through the base pan) | volume (mm3) (8 bodies added) | OCP 4562.023 / Fusion 4562.023 | PASS |
-| osa-dryer-assembly | hardware-idler-brackets (bought, 4 x M6 x 12 hex, nuts, through the base pan) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | hardware-idler-brackets (bought, 4 x M6 x 12 hex, nuts, through the base pan) | solid body | 1 | PASS |
-| post-1 | Body1 | volume (mm3) | OCP 1088617.560 / Fusion 1088617.559 | PASS |
-| post-1 | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| post-1 | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| post-1 | Body1 | solid body | 1 | PASS |
-| post-2 | Body1 | volume (mm3) | OCP 1088617.560 / Fusion 1088617.559 | PASS |
-| post-2 | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| post-2 | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| post-2 | Body1 | solid body | 1 | PASS |
-| post-3 | Body1 | volume (mm3) | OCP 1088617.560 / Fusion 1088617.559 | PASS |
-| post-3 | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| post-3 | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| post-3 | Body1 | solid body | 1 | PASS |
-| post-4 | Body1 | volume (mm3) | OCP 1088617.560 / Fusion 1088617.559 | PASS |
-| post-4 | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| post-4 | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| post-4 | Body1 | solid body | 1 | PASS |
-| rail-bottom-front | Body1 | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| rail-bottom-front | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-bottom-front | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-bottom-front | Body1 | solid body | 1 | PASS |
-| rail-bottom-left | Body1 | volume (mm3) | OCP 729373.765 / Fusion 729373.765 | PASS |
-| rail-bottom-left | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-bottom-left | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-bottom-left | Body1 | solid body | 1 | PASS |
-| rail-bottom-rear | Body1 | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| rail-bottom-rear | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-bottom-rear | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-bottom-rear | Body1 | solid body | 1 | PASS |
-| rail-bottom-right | Body1 | volume (mm3) | OCP 729373.765 / Fusion 729373.765 | PASS |
-| rail-bottom-right | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-bottom-right | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-bottom-right | Body1 | solid body | 1 | PASS |
-| rail-mid-front-left | Body1 | volume (mm3) | OCP 146963.371 / Fusion 146963.370 | PASS |
-| rail-mid-front-left | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-mid-front-left | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-mid-front-left | Body1 | solid body | 1 | PASS |
-| rail-mid-front-right | Body1 | volume (mm3) | OCP 146963.371 / Fusion 146963.370 | PASS |
-| rail-mid-front-right | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-mid-front-right | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-mid-front-right | Body1 | solid body | 1 | PASS |
-| rail-mid-left | Body1 | volume (mm3) | OCP 729373.765 / Fusion 729373.765 | PASS |
-| rail-mid-left | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-mid-left | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-mid-left | Body1 | solid body | 1 | PASS |
-| rail-mid-rear | Body1 | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| rail-mid-rear | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-mid-rear | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-mid-rear | Body1 | solid body | 1 | PASS |
-| rail-mid-rearcross | Body1 | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| rail-mid-rearcross | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-mid-rearcross | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-mid-rearcross | Body1 | solid body | 1 | PASS |
-| rail-mid-right | Body1 | volume (mm3) | OCP 729373.765 / Fusion 729373.765 | PASS |
-| rail-mid-right | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-mid-right | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-mid-right | Body1 | solid body | 1 | PASS |
-| rail-top-front | Body1 | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| rail-top-front | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-top-front | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-top-front | Body1 | solid body | 1 | PASS |
-| rail-top-left | Body1 | volume (mm3) | OCP 729373.765 / Fusion 729373.765 | PASS |
-| rail-top-left | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-top-left | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-top-left | Body1 | solid body | 1 | PASS |
-| rail-top-rear | Body1 | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| rail-top-rear | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-top-rear | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-top-rear | Body1 | solid body | 1 | PASS |
-| rail-top-rearcross | Body1 | volume (mm3) | OCP 664056.711 / Fusion 664056.711 | PASS |
-| rail-top-rearcross | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-top-rearcross | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-top-rearcross | Body1 | solid body | 1 | PASS |
-| rail-top-right | Body1 | volume (mm3) | OCP 729373.765 / Fusion 729373.765 | PASS |
-| rail-top-right | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rail-top-right | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| rail-top-right | Body1 | solid body | 1 | PASS |
-| rear-bulkhead | Body1 | volume (mm3) | OCP 652302.104 / Fusion 652302.104 | PASS |
-| rear-bulkhead | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rear-bulkhead | Body1 | face count | OCP 148 / Fusion 148 | PASS |
-| rear-bulkhead | Body1 | solid body | 1 | PASS |
-| rear-lower-panel | Body1 | volume (mm3) | OCP 240240.871 / Fusion 240240.871 | PASS |
-| rear-lower-panel | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rear-lower-panel | Body1 | face count | OCP 147 / Fusion 147 | PASS |
-| rear-lower-panel | Body1 | solid body | 1 | PASS |
-| rear-upper-panel | Body1 | volume (mm3) | OCP 764957.703 / Fusion 764957.703 | PASS |
-| rear-upper-panel | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rear-upper-panel | Body1 | face count | OCP 28 / Fusion 28 | PASS |
-| rear-upper-panel | Body1 | solid body | 1 | PASS |
-| riser-duct | Body1 | volume (mm3) | OCP 8530900.000 / Fusion 8530900.000 | PASS |
-| riser-duct | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| riser-duct | Body1 | face count | OCP 10 / Fusion 10 | PASS |
-| riser-duct | Body1 | solid body | 1 | PASS |
-| side-panel-left | Body1 | volume (mm3) | OCP 1123510.182 / Fusion 1123510.182 | PASS |
-| side-panel-left | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| side-panel-left | Body1 | face count | OCP 39 / Fusion 39 | PASS |
-| side-panel-left | Body1 | solid body | 1 | PASS |
-| side-panel-right | Body1 | volume (mm3) | OCP 1123510.182 / Fusion 1123510.182 | PASS |
-| side-panel-right | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| side-panel-right | Body1 | face count | OCP 39 / Fusion 39 | PASS |
-| side-panel-right | Body1 | solid body | 1 | PASS |
-| tier0-faceplate | Body1 | volume (mm3) | OCP 87020.179 / Fusion 87020.179 | PASS |
-| tier0-faceplate | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| tier0-faceplate | Body1 | face count | OCP 513 / Fusion 513 | PASS |
-| tier0-faceplate | Body1 | solid body | 1 | PASS |
-| top-panel | Body1 | volume (mm3) | OCP 775208.154 / Fusion 775208.154 | PASS |
-| top-panel | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| top-panel | Body1 | face count | OCP 30 / Fusion 30 | PASS |
-| top-panel | Body1 | solid body | 1 | PASS |
-| tray-rail-1 | Body1 | volume (mm3) | OCP 72929.578 / Fusion 72929.578 | PASS |
-| tray-rail-1 | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| tray-rail-1 | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| tray-rail-1 | Body1 | solid body | 1 | PASS |
-| tray-rail-2 | Body1 | volume (mm3) | OCP 72929.578 / Fusion 72929.578 | PASS |
-| tray-rail-2 | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| tray-rail-2 | Body1 | face count | OCP 59 / Fusion 59 | PASS |
-| tray-rail-2 | Body1 | solid body | 1 | PASS |
-| base-pan |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 33 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| bay-ceiling |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 22 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-cap |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 14 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-cheek-left |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 9 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-cheek-right |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 9 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-face |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 16 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-post-1 |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-post-2 |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-post-3 |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-post-4 |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-rail-front |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-rail-left |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-rail-rear |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-rail-right |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| console-rear |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 12 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| door-disc |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| door-ring |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 12 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| drum-ring-front |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 32 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| drum-ring-rear |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 32 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| drum-sheet |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 210 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| drum-splice |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 22 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| felt-seal-front |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 2 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| felt-seal-rear |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 2 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| front-bulkhead |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 16 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| front-lower-panel |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 124 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| front-upper-panel |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 31 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| post-1 |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| post-2 |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| post-3 |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| post-4 |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-bottom-front |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-bottom-left |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-bottom-rear |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-bottom-right |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-mid-front-left |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-mid-front-right |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-mid-left |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-mid-rear |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-mid-rearcross |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-mid-right |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-top-front |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-top-left |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-top-rear |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-top-rearcross |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rail-top-right |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rear-bulkhead |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 142 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rear-lower-panel |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 77 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rear-upper-panel |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 22 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| side-panel-left |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 33 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| side-panel-right |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 33 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| tier0-faceplate |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 20 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| top-panel |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 24 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| tray-rail-1 |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| tray-rail-2 |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| osa-dryer-assembly | drum-sheet / front-bulkhead | minimum distance (mm) | OCP 7.700 / Fusion 7.700 | PASS |
-| osa-dryer-assembly | drum-sheet / rear-bulkhead | minimum distance (mm) | OCP 9.200 / Fusion 9.200 | PASS |
-| osa-dryer-assembly | drum-sheet / bay-ceiling | minimum distance (mm) | OCP 20.000 / Fusion 20.000 | PASS |
-| osa-dryer-assembly | drum-sheet / side-panel-left | minimum distance (mm) | OCP 35.000 / Fusion 35.000 | PASS |
-| osa-dryer-assembly | drum-sheet / side-panel-right | minimum distance (mm) | OCP 35.000 / Fusion 35.000 | PASS |
-| osa-dryer-assembly | drum-sheet / top-panel | minimum distance (mm) | OCP 58.500 / Fusion 58.500 | PASS |
-| osa-dryer-assembly | drum-sheet / rail-top-left | minimum distance (mm) | OCP 139.087 / Fusion 139.087 | PASS |
-| osa-dryer-assembly | drum-sheet / rail-top-right | minimum distance (mm) | OCP 139.087 / Fusion 139.087 | PASS |
-| osa-dryer-assembly | drum-sheet / rail-top-front | minimum distance (mm) | OCP 21.754 / Fusion 21.754 | PASS |
-| osa-dryer-assembly | drum-sheet / roller-front-1 (bought) | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | drum-sheet / roller-front-2 (bought) | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | drum-sheet / roller-rear-1 (bought) | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | drum-sheet / roller-rear-2 (bought) | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | drum-sheet / drum-ring-front | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | drum-sheet / drum-ring-rear | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | drum-sheet / drum-splice | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | drum-sheet / baffle-1 (angle, cut to length) | minimum distance (mm) | OCP 0.050 / Fusion 0.050 | PASS |
-| osa-dryer-assembly | drum-ring-front / front-bulkhead | minimum distance (mm) | OCP 8.500 / Fusion 8.500 | PASS |
-| osa-dryer-assembly | drum-ring-rear / rear-bulkhead | minimum distance (mm) | OCP 10.000 / Fusion 10.000 | PASS |
-| osa-dryer-assembly | door-ring / front-upper-panel | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | door-disc / door-ring | minimum distance (mm) | OCP 8.000 / Fusion 8.000 | PASS |
-| osa-dryer-assembly | console-face / console-cheek-left | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | console-face / console-cheek-right | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | console-face / top-panel | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | console-face / console-cap | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | front-bulkhead / bay-ceiling | minimum distance (mm) | OCP 0.500 / Fusion 0.500 | PASS |
-| osa-dryer-assembly | rear-bulkhead / bay-ceiling | minimum distance (mm) | OCP 0.500 / Fusion 0.500 | PASS |
-| osa-dryer-assembly | lint-duct / rail-mid-front-left | minimum distance (mm) | OCP 2.000 / Fusion 2.000 | PASS |
-| osa-dryer-assembly | lint-duct / rail-mid-front-right | minimum distance (mm) | OCP 2.000 / Fusion 2.000 | PASS |
-| osa-dryer-assembly | lint-duct / front-bulkhead | minimum distance (mm) | OCP 2.000 / Fusion 2.000 | PASS |
-| osa-dryer-assembly | lint-duct / front-upper-panel | minimum distance (mm) | OCP 5.000 / Fusion 5.000 | PASS |
-| osa-dryer-assembly | riser-duct / rear-bulkhead | minimum distance (mm) | OCP 7.000 / Fusion 7.000 | PASS |
-| osa-dryer-assembly | riser-duct / rail-mid-rear | minimum distance (mm) | OCP 6.500 / Fusion 6.500 | PASS |
-| osa-dryer-assembly | riser-duct / bay-ceiling | minimum distance (mm) | OCP 2.000 / Fusion 2.000 | PASS |
-| osa-dryer-assembly | heat-module (envelope) / heat-module-tray | minimum distance (mm) | OCP 0.500 / Fusion 0.500 | PASS |
-| osa-dryer-assembly | heat-module (envelope) / bay-ceiling | minimum distance (mm) | OCP 71.000 / Fusion 71.000 | PASS |
-| osa-dryer-assembly | motor (bought) / base-pan | minimum distance (mm) | OCP 50.000 / Fusion 50.000 | PASS |
-| osa-dryer-assembly | blower (bought) / front-bulkhead | minimum distance (mm) | OCP 55.057 / Fusion 55.057 | PASS |
-| osa-dryer-assembly | blower (bought) / lint-duct-transition | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
-| osa-dryer-assembly | pulley (bought) / bay-ceiling | minimum distance (mm) | OCP 165.000 / Fusion 165.000 | PASS |
-| osa-dryer-assembly | exhaust-duct (bought) / rear-lower-panel | minimum distance (mm) | OCP 2.000 / Fusion 2.000 | PASS |
-| osa-dryer-assembly | power-module (envelope) / side-panel-left | minimum distance (mm) | OCP 5.000 / Fusion 5.000 | PASS |
-| osa-dryer-assembly | power-module (envelope) / bay-ceiling | minimum distance (mm) | OCP 80.000 / Fusion 80.000 | PASS |
-| osa-dryer-assembly | drum-sheet / front-upper-panel | minimum distance (mm) | OCP 49.200 / Fusion 49.200 | PASS |
 
 ## 4. Clearances measured in the assembly (mm)
 
@@ -1657,7 +941,7 @@ Every part: bounding box, volume, faces. The full feature lists are in `measured
 | console-cap | 1 | -346.50..346.50 | 610.00..751.50 | 1201.50..1203.00 | 693.00 x 141.50 x 1.50 | 146545.1 | 20 (6 / 14 / 0) | 1.500 | 11 |
 | console-cheek-left | 1 | -346.50..-345.00 | 610.00..751.50 | 1000.00..1201.50 | 1.50 x 141.50 x 201.50 | 42473.1 | 15 (6 / 9 / 0) | 1.500 | 6 |
 | console-cheek-right | 1 | 345.00..346.50 | 610.00..751.50 | 1000.00..1201.50 | 1.50 x 141.50 x 201.50 | 42473.1 | 15 (6 / 9 / 0) | 1.500 | 6 |
-| console-face | 1 | -345.00..345.00 | 610.00..611.50 | 1001.50..1201.50 | 690.00 x 1.50 x 200.00 | 163260.0 | 26 (10 / 16 / 0) | 1.500 | 14 |
+| console-face | 1 | -345.00..345.00 | 610.00..611.50 | 1001.50..1201.50 | 690.00 x 1.50 x 200.00 | 116412.3 | 28 (10 / 18 / 0) | 1.500 | 16 |
 | console-post-1 | 1 | -345.00..-305.00 | 611.50..651.50 | 1001.50..1201.50 | 40.00 x 40.00 x 200.00 | 217723.5 | 59 (54 / 5 / 0) | | |
 | console-post-2 | 1 | -345.00..-305.00 | 710.00..750.00 | 1001.50..1201.50 | 40.00 x 40.00 x 200.00 | 217723.5 | 59 (54 / 5 / 0) | | |
 | console-post-3 | 1 | 305.00..345.00 | 611.50..651.50 | 1001.50..1201.50 | 40.00 x 40.00 x 200.00 | 217723.5 | 59 (54 / 5 / 0) | | |
@@ -1706,7 +990,7 @@ Every part: bounding box, volume, faces. The full feature lists are in `measured
 | riser-duct | 1 | -150.00..150.00 | 560.00..703.50 | 230.00..821.50 | 300.00 x 143.50 x 591.50 | 8530900.0 | 10 (10 / 0 / 0) | | |
 | side-panel-left | 1 | -346.50..-345.00 | -0.00..750.00 | -0.00..1000.00 | 1.50 x 750.00 x 1000.00 | 1123510.2 | 39 (6 / 33 / 0) | 1.500 | 30 |
 | side-panel-right | 1 | 345.00..346.50 | -0.00..750.00 | -0.00..1000.00 | 1.50 x 750.00 x 1000.00 | 1123510.2 | 39 (6 / 33 / 0) | 1.500 | 30 |
-| tier0-faceplate | 1 | -140.00..140.00 | 608.00..610.00 | 1004.50..1164.50 | 280.00 x 2.00 x 160.00 | 87020.2 | 513 (359 / 20 / 134) | 2.000 | 17 |
+| tier0-faceplate | 1 | -270.00..270.00 | 608.00..610.00 | 1004.50..1164.50 | 540.00 x 2.00 x 160.00 | 170156.6 | 515 (359 / 22 / 134) | 2.000 | 19 |
 | top-panel | 1 | -345.00..345.00 | -0.00..750.00 | 1000.00..1001.50 | 690.00 x 750.00 x 1.50 | 775208.2 | 30 (6 / 24 / 0) | 1.500 | 21 |
 | tray-rail-1 | 1 | -170.00..-150.00 | 340.00..700.00 | 40.00..60.00 | 20.00 x 360.00 x 20.00 | 72929.6 | 59 (54 / 5 / 0) | | |
 | tray-rail-2 | 1 | 150.00..170.00 | 340.00..700.00 | 40.00..60.00 | 20.00 x 360.00 x 20.00 | 72929.6 | 59 (54 / 5 / 0) | | |
@@ -1734,16 +1018,16 @@ Bought parts and envelopes in the assembly (no part file):
 | hardware-console-cap (bought, 10 x M6 x 12 hex, washers, T-nuts) | -331.00..331.00 | 625.50..736.00 | 1191.00..1208.60 | 8584.5 |
 | hardware-console-cheek-left (bought, 5 x M6 x 12 hex, washers, T-nuts) | -352.10..-334.50 | 625.50..736.00 | 1024.00..1187.50 | 4292.2 |
 | hardware-console-cheek-right (bought, 5 x M6 x 12 hex, washers, T-nuts) | 334.50..352.10 | 625.50..736.00 | 1024.00..1187.50 | 4292.2 |
-| hardware-tier0-faceplate (bought, 4 x M4 x 10 button head, nuts) | -134.04..134.04 | 605.80..618.00 | 1010.70..1158.30 | 1181.0 |
-| tier0-knob-dry-time (bought) | -100.00..-60.00 | 586.80..611.50 | 1064.50..1104.50 | 15189.3 |
-| tier0-timer-dry-time (bought) | -100.30..-59.70 | 610.00..641.70 | 1031.30..1137.70 | 90563.2 |
-| tier0-knob-heat-time (bought) | -40.00..0.00 | 586.80..611.50 | 1064.50..1104.50 | 15189.3 |
-| tier0-timer-heat-time (bought) | -40.30..0.30 | 610.00..641.70 | 1031.30..1137.70 | 90563.2 |
-| tier0-selector-body (bought) | 30.00..60.00 | 605.50..656.50 | 1087.00..1122.00 | 34073.2 |
-| tier0-selector (bought) | 34.00..56.00 | 595.50..605.50 | 1089.50..1119.50 | 2878.1 |
-| tier0-start-body (bought) | 75.00..105.00 | 605.50..656.50 | 1087.00..1122.00 | 34073.2 |
-| tier0-start-button (bought) | 79.00..101.00 | 597.50..605.50 | 1093.50..1115.50 | 2984.1 |
-| tier0-k1-relay-on-din-rail (bought) | 15.00..115.00 | 610.00..694.50 | 1024.50..1079.50 | 127556.4 |
+| hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts) | -264.04..264.04 | 605.80..618.00 | 1010.70..1158.30 | 1771.6 |
+| tier0-knob-dry-time (bought) | -170.00..-130.00 | 586.80..611.50 | 1064.50..1104.50 | 15189.3 |
+| tier0-timer-dry-time (bought) | -170.30..-129.70 | 610.00..641.70 | 1031.30..1137.70 | 90563.2 |
+| tier0-knob-heat-time (bought) | -80.00..-40.00 | 586.80..611.50 | 1064.50..1104.50 | 15189.3 |
+| tier0-timer-heat-time (bought) | -80.30..-39.70 | 610.00..641.70 | 1031.30..1137.70 | 90563.2 |
+| tier0-selector-body (bought) | 45.00..75.00 | 605.50..656.50 | 1087.00..1122.00 | 34073.2 |
+| tier0-selector (bought) | 49.00..71.00 | 595.50..605.50 | 1089.50..1119.50 | 2878.1 |
+| tier0-start-body (bought) | 115.00..145.00 | 605.50..656.50 | 1087.00..1122.00 | 34073.2 |
+| tier0-start-button (bought) | 119.00..141.00 | 597.50..605.50 | 1093.50..1115.50 | 2984.1 |
+| tier0-k1-relay-on-din-rail (bought) | 40.00..140.00 | 610.00..694.50 | 1024.50..1079.50 | 127556.4 |
 | hardware-door-ring (bought, 8 x M4 x 8 button head, nuts) | -241.94..241.94 | -5.70..4.50 | 389.80..873.20 | 2161.0 |
 | door-hinge-1-fixed (bought, flag hinge, pinned half) | -287.50..-245.00 | -23.00..-3.50 | 561.50..701.50 | 17840.6 |
 | hardware-door-hinge-1 (bought, 2 x M6 x 16 countersunk, nuts) | -272.00..-246.00 | -9.50..6.50 | 575.50..587.50 | 1692.2 |
@@ -1794,7 +1078,7 @@ DXF drawings:
 | console-cap | ARC 4, CIRCLE 10, LINE 4 | 11 | 0 | circle 10, rrect 1 |
 | console-cheek-left | ARC 4, CIRCLE 5, LINE 4 | 6 | 0 | circle 5, rrect 1 |
 | console-cheek-right | ARC 4, CIRCLE 5, LINE 4 | 6 | 0 | circle 5, rrect 1 |
-| console-face | ARC 4, CIRCLE 12, LINE 8 | 14 | 0 | circle 12, rect 1, rrect 1 |
+| console-face | ARC 4, CIRCLE 14, LINE 8 | 16 | 0 | circle 14, rect 1, rrect 1 |
 | console-rear | ARC 4, CIRCLE 8, LINE 4 | 9 | 0 | circle 8, rrect 1 |
 | door-disc | CIRCLE 5 | 5 | 0 | circle 5 |
 | door-ring | CIRCLE 12 | 12 | 0 | circle 12 |
@@ -1810,7 +1094,7 @@ DXF drawings:
 | rear-upper-panel | ARC 4, CIRCLE 18, LINE 4 | 19 | 0 | circle 18, rrect 1 |
 | side-panel-left | ARC 4, CIRCLE 29, LINE 4 | 30 | 0 | circle 29, rrect 1 |
 | side-panel-right | ARC 4, CIRCLE 29, LINE 4 | 30 | 0 | circle 29, rrect 1 |
-| tier0-faceplate | CIRCLE 16, LWPOLYLINE 1, LWPOLYLINE (not CUT) 1, TEXT (not CUT) 6 | 17 | 0 | circle 16, rrect 1 |
+| tier0-faceplate | CIRCLE 18, LWPOLYLINE 1, LWPOLYLINE (not CUT) 1, TEXT (not CUT) 6 | 19 | 0 | circle 18, rrect 1 |
 | top-panel | ARC 4, CIRCLE 20, LINE 4 | 21 | 0 | circle 20, rrect 1 |
 
 ## Notes

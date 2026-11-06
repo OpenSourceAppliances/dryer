@@ -181,12 +181,14 @@ P-034c,top-panel,hole_at,6.5;-282;730,1,,"7a Console (draft 6): foot bracket bol
 K-001,console-face,thickness,,1.5,,7a all flat plates 1.5
 K-002,console-face,normal,,"0,1,0",,"7a: vertical, facing front"
 K-003,console-face,outline,690;200,1,,"7a: 690 wide between the cheeks, 200 tall from the top panel to the top of the frame"
-K-004,console-face,loop,rect;0;1084.5;240;120,1,,"uci-spec 4.1 aperture 240 x 120, centred 83 above the top panel's top: the module's nuts clear the front rail (1161.5), the faceplate clears the rail bolts"
-K-005,console-face,hole_at,4.5;-130;1014.5,1,,uci-spec 4.1 holes on 260 x 140
-K-006,console-face,hole_at,4.5;130;1014.5,1,,uci-spec 4.1
-K-007,console-face,hole_at,4.5;-130;1154.5,1,,uci-spec 4.1
-K-008,console-face,hole_at,4.5;130;1154.5,1,,uci-spec 4.1
-K-009,console-face,holes,4.5,4,,uci-spec 4.1 four holes
+K-004,console-face,loop,rect;0;1084.5;500;120,1,,"uci-spec 4.1 (draft 5) aperture 500 x 120, centred 83 above the top panel's top: the module's nuts clear the front rail (1161.5), the faceplate clears the rail bolts"
+K-005,console-face,hole_at,4.5;-260;1014.5,1,,uci-spec 4.1 holes on 520 x 140 and the centre line
+K-006,console-face,hole_at,4.5;260;1014.5,1,,uci-spec 4.1
+K-007,console-face,hole_at,4.5;-260;1154.5,1,,uci-spec 4.1
+K-008,console-face,hole_at,4.5;260;1154.5,1,,uci-spec 4.1
+K-008b,console-face,hole_at,4.5;0;1014.5,1,,uci-spec 4.1: the two centre-line holes
+K-008c,console-face,hole_at,4.5;0;1154.5,1,,uci-spec 4.1
+K-009,console-face,holes,4.5,6,,uci-spec 4.1 six holes
 K-010,console-face,min,y,610,,"7a: on the front faces of the front posts (611.5), 1.5 thick"
 K-011,console-face,min,z,1001.5,,7a: on the top panel
 K-012,console-face,max,z,1201.5,,7a: to the top of the frame
@@ -362,14 +364,14 @@ H-023b,felt-seal-front,thickness,,8,,"7a Drum and door: 8 mm felt at the front t
 H-023c,felt-seal-front,loop,circle;0;631.5;582;582,1,,7b Seals
 H-023d,felt-seal-front,max,y,49.5,,"7b Seals: on the front bulkhead's back (41.5), ring face at 50"
 H-024,tier0-faceplate,thickness,,2,,tier0 README: 2 mm aluminum
-H-025,tier0-faceplate,outline,280;160,1,,tier0 README: 280 x 160
-H-026,tier0-faceplate,holes,4.5,8,,"tier0_drawings: 4 mounting, 2 DIN rail standoffs, 2 cable ties"
+H-025,tier0-faceplate,outline,540;160,1,,tier0 README: 540 x 160 (UCI-D draft 5)
+H-026,tier0-faceplate,holes,4.5,10,,"tier0_drawings: 6 mounting, 2 DIN rail standoffs, 2 cable ties"
 H-027,tier0-faceplate,holes,12,2,,tier0_drawings: two timer shaft holes
 H-028,tier0-faceplate,holes,4,4,,tier0_drawings: four yoke holes at 83.3
 H-029,tier0-faceplate,holes,22.3,2,,tier0_drawings: two 22 mm devices
-H-030,tier0-faceplate,hole_at,12;-80;1084.5,1,,"tier0_drawings: DRY TIME shaft on the faceplate's centre line, the aperture centre (1084.5)"
-H-031,tier0-faceplate,hole_at,22.3;90;1104.5,1,,"tier0_drawings (faceplate draft 2): START, 20 above the centre line so K1 fits below the 22 mm devices"
-H-031b,tier0-faceplate,hole_at,4.5;25;1060.5,1,,"tier0_drawings (faceplate draft 2): K1 rail standoff, 24 below the centre line; the socket hangs 36 below it, to the aperture's edge"
+H-030,tier0-faceplate,hole_at,12;-150;1084.5,1,,"tier0_drawings (faceplate draft 3): DRY TIME shaft at X -150 on the faceplate's centre line, the aperture centre (1084.5)"
+H-031,tier0-faceplate,hole_at,22.3;130;1104.5,1,,"tier0_drawings (faceplate draft 3): START at X 130, 20 above the centre line so K1 fits below the 22 mm devices"
+H-031b,tier0-faceplate,hole_at,4.5;50;1060.5,1,,"tier0_drawings (faceplate draft 3): K1 rail standoff at X 50, 24 below the centre line; the socket hangs 36 below it, to the aperture's edge"
 H-032,clearance,clearance,tier0-faceplate;console-face,0,,uci-spec 4.1: faceplate on the chassis panel
 H-034,clearance,clearance,"feet (bought, 4 x M8 leveling feet, 50 pad);base-pan",0,,7c Feet: hex against the pan
 H-035,clearance,clearance,"hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts);front-bulkhead",2.5,,"7b: bolt tips at 44, bulkhead back face at 41.5"

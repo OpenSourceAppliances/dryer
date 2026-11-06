@@ -873,7 +873,7 @@ for name in PANELS:
 # its M4 holes are the UCI-D module pattern on the face only
 m = parts["console-face"]
 m4 = [g for g in m["cylinders"] if abs(g["r"] - 2.25) < 1e-3]
-gen("console-face", "the only M4 holes are the four UCI-D module holes (uci-spec 4.1)", f"{len(m4)} M4 holes", len(m4) == 4)
+gen("console-face", "the only M4 holes are the six UCI-D module holes (uci-spec 4.1, draft 5)", f"{len(m4)} M4 holes", len(m4) == 6)
 
 # V-011: every round feature has a named diameter
 ALLOWED_D = {4.5: "M4 clearance", 5.0: "louver slot ends (60 x 5)", 6.5: "M6 clearance", 8.5: "M8 clearance (feet studs)", 10.0: "inlet holes", 10.5: "roller shafts",

@@ -1,0 +1,128 @@
+part,xmin,xmax,ymin,ymax,zmin,zmax
+post-1,-345.0,-305.0,0.0,40.0,0.0,1000.0
+post-2,305.0,345.0,0.0,40.0,0.0,1000.0
+post-3,-345.0,-305.0,710.0,750.0,0.0,1000.0
+post-4,305.0,345.0,710.0,750.0,0.0,1000.0
+rail-bottom-front,-305.0,305.0,0.0,40.0,0.0,40.0
+rail-bottom-rear,-305.0,305.0,710.0,750.0,0.0,40.0
+rail-bottom-left,-345.0,-305.0,40.0,710.0,0.0,40.0
+rail-bottom-right,305.0,345.0,40.0,710.0,0.0,40.0
+rail-mid-front-left,-305.0,-170.0,0.0,40.0,260.0,300.0
+rail-mid-front-right,170.0,305.0,0.0,40.0,260.0,300.0
+rail-mid-rear,-305.0,305.0,710.0,750.0,260.0,300.0
+rail-mid-left,-345.0,-305.0,40.0,710.0,260.0,300.0
+rail-mid-right,305.0,345.0,40.0,710.0,260.0,300.0
+rail-mid-rearcross,-305.0,305.0,611.5,651.5,260.0,300.0
+rail-top-front,-305.0,305.0,0.0,40.0,960.0,1000.0
+rail-top-rear,-305.0,305.0,710.0,750.0,960.0,1000.0
+rail-top-left,-345.0,-305.0,40.0,710.0,960.0,1000.0
+rail-top-right,305.0,345.0,40.0,710.0,960.0,1000.0
+rail-top-rearcross,-305.0,305.0,611.5,651.5,960.0,1000.0
+tray-rail-1,-170.0,-150.0,340.0,700.0,40.0,60.0
+tray-rail-2,150.0,170.0,340.0,700.0,40.0,60.0
+"feet (bought, 4 x M8 leveling feet, 50 pad)",-350.0,350.0,-5.0,755.0,-19.5,35.0
+front-bulkhead,-305.0,305.0,40.0,41.5,265.0,995.0
+"hardware-front-bulkhead (bought, 7 x M6 x 12 hex, washers, T-nuts)",-281.0,281.0,29.5,47.1,274.0,986.0
+rear-bulkhead,-305.0,305.0,610.0,611.5,265.0,995.0
+"hardware-rear-bulkhead (bought, 10 x M6 x 12 hex, washers, T-nuts)",-281.0,281.0,604.4,622.0,274.0,986.0
+felt-seal-rear,-291.0,291.0,602.0,610.0,340.5,922.5
+felt-seal-front,-291.0,291.0,41.5,49.5,340.5,922.5
+bay-ceiling,-343.5,343.5,42.0,750.0,300.0,301.5
+"hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts)",-331.0,331.0,74.0,736.0,289.5,307.1
+base-pan,-343.5,343.5,-0.0,750.0,-1.5,0.0
+"hardware-base-pan (bought, 20 x M6 x 12 hex, washers, T-nuts)",-331.0,331.0,14.0,736.0,-7.1,10.5
+side-panel-left,-346.5,-345.0,-0.0,750.0,-0.0,1000.0
+"hardware-side-panel-left (bought, 29 x M6 x 12 hex, washers, T-nuts)",-352.1,-334.5,14.0,736.0,14.0,986.0
+side-panel-right,345.0,346.5,-0.0,750.0,-0.0,1000.0
+"hardware-side-panel-right (bought, 29 x M6 x 12 hex, washers, T-nuts)",334.5,352.1,14.0,736.0,14.0,986.0
+front-upper-panel,-345.0,345.0,-1.5,0.0,260.0,1000.0
+"hardware-front-upper-panel (bought, 16 x M6 x 12 hex, washers, T-nuts)",-331.0,331.0,-7.1,10.5,274.0,986.0
+front-lower-panel,-345.0,345.0,-1.5,0.0,-0.0,259.0
+"hardware-front-lower-panel (bought, 8 x M6 x 12 hex, washers, T-nuts)",-331.0,331.0,-7.1,10.5,14.0,205.0
+rear-upper-panel,-345.0,345.0,750.0,751.5,260.0,1000.0
+"hardware-rear-upper-panel (bought, 18 x M6 x 12 hex, washers, T-nuts)",-331.0,331.0,739.5,757.1,274.0,986.0
+rear-lower-panel,-345.0,345.0,750.0,751.5,-0.0,259.0
+"hardware-rear-lower-panel (bought, 8 x M6 x 12 hex, washers, T-nuts)",-331.0,331.0,739.5,757.1,14.0,205.0
+top-panel,-345.0,345.0,-0.0,750.0,1000.0,1001.5
+"hardware-top-panel (bought, 16 x M6 x 12 hex, washers, T-nuts)",-331.0,331.0,14.0,736.0,989.5,1007.1
+console-post-1,-345.0,-305.0,611.5,651.5,1001.5,1201.5
+console-post-2,-345.0,-305.0,710.0,750.0,1001.5,1201.5
+console-post-3,305.0,345.0,611.5,651.5,1001.5,1201.5
+console-post-4,305.0,345.0,710.0,750.0,1001.5,1201.5
+console-rail-front,-305.0,305.0,611.5,651.5,1161.5,1201.5
+console-rail-rear,-305.0,305.0,710.0,750.0,1161.5,1201.5
+console-rail-left,-345.0,-305.0,651.5,710.0,1161.5,1201.5
+console-rail-right,305.0,345.0,651.5,710.0,1161.5,1201.5
+"console-brackets (bought, 12 x 4040 inside corner brackets)",-342.0,342.0,614.5,747.0,1001.5,1198.5
+"hardware-console-brackets (bought, 24 x M6 x 12 hex, washers, T-nuts)",-331.0,331.0,625.5,736.0,993.5,1187.5
+console-face,-345.0,345.0,610.0,611.5,1001.5,1201.5
+"hardware-console-face (bought, 8 x M6 x 12 hex, washers, T-nuts)",-331.0,331.0,604.4,622.0,1024.0,1187.5
+console-rear,-345.0,345.0,750.0,751.5,1000.0,1201.5
+"hardware-console-rear (bought, 8 x M6 x 12 hex, washers, T-nuts)",-331.0,331.0,739.5,757.1,1024.0,1187.5
+console-cap,-346.5,346.5,610.0,751.5,1201.5,1203.0
+"hardware-console-cap (bought, 10 x M6 x 12 hex, washers, T-nuts)",-331.0,331.0,625.5,736.0,1191.0,1208.6
+console-cheek-left,-346.5,-345.0,610.0,751.5,1000.0,1201.5
+"hardware-console-cheek-left (bought, 5 x M6 x 12 hex, washers, T-nuts)",-352.1,-334.5,625.5,736.0,1024.0,1187.5
+console-cheek-right,345.0,346.5,610.0,751.5,1000.0,1201.5
+"hardware-console-cheek-right (bought, 5 x M6 x 12 hex, washers, T-nuts)",334.5,352.1,625.5,736.0,1024.0,1187.5
+tier0-faceplate,-270.0,270.0,608.0,610.0,1004.5,1164.5
+"hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts)",-264.04,264.04,605.8,618.0,1010.7,1158.3
+tier0-knob-dry-time (bought),-170.0,-130.0,586.8,611.5,1064.5,1104.5
+tier0-timer-dry-time (bought),-170.3,-129.7,610.0,641.7,1031.3,1137.7
+tier0-knob-heat-time (bought),-80.0,-40.0,586.8,611.5,1064.5,1104.5
+tier0-timer-heat-time (bought),-80.3,-39.7,610.0,641.7,1031.3,1137.7
+tier0-selector-body (bought),45.0,75.0,605.5,656.5,1087.0,1122.0
+tier0-selector (bought),49.0,71.0,595.5,605.5,1089.5,1119.5
+tier0-start-body (bought),115.0,145.0,605.5,656.5,1087.0,1122.0
+tier0-start-button (bought),119.0,141.0,597.5,605.5,1093.5,1115.5
+tier0-k1-relay-on-din-rail (bought),40.0,140.0,610.0,694.5,1024.5,1079.5
+door-ring,-280.0,280.0,-3.5,-1.5,351.5,911.5
+"hardware-door-ring (bought, 8 x M4 x 8 button head, nuts)",-241.94,241.94,-5.7,4.5,389.8,873.2
+door-disc,-270.0,270.0,-13.5,-11.5,361.5,901.5
+"door-hinge-1-fixed (bought, flag hinge, pinned half)",-287.5,-245.0,-23.0,-3.5,561.5,701.5
+"hardware-door-hinge-1 (bought, 2 x M6 x 16 countersunk, nuts)",-272.0,-246.0,-9.5,6.5,575.5,587.5
+"door-hinge-2-swing (bought, flag hinge, lift-off half)",-287.5,-245.0,-23.0,-5.0,666.5,696.5
+"hardware-door-hinge-2 (bought, 2 x M4 x 8 button head into the tapped leaf)",-262.8,-246.2,-15.7,-5.5,677.7,685.3
+"door-handle (bought, D handle 128 centres)",213.0,227.0,-57.0,-13.5,560.5,702.5
+"hardware-door-handle (bought, 2 x M4 x 10 button head into the handle)",216.2,223.8,-21.5,-9.3,563.7,699.3
+"door-seal (bought, OEM door seal)",-246.0,246.0,-11.5,-5.5,385.5,877.5
+"door-catch (bought, magnetic catch)",256.0,268.0,-10.0,-3.5,625.5,637.5
+door-catch-strike (bought),256.0,268.0,-11.5,-10.5,625.5,637.5
+riser-duct,-150.0,150.0,560.0,703.5,230.0,821.5
+lint-duct,-168.0,168.0,5.0,38.0,150.0,445.0
+lint-duct-transition,-110.0,110.0,38.0,84.0,50.0,190.0
+drum-sheet,-310.0,310.0,49.2,600.8,321.5,941.5
+drum-ring-front,-309.2,309.2,50.0,52.0,322.3,940.7
+drum-ring-rear,-309.2,309.2,598.0,600.0,322.3,940.7
+"hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts)",-305.24,305.24,44.0,606.0,328.15,934.85
+drum-splice,-29.96,29.96,53.0,597.0,938.24,940.7
+"hardware-drum-seam (bought, 16 x M4 x 8 button head, nuts)",-19.21,19.21,101.2,508.8,936.99,947.36
+"baffle-1 (angle, cut to length)",-277.17,-241.03,85.0,565.0,748.43,803.07
+"baffle-2 (angle, cut to length)",-20.0,20.0,85.0,565.0,323.0,363.0
+"baffle-3 (angle, cut to length)",222.53,277.17,85.0,565.0,766.93,803.07
+"hardware-drum-baffles (bought, 12 x M6 x 12 button head, nuts)",-272.98,272.98,149.75,500.25,318.2,791.73
+motor (bought),-70.0,70.0,184.0,394.0,50.0,210.0
+"motor-mount-1 (bought, cradle)",-35.0,35.0,215.0,245.0,0.0,58.8
+"motor-mount-2 (bought, cradle)",-35.0,35.0,335.0,365.0,0.0,58.8
+pulley (bought),-15.0,15.0,394.0,416.0,105.0,135.0
+blower (bought),-110.0,270.0,84.0,190.0,10.0,230.0
+heat-module-tray,-160.0,160.0,420.0,670.0,60.0,61.5
+heat-module (envelope),-140.0,140.0,440.0,650.0,62.0,229.0
+power-module (envelope),-340.0,-170.0,450.0,700.0,40.0,220.0
+exhaust-duct (bought),179.0,281.0,190.0,750.0,99.0,201.0
+"cord-bushing (bought, PG16 strain relief)",-265.01,-234.99,677.0,703.0,-6.5,18.0
+power-cord (bought),-254.5,-245.5,685.5,820.0,-16.5,40.0
+roller-rear-1 (bought),-200.0,-140.0,575.0,600.0,307.05,367.05
+roller-front-1 (bought),-200.0,-140.0,50.0,75.0,307.05,367.05
+roller-rear-2 (bought),140.0,200.0,575.0,600.0,307.05,367.05
+roller-front-2 (bought),140.0,200.0,50.0,75.0,307.05,367.05
+"belt (bought, PJ 5 rib)",-313.5,313.5,396.0,408.0,101.5,945.0
+"idler-pulley (bought, flat idler 40 with bearing)",-82.0,-38.0,394.5,409.5,143.0,187.0
+"idler-arm (flat bar 25x4, cut to length)",-129.43,-45.57,390.0,394.0,10.57,179.43
+"hardware-idler-axle (bought, M8 x 30 bolt, nut)",-67.51,-52.49,385.0,414.5,158.5,171.5
+"idler-bracket (angle 40x40x3, cut to length)",-140.0,-90.0,350.0,390.0,0.0,40.0
+"hardware-idler-pivot (bought, M8 x 25 bolt, nut)",-122.51,-107.49,382.0,400.0,18.5,31.5
+"spring-bracket (angle 40x40x3, cut to length)",45.0,85.0,350.0,390.0,0.0,40.0
+"hardware-idler-spring-posts (bought, 2 x M5 shoulder posts)",-84.5,67.5,384.0,417.5,22.5,111.5
+"idler-spring (bought, extension spring)",-80.19,63.19,409.0,417.0,25.51,108.49
+"hardware-idler-brackets (bought, 4 x M6 x 12 hex, nuts, through the base pan)",-134.0,81.0,364.0,376.0,-9.0,8.6
