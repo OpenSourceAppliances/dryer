@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1220" height="820" viewBox="0 0 1220 820">
-<rect x="0" y="0" width="1220" height="820" fill="#ffffff"/>
-<text x="24" y="34" font-family="Helvetica, Arial, sans-serif" font-size="20" text-anchor="start" fill="#111" font-weight="bold"><tspan x="24" dy="0">osa-dryer: Tier 0 faceplate (draft 1, 2026-11-05), 2 mm aluminum, all dimensions mm</tspan></text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1540" height="820" viewBox="0 0 1540 820">
+<rect x="0" y="0" width="1540" height="820" fill="#ffffff"/>
+<text x="24" y="34" font-family="Helvetica, Arial, sans-serif" font-size="20" text-anchor="start" fill="#111" font-weight="bold"><tspan x="24" dy="0">osa-dryer: Tier 0 faceplate (draft 2, 2026-11-06), 2 mm aluminum, all dimensions mm</tspan></text>
 <rect x="150.0" y="110.0" width="840.0" height="480.0" rx="30.0" fill="#f7f7f7" stroke="#111" stroke-width="2"/>
 <rect x="210.0" y="170.0" width="720.0" height="360.0" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="8,6"/>
 <text x="216.0" y="186.0" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="start" fill="#555" font-style="italic"><tspan x="216.0" dy="0">chassis aperture 240 x 120 (reference, not cut)</tspan></text>
@@ -8,6 +8,8 @@
 <rect x="294.0" y="190.39999999999998" width="72.0" height="319.20000000000005" fill="none" stroke="#bbb" stroke-width="1" stroke-dasharray="2,4"/>
 <rect x="449.1" y="243.5" width="121.80000000000001" height="212.70000000000002" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="4,4"/>
 <rect x="474.0" y="190.39999999999998" width="72.0" height="319.20000000000005" fill="none" stroke="#bbb" stroke-width="1" stroke-dasharray="2,4"/>
+<rect x="618.0" y="365.0" width="84.0" height="165.0" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="4,4"/>
+<rect x="615.0" y="369.5" width="300.0" height="105.0" fill="none" stroke="#bbb" stroke-width="1" stroke-dasharray="2,4"/>
 <circle cx="180.0" cy="560.0" r="6.75" fill="#fff" stroke="#111" stroke-width="1.6"/>
 <line x1="174.0" y1="560.0" x2="186.0" y2="560.0" stroke="#111" stroke-width="0.8"/>
 <line x1="180.0" y1="554.0" x2="180.0" y2="566.0" stroke="#111" stroke-width="0.8"/>
@@ -38,18 +40,18 @@
 <circle cx="510.0" cy="474.95" r="6.0" fill="#fff" stroke="#111" stroke-width="1.6"/>
 <line x1="504.0" y1="474.95" x2="516.0" y2="474.95" stroke="#111" stroke-width="0.8"/>
 <line x1="510.0" y1="468.95" x2="510.0" y2="480.95" stroke="#111" stroke-width="0.8"/>
-<circle cx="705.0" cy="350.0" r="33.45" fill="#fff" stroke="#111" stroke-width="1.6"/>
-<line x1="699.0" y1="350.0" x2="711.0" y2="350.0" stroke="#111" stroke-width="0.8"/>
-<line x1="705.0" y1="344.0" x2="705.0" y2="356.0" stroke="#111" stroke-width="0.8"/>
-<circle cx="840.0" cy="350.0" r="33.45" fill="#fff" stroke="#111" stroke-width="1.6"/>
-<line x1="834.0" y1="350.0" x2="846.0" y2="350.0" stroke="#111" stroke-width="0.8"/>
-<line x1="840.0" y1="344.0" x2="840.0" y2="356.0" stroke="#111" stroke-width="0.8"/>
-<circle cx="645.0" cy="464.0" r="6.75" fill="#fff" stroke="#111" stroke-width="1.6"/>
-<line x1="639.0" y1="464.0" x2="651.0" y2="464.0" stroke="#111" stroke-width="0.8"/>
-<line x1="645.0" y1="458.0" x2="645.0" y2="470.0" stroke="#111" stroke-width="0.8"/>
-<circle cx="885.0" cy="464.0" r="6.75" fill="#fff" stroke="#111" stroke-width="1.6"/>
-<line x1="879.0" y1="464.0" x2="891.0" y2="464.0" stroke="#111" stroke-width="0.8"/>
-<line x1="885.0" y1="458.0" x2="885.0" y2="470.0" stroke="#111" stroke-width="0.8"/>
+<circle cx="705.0" cy="290.0" r="33.45" fill="#fff" stroke="#111" stroke-width="1.6"/>
+<line x1="699.0" y1="290.0" x2="711.0" y2="290.0" stroke="#111" stroke-width="0.8"/>
+<line x1="705.0" y1="284.0" x2="705.0" y2="296.0" stroke="#111" stroke-width="0.8"/>
+<circle cx="840.0" cy="290.0" r="33.45" fill="#fff" stroke="#111" stroke-width="1.6"/>
+<line x1="834.0" y1="290.0" x2="846.0" y2="290.0" stroke="#111" stroke-width="0.8"/>
+<line x1="840.0" y1="284.0" x2="840.0" y2="296.0" stroke="#111" stroke-width="0.8"/>
+<circle cx="645.0" cy="422.0" r="6.75" fill="#fff" stroke="#111" stroke-width="1.6"/>
+<line x1="639.0" y1="422.0" x2="651.0" y2="422.0" stroke="#111" stroke-width="0.8"/>
+<line x1="645.0" y1="416.0" x2="645.0" y2="428.0" stroke="#111" stroke-width="0.8"/>
+<circle cx="885.0" cy="422.0" r="6.75" fill="#fff" stroke="#111" stroke-width="1.6"/>
+<line x1="879.0" y1="422.0" x2="891.0" y2="422.0" stroke="#111" stroke-width="0.8"/>
+<line x1="885.0" y1="416.0" x2="885.0" y2="428.0" stroke="#111" stroke-width="0.8"/>
 <circle cx="234.0" cy="485.0" r="6.75" fill="#fff" stroke="#111" stroke-width="1.6"/>
 <line x1="228.0" y1="485.0" x2="240.0" y2="485.0" stroke="#111" stroke-width="0.8"/>
 <line x1="234.0" y1="479.0" x2="234.0" y2="491.0" stroke="#111" stroke-width="0.8"/>
@@ -58,9 +60,9 @@
 <line x1="234.0" y1="209.0" x2="234.0" y2="221.0" stroke="#111" stroke-width="0.8"/>
 <text x="330.0" y="204.0" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" font-weight="bold"><tspan x="330.0" dy="0">DRY TIME</tspan></text>
 <text x="510.0" y="204.0" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" font-weight="bold"><tspan x="510.0" dy="0">HEAT TIME</tspan></text>
-<text x="705.0" y="273.0" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" font-weight="bold"><tspan x="705.0" dy="0">HEAT</tspan></text>
-<text x="840.0" y="273.0" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" font-weight="bold"><tspan x="840.0" dy="0">START</tspan></text>
-<text x="705.0" y="435.0" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" font-weight="bold"><tspan x="705.0" dy="0">AIR  LOW  HIGH</tspan></text>
+<text x="705.0" y="213.0" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" font-weight="bold"><tspan x="705.0" dy="0">HEAT</tspan></text>
+<text x="840.0" y="213.0" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" font-weight="bold"><tspan x="840.0" dy="0">START</tspan></text>
+<text x="705.0" y="354.0" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#111" font-weight="bold"><tspan x="705.0" dy="0">AIR  LOW  HIGH</tspan></text>
 <line x1="150.0" y1="632.0" x2="990.0" y2="632.0" stroke="#111" stroke-width="1"/>
 <line x1="150.0" y1="627.0" x2="150.0" y2="637.0" stroke="#111" stroke-width="1"/>
 <line x1="990.0" y1="627.0" x2="990.0" y2="637.0" stroke="#111" stroke-width="1"/>
@@ -97,9 +99,18 @@
 <line x1="103.0" y1="474.95" x2="113.0" y2="474.95" stroke="#111" stroke-width="1"/>
 <line x1="103.0" y1="225.05" x2="113.0" y2="225.05" stroke="#111" stroke-width="1"/>
 <text x="114.0" y="354.0" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#111">83.3</text>
+<line x1="1320.0" y1="350.0" x2="1320.0" y2="290.0" stroke="#111" stroke-width="1"/>
+<line x1="1315.0" y1="350.0" x2="1325.0" y2="350.0" stroke="#111" stroke-width="1"/>
+<line x1="1315.0" y1="290.0" x2="1325.0" y2="290.0" stroke="#111" stroke-width="1"/>
+<text x="1326.0" y="324.0" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#111">20 (22 mm devices)</text>
+<line x1="1320.0" y1="422.0" x2="1320.0" y2="350.0" stroke="#111" stroke-width="1"/>
+<line x1="1315.0" y1="422.0" x2="1325.0" y2="422.0" stroke="#111" stroke-width="1"/>
+<line x1="1315.0" y1="350.0" x2="1325.0" y2="350.0" stroke="#111" stroke-width="1"/>
+<text x="1326.0" y="390.0" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#111">24 (K1 rail)</text>
 <text x="130.0" y="420.0" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="end" fill="#111" font-style="italic"><tspan x="130.0" dy="0">timer yoke holes, 6-32</tspan></text>
 <text x="150" y="720.0" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="start" fill="#333" font-style="italic"><tspan x="150" dy="0">Holes: 4 x 4.5 mount; timers: 12 shaft (check against the part) and 2 x 4.0 yoke holes at 83.3; 2 x 22.3 for the 22 mm selector and button;</tspan></text>
 <text x="150" y="736.0" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="start" fill="#333" font-style="italic"><tspan x="150" dy="0">2 x 4.5 for the K1 DIN rail standoffs; 2 x 4.5 cable tie anchors. Dashed boxes: timer body 40.6 x 70.9 and yoke 106.4 long, both behind the plate.</tspan></text>
-<text x="150" y="752.0" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="start" fill="#333" font-style="italic"><tspan x="150" dy="0">Everything mounted on the back stays inside the 240 x 120 aperture; the 20 mm band outside it sits against the chassis panel.</tspan></text>
-<text x="150" y="768.0" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="start" fill="#333" font-style="italic"><tspan x="150" dy="0">Labels: engrave if the cutter offers it, otherwise a printed strip. Knob diameter is not on the timer&#x27;s sheet: check it before cutting.</tspan></text>
+<text x="150" y="752.0" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="start" fill="#333" font-style="italic"><tspan x="150" dy="0">The 22 mm devices sit 20 above the centre line and the K1 rail 24 below it, so the K1 socket (36 below the rail line) stays inside the aperture.</tspan></text>
+<text x="150" y="768.0" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="start" fill="#333" font-style="italic"><tspan x="150" dy="0">Everything mounted on the back stays inside the 240 x 120 aperture; the 20 mm band outside it sits against the chassis panel.</tspan></text>
+<text x="150" y="784.0" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="start" fill="#333" font-style="italic"><tspan x="150" dy="0">Labels: engrave if the cutter offers it, otherwise a printed strip. Knob diameter is not on the timer&#x27;s sheet: check it before cutting.</tspan></text>
 </svg>

@@ -15,7 +15,7 @@ Every step names the checks from `docs/verification.md` that must be closed befo
 
 ## 1. Frame
 
-1. Cut or have cut the 21 extrusion pieces per `mechanical/drawings/frame-cut-list.csv`. Deburr the ends.
+1. Cut or have cut the 29 extrusion pieces per `mechanical/drawings/frame-cut-list.csv` (21 for the cabinet, 8 for the console frame, which waits until step 8). Deburr the ends. Tap the bottom end of each post M8 for the feet.
 2. Bottom level: two side rails and two end rails between the four posts, corner brackets, M8 into T-nuts, square before tightening. Diagonals equal within 2 mm (V-301).
 3. Mid level at 260 to 300: side rails, rear end rail, the two front stubs, the rear cross rail at Y 611.5. Check the stubs leave the 340 mm gap centered.
 4. Top level at 960 to 1000: side rails, end rails, rear cross rail.
@@ -25,7 +25,7 @@ Every step names the checks from `docs/verification.md` that must be closed befo
 
 ## 2. Bay
 
-1. Base pan under the bottom rails, M6 into the slots.
+1. Base pan under the bottom rails, M6 into the slots. The cord's strain relief bushing into the 22 mm hole under the power module's place, locknut under the pan.
 2. Motor mount plate and blower housing at the front (per the drawings that follow V-106 and V-107), motor in, pulley on the rear shaft, wheel on the front shaft. Direction checked at V-204 already.
 3. Power module box at the rear left, bonded to the frame (ring terminal, star washer, bare metal).
 4. Exhaust duct from the blower outlet along the right side to the rear lower panel port position.
@@ -61,22 +61,22 @@ Built on the bench before the frame is closed, after V-208 has been run with a c
 6. Drill the three baffles on the drill press to the sheet's holes and bolt them in, angle inside, nuts outside.
 7. Two people. Drum in from the front at an angle, rear end onto the rear rollers, front end onto the front rollers.
 8. Turn by hand: free, silent, both felt seals touching the ring faces all round (V-304, V-306).
-9. Belt around the drum through the ceiling slot, under the motor pulley, idler fitted. Ten turns by hand, belt centered on the smooth track between the seam bolts (V-305).
+9. Belt around the drum through the two ceiling slots, under the motor pulley, idler fitted. Ten turns by hand, belt centered on the smooth track between the seam bolts (V-305).
 
 ## 7. Heat module
 
-1. Build the electric tray on the bench (V-203 closed), slide it in on the tray rails from the front, bolt it to the rails.
+1. Build the electric tray on the bench (V-203 closed), slide it in on the tray rails from the back (the rear lower panel is still off; the module passes under the riser's hood), bolt it to the rails.
 2. Riser flange adapter gasketed and bolted. Mains leads to X2, coil leads to X4. Tray bonded to X2:4.
 
 ## 8. Panels and console
 
-1. Side panels, then rear upper and lower, then the top panel, then the console cheeks, face, and cap. M6 into the slots at every hole. Bond each panel (V-303).
+1. Side panels, then rear upper and lower, then the top panel. Console frame next: the four 200 posts on the top panel with their foot brackets bolted down through the panel into the top rear cross rail's and rear top rail's slots (the T-nuts go into those slots before the top panel goes on), the four top rails and their brackets. Then the console cheeks, face, rear plate and cap. M6 into the slots at every hole. Bond each panel (V-303).
 2. Front upper panel with the door ring, door disc on its hinge, latch and strike adjusted so S1 and S2 both operate (V-308).
 3. Front lower panel last, after the bay has been looked at one more time for anything left inside.
 
 ## 9. Harness and controls
 
-1. J1 and J2 leads from the power module up to the console through their grommet, strain relieved (V-310).
+1. Cord through the base pan's bushing from below into the power module, strain relieved. J1 and J2 leads from the power module up to the console through their grommet, strain relieved (V-310).
 2. Control module in, four M4 screws, plugs in.
 3. Everything in Gate 3 ticked (V-301 to V-311).
 

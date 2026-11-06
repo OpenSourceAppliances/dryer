@@ -10,10 +10,13 @@ One file holds every number. Run it and it writes:
 Coordinate system: X across the cabinet (left negative), Y from front (0) to back, Z up from the floor.
 All dimensions mm. Needs cadquery (pip install cadquery). Also runs in FreeCAD's CadQuery workbench.
 
-Status: draft 4, 2026-11-06. Draft 4 draws what the documents already called for but the model only
+Status: draft 6, 2026-11-06. Draft 5 drew what the documents already called for but the model only
 implied: T-slot profiles on the extrusions, laser corner radii, every panel bolt, the leveling feet, the belt
 on its real path with the idler, the door hinges, handle, seal and catch, the Tier 0 control module, and
-the detail of the motor, pulley and blower. Bought parts (motor, blower, timers, rollers, hinges, feet) are
+the detail of the motor, pulley and blower. Draft 6 settles the three things draft 5 found (DECISIONS.md,
+2026-11-06): the drum ring bore grows to 540 and the lint slot becomes a curved slot inside it, the heat
+module leaves by the back under a hood into a raised riser, and the console is a vertical box on its own small
+4040 frame that holds the whole UCI envelope. Every M4 is a button head. Bought parts (motor, blower, timers, rollers, hinges, feet) are
 drawn as representations from catalog numbers that have NOT been measured. docs/verification.md says which
 measurement unlocks which DXF. Do not cut a plate whose gate is open.
 """
@@ -26,8 +29,14 @@ import cadquery as cq
 from cadquery import exporters
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "."
+DRAFT = 6
+HERE = os.path.dirname(os.path.abspath(__file__))
 for sub in ("step", "drawings"):
     os.makedirs(os.path.join(OUT, sub), exist_ok=True)
+# the Tier 0 faceplate's numbers live with its drawing (mechanical/drawings/tier0_drawings.py); this model draws the
+# module from them so the faceplate here and tier0-faceplate.dxf cannot drift apart
+sys.path.insert(0, os.path.join(HERE, "..", "drawings"))
+import tier0_drawings as T0  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Parameters
@@ -43,8 +52,8 @@ P = dict(
     bay_top=300.0,            # top face of the bay ceiling rails (mid rails are bay_top-40 .. bay_top)
     # drum (made: a wrapped 304 sheet on two laser-cut rings, see docs/design-rules.md 7b)
     drum_d=620.0, drum_l=550.0, drum_rim_r=None,   # drum_d is the outside diameter of the wrapped sheet
-    drum_t=0.8, ring_t=2.0, ring_id=480.0,
-    tab_n=30, tab_w=24.0, tab_h=20.0, tab_hole_d=4.5,
+    drum_t=0.8, ring_t=2.0, ring_id=540.0,                     # 540 bore (draft 6): room for the curved lint slot inside it
+    tab_n=30, tab_w=24.0, tab_h=16.0, tab_hole_d=4.5,          # 16 tall tabs (draft 6): the felt rides on the ring face inboard of them
     seam_pitch=50.0, seam_inset=15.0, seam_hole_d=4.5, splice_w=60.0, splice_t=1.0,
     baffle_n=3, baffle_leg=40.0, baffle_len=480.0, baffle_hole_d=6.5,
     belt_track_w=40.0, roller_track_w=45.0,       # fastener-free zones on the wall (belt track centred on the pulley, 7a)
@@ -57,26 +66,25 @@ P = dict(
     # rollers (bought dryer drum rollers, two front and two rear; measure the kit)
     roller_d=60.0, roller_angle_deg=30.0, roller_shaft_hole_d=10.5,
     motor_pulley_d=30.0,
-    # lint filter slot in the front bulkhead (inside the drum, below the door opening)
-    lint_slot_w=260.0, lint_slot_h=40.0, lint_slot_below_axis=270.0,
+    # lint filter slot in the front bulkhead: a curved slot inside the ring bore, below the door opening (draft 6)
+    lint_slot_r0=238.0, lint_slot_r1=266.0, lint_slot_half_deg=36.0,   # 8 outside the 460 opening, 4 inside the 540 bore; 8865 mm2
     # rear air inlet zone
     inlet_w=200.0, inlet_h=130.0, inlet_above_axis=50.0, inlet_hole_d=10.0, inlet_pitch=14.0,   # inside the ring opening (R 240)
-    # riser duct
-    riser_w=260.0, riser_depth=50.0,
-    # console wedge
-    console_face=160.0,       # length of the sloped face (holds the 120 mm aperture plus the 20 mm bands)
-    console_y0=450.0,         # where the wedge starts on the top
+    # riser duct: vertical part behind the rear cross rails, and a hood under the mid cross rail over the heat module's outlet
+    riser_w=260.0, riser_depth=50.0, riser_z0=230.0, hood_w=300.0, hood_y0=560.0, hood_h=28.0,
+    # console: a vertical box at the rear of the top on its own 4040 sub-frame (draft 6), holding the full UCI envelope
+    console_h=200.0, uci_ap_z_off=83.0,   # console depth: from the top rear cross rail to the back (set below). Aperture centre above the top panel: the module's nuts under the front rail, the faceplate under its bolts
     uci_ap_w=240.0, uci_ap_h=120.0, uci_hole_x=260.0, uci_hole_y=140.0, uci_hole_d=4.5,
     # fasteners
     m6_hole=6.5, m4_hole=4.5, panel_pitch=150.0,
     # bay layout (envelopes)
     motor_axis_z=120.0, motor_len=200.0, motor_d=140.0, motor_y0=190.0,   # motor behind the blower, pulley on its rear shaft
     blower_d=220.0, blower_w=100.0, blower_y0=84.0,                       # blower on the front shaft, inlet facing front
-    lint_duct_depth=36.0,                                                 # between the front panel and the front bulkhead
+    lint_duct_y0=5.0, lint_duct_depth=33.0, lint_duct_top=445.0,         # between the front panel (behind the ring bolts' nuts and tips) and the front bulkhead
     tray_w=320.0, tray_depth=250.0, tray_y0=420.0, tray_x0=-160.0, t_tray=1.5,
     pm_w=170.0, pm_depth=250.0, pm_h=180.0, pm_x0=-340.0, pm_y0=450.0,
     exhaust_d=102.0, exhaust_x=230.0, exhaust_z=150.0,
-    cord_hole_d=22.0,         # hole for the cord strain relief bushing (PG16 / M20 style); confirm against the bushing bought, V-112
+    cord_hole_d=22.0, cord_x=-250.0, cord_y=690.0,   # cord strain relief bushing through the base pan under the power module (draft 6); confirm against the bushing bought, V-112
     # --- draft 4: what the documents call for, now drawn ---
     plate_corner_r=6.0,       # laser-cut outside corners of every rectangular plate (no sharp sheet corners to handle)
     small_corner_r=3.0,       # cheeks, the splice strip, the drum tabs
@@ -90,7 +98,7 @@ P = dict(
     # drum hardware (7b): M4 button heads and nuts on the tabs and the seam, M6 on the baffles (6.5 holes)
     m4_head_d=7.6, m4_head_h=2.2, m4_nut_af=7.0, m4_nut_h=3.2, m6_button_d=10.5, m6_button_h=3.3,
     # leveling feet (7c Feet): catalog M8 feet into the posts' tapped centre bores, through 8.5 holes in the base pan
-    foot_pad_d=50.0, foot_pad_h=8.0, foot_hex_af=19.0, foot_hex_h=6.0, foot_stud_d=8.0, foot_stud_in=35.0, foot_hole_d=8.5,
+    foot_pad_d=50.0, foot_pad_h=10.0, foot_hex_af=19.0, foot_hex_h=8.0, foot_stud_d=8.0, foot_stud_in=35.0, foot_hole_d=8.5,   # 18 under the pan: room for the cord
     # belt and idler (7a Drive): PJ 5-rib belt, catalog flat idler on a sprung arm pressing the slack (left) run inward
     belt_w=12.0, belt_t=3.5, idler_d=40.0, idler_w=12.0, idler_x=-60.0, idler_z=165.0,
     belt_slot_w=40.0, belt_slot_l=90.0,   # one slot in the bay ceiling per belt run, centred where the run crosses the plate
@@ -102,7 +110,7 @@ P = dict(
     ring_bolt_r=257.5, ring_bolt_n=8,
     latch_x0=256.0, latch_x1=268.0,
     # felt seal (7a Drum and door): 8 mm polyester felt annulus glued to the rear bulkhead; the front one waits on the lint slot decision (V-010 finding)
-    felt_ri=250.0, felt_ro=285.0, felt_t=8.0,
+    felt_ri=273.0, felt_ro=291.0, felt_t=8.0,   # on the ring face between the 540 bore and the tab tips (293.2)
     # Tier 0 control module (controls/tier0-mechanical): faceplate numbers from mechanical/drawings/tier0_drawings.py
     fp_w=280.0, fp_h=160.0, fp_r=10.0, fp_t=2.0,
     knob_d=40.0, knob_skirt_h=3.0, knob_body_d=30.0, knob_h=20.0,
@@ -111,11 +119,11 @@ P["drum_rim_r"] = P["drum_d"] / 2
 P["drum_flat_w"] = math.pi * (P["drum_d"] - P["drum_t"])   # sheet length at the mid-surface
 P["drum_axis_z"] = P["bay_top"] + P["t_base"] + P["drum_clear_bottom"] + P["drum_d"] / 2
 P["H_body"] = P["drum_axis_z"] + P["drum_d"] / 2 + P["drum_clear_top"] + P["ext"]
-P["console_rise"] = P["console_face"] * math.sin(math.radians(45))
-P["H_total"] = P["H_body"] + P["console_rise"]
+P["H_total"] = P["H_body"] + P["t_panel"] + P["console_h"] + P["t_panel"]   # body, top panel, console box, cap
 P["front_bulk_y"] = P["ext"]                         # plate sits behind the front rails
 P["rear_bulk_y"] = P["drum_front_y"] + P["drum_l"] + 10.0   # plate front face
 P["rear_cross_y"] = P["rear_bulk_y"] + P["t_bulk"]  # rear cross rails start here
+P["console_depth"] = P["D"] - P["rear_cross_y"]      # the console's front posts stand over the top rear cross rail (draft 6): 138.5
 P["inner_w"] = P["W"] - 2 * P["ext"]                # 610 between the posts
 P["half_w"] = P["W"] / 2
 P["belt_y"] = P["motor_y0"] + P["motor_len"] + 12.0   # pulley centre on the rear shaft
@@ -241,23 +249,42 @@ def compound(solids):
     return cq.Compound.makeCompound([s.val() if hasattr(s, "val") else s for s in solids])
 
 
-def plate_bolts(name, pts, n, bolt=None, qty_note=""):
+def plate_bolts(name, pts, n, bolt=None, label=None):
     """One compound part holding a bolt at every point in pts (world points on the surface), heads along n."""
     bolt = bolt if bolt is not None else hex_bolt_m6()
+    label = label or "M6 x 12 hex, washers, T-nuts"
     if not pts:
         return None
     sols = [place(bolt, p, n) for p in pts]
-    return add(f"hardware-{name} (bought, {len(pts)} x M6 x 12 hex, washers, T-nuts{qty_note})", compound(sols), HARDWARE)
+    return add(f"hardware-{name} (bought, {len(pts)} x {label})", compound(sols), HARDWARE)
+
+
+def sector_xz(xc, zc, r0, r1, half_deg, depth):
+    """An annular sector about (xc, zc) in the XZ plane, centred on straight down, extruded along +Y from Y 0 by depth."""
+    ring = cq.Workplane("XZ").center(xc, zc).circle(r1).circle(r0).extrude(-depth)
+    L = 2 * r1
+    pts = [(xc, zc)] + [(xc + L * math.sin(math.radians(a)), zc - L * math.cos(math.radians(a))) for a in (-half_deg, -half_deg / 2, 0, half_deg / 2, half_deg)]
+    wedge = cq.Workplane("XZ").polyline(pts).close().extrude(-depth)
+    return ring.intersect(wedge)
+
+
+def sector_xy(xc, yc, r0, r1, half_deg, depth):
+    ring = cq.Workplane("XY").center(xc, yc).circle(r1).circle(r0).extrude(depth)
+    L = 2 * r1
+    pts = [(xc, yc)] + [(xc + L * math.sin(math.radians(a)), yc - L * math.cos(math.radians(a))) for a in (-half_deg, -half_deg / 2, 0, half_deg / 2, half_deg)]
+    wedge = cq.Workplane("XY").polyline(pts).close().extrude(depth)
+    return ring.intersect(wedge)
 
 
 def fillet_corners(solid, axis_sel, r):
     return solid.edges(axis_sel).fillet(r) if r > 0 else solid
 
 
-def plate_xz(name, x0, x1, z0, z1, y0, t, holes=(), rect_cuts=(), circ_cuts=(), slots=(), r=None, bolt_side=None, bolt_d=None, bolt_skip=()):
+def plate_xz(name, x0, x1, z0, z1, y0, t, holes=(), rect_cuts=(), circ_cuts=(), slots=(), sectors=(), r=None, bolt_side=None, bolt_d=None, bolt_skip=(), bolt=None, bolt_label=None):
     """A flat plate in the XZ plane (front/rear facing), thickness along +Y from y0, corners rounded r.
     holes: (x, z, d). rect_cuts: (xc, zc, w, h). circ_cuts: (x, z, d). slots: (xc, zc, w, h) rounded ends.
-    bolt_side: -1 puts a hex bolt head on the y0 face at every hole of diameter bolt_d, +1 on the y0+t face."""
+    sectors: (xc, zc, r0, r1, half_deg) curved slots centred on straight down from (xc, zc).
+    bolt_side: -1 puts a bolt head on the y0 face at every hole of diameter bolt_d, +1 on the y0+t face."""
     r = P["plate_corner_r"] if r is None else r
     w, h = x1 - x0, z1 - z0
     wp = cq.Workplane("XZ").center((x0 + x1) / 2, (z0 + z1) / 2).rect(w, h)
@@ -270,6 +297,8 @@ def plate_xz(name, x0, x1, z0, z1, y0, t, holes=(), rect_cuts=(), circ_cuts=(), 
         solid = solid.cut(cq.Workplane("XZ").center(xc, zc).rect(cw, ch).extrude(-t - 2).translate((0, y0 - 1, 0)))
     for (xc, zc, cw, ch) in slots:
         solid = solid.cut(cq.Workplane("XZ").center(xc, zc).slot2D(cw, ch).extrude(-t - 2).translate((0, y0 - 1, 0)))
+    for (xc, zc, r0, r1, half) in sectors:
+        solid = solid.cut(sector_xz(xc, zc, r0, r1, half, t + 2).translate((0, y0 - 1, 0)))
     add(name, solid, STEEL, plate=True, t=t)
     # 2D for DXF: same features, in plate-local coordinates (x right, y up)
     sk = fillet_corners(cq.Workplane("XY").center((x0 + x1) / 2, (z0 + z1) / 2).rect(w, h).extrude(1), "|Z", r)
@@ -279,14 +308,16 @@ def plate_xz(name, x0, x1, z0, z1, y0, t, holes=(), rect_cuts=(), circ_cuts=(), 
         sk = sk.cut(cq.Workplane("XY").center(xc, zc).rect(cw, ch).extrude(3).translate((0, 0, -1)))
     for (xc, zc, cw, ch) in slots:
         sk = sk.cut(cq.Workplane("XY").center(xc, zc).slot2D(cw, ch).extrude(3).translate((0, 0, -1)))
+    for (xc, zc, r0, r1, half) in sectors:
+        sk = sk.cut(sector_xy(xc, zc, r0, r1, half, 3).translate((0, 0, -1)))
     export_dxf(name, sk)
     if bolt_side:
         yb = y0 if bolt_side < 0 else y0 + t
-        plate_bolts(name, [(x, yb, z) for (x, z, d) in holes if abs(d - (bolt_d or P["m6_hole"])) < 1e-6 and (x, z) not in bolt_skip], (0, bolt_side, 0))
+        plate_bolts(name, [(x, yb, z) for (x, z, d) in holes if abs(d - (bolt_d or P["m6_hole"])) < 1e-6 and (x, z) not in bolt_skip], (0, bolt_side, 0), bolt, bolt_label)
     return solid
 
 
-def plate_xy(name, x0, x1, y0, y1, z0, t, holes=(), rect_cuts=(), circ_cuts=(), r=None, bolt_side=None, bolt_skip=()):
+def plate_xy(name, x0, x1, y0, y1, z0, t, holes=(), rect_cuts=(), circ_cuts=(), r=None, bolt_side=None, bolt_skip=(), bolt_d=None, bolt=None, bolt_label=None):
     """A flat plate in the XY plane (horizontal), thickness along +Z from z0."""
     r = P["plate_corner_r"] if r is None else r
     w, d = x1 - x0, y1 - y0
@@ -304,11 +335,11 @@ def plate_xy(name, x0, x1, y0, y1, z0, t, holes=(), rect_cuts=(), circ_cuts=(), 
     export_dxf(name, sk)
     if bolt_side:
         zb = z0 if bolt_side < 0 else z0 + t
-        plate_bolts(name, [(x, y, zb) for (x, y, dd) in holes if abs(dd - P["m6_hole"]) < 1e-6 and (x, y) not in bolt_skip], (0, 0, bolt_side))
+        plate_bolts(name, [(x, y, zb) for (x, y, dd) in holes if abs(dd - (bolt_d or P["m6_hole"])) < 1e-6 and (x, y) not in bolt_skip], (0, 0, bolt_side), bolt, bolt_label)
     return solid
 
 
-def plate_yz(name, y0, y1, z0, z1, x0, t, holes=(), r=None, bolt_side=None):
+def plate_yz(name, y0, y1, z0, z1, x0, t, holes=(), r=None, bolt_side=None, bolt_d=None, bolt=None, bolt_label=None):
     """A flat plate in the YZ plane (side panel), thickness along +X from x0. holes: (y, z, d)."""
     r = P["plate_corner_r"] if r is None else r
     d, h = y1 - y0, z1 - z0
@@ -322,7 +353,7 @@ def plate_yz(name, y0, y1, z0, z1, x0, t, holes=(), r=None, bolt_side=None):
     export_dxf(name, sk)
     if bolt_side:
         xb = x0 if bolt_side < 0 else x0 + t
-        plate_bolts(name, [(xb, y, z) for (y, z, dd) in holes if abs(dd - P["m6_hole"]) < 1e-6], (bolt_side, 0, 0))
+        plate_bolts(name, [(xb, y, z) for (y, z, dd) in holes if abs(dd - (bolt_d or P["m6_hole"])) < 1e-6], (bolt_side, 0, 0), bolt, bolt_label)
     return solid
 
 
@@ -400,6 +431,7 @@ P["foot_height"] = P["foot_pad_h"] + P["foot_hex_h"]   # floor to the base pan
 # ---------------------------------------------------------------------------
 az = P["drum_axis_z"]
 tb = P["t_bulk"]
+ro, ri = P["drum_d"] / 2, P["drum_d"] / 2 - P["drum_t"]
 bulk_x0, bulk_x1 = -P["inner_w"] / 2, P["inner_w"] / 2
 bulk_z0, bulk_z1 = bt - e + 5, Hb - 5
 
@@ -422,7 +454,9 @@ for ang in (-P["roller_angle_deg"], P["roller_angle_deg"]):
 plate_xz("front-bulkhead", bulk_x0, bulk_x1, bulk_z0, bulk_z1, P["front_bulk_y"], tb,
          holes=bulk_holes(front=True) + rollers,
          circ_cuts=[(0, az, P["door_opening_d"])],
-         slots=[(0, az - P["lint_slot_below_axis"], P["lint_slot_w"], P["lint_slot_h"])], bolt_side=+1)
+         sectors=[(0, az, P["lint_slot_r0"], P["lint_slot_r1"], P["lint_slot_half_deg"])], bolt_side=+1)
+P["lint_slot_area"] = math.radians(2 * P["lint_slot_half_deg"]) / 2 * (P["lint_slot_r1"] ** 2 - P["lint_slot_r0"] ** 2)
+assert P["lint_slot_r1"] < P["ring_id"] / 2 and P["lint_slot_r0"] > P["door_opening_d"] / 2, "lint slot must sit between the door opening and the ring bore"
 
 # rear bulkhead: inlet hole field, roller shaft holes, mounting holes; bolt heads on its front face (the cross rails are behind it)
 inlet = []
@@ -436,11 +470,16 @@ for i in range(nx):
 plate_xz("rear-bulkhead", bulk_x0, bulk_x1, bulk_z0, bulk_z1, P["rear_bulk_y"], tb,
          holes=bulk_holes() + rollers + inlet, bolt_side=-1)
 
-# felt seal on the rear bulkhead's front face, inboard of the rear tabs, against the rear ring's back face
+# felt seals: on the rear bulkhead's front face against the rear ring, and on the front bulkhead's back face against the
+# front ring; both ride on the ring face between the 540 bore and the tab tips (7b Seals). Same annulus, one DXF.
+assert P["felt_ro"] < ri - P["tab_h"] and P["felt_ri"] > P["ring_id"] / 2, "felt must sit on the ring face inboard of the tabs"
 felt = (cq.Workplane("XZ").center(0, az).circle(P["felt_ro"]).circle(P["felt_ri"]).extrude(-P["felt_t"])
         .translate((0, P["rear_bulk_y"] - P["felt_t"], 0)))
 add("felt-seal-rear", felt, FELT, plate=True, t=P["felt_t"])
-export_dxf("felt-seal-rear", cq.Workplane("XY").circle(P["felt_ro"]).extrude(1).cut(cq.Workplane("XY").circle(P["felt_ri"]).extrude(3).translate((0, 0, -1))))
+felt_f = (cq.Workplane("XZ").center(0, az).circle(P["felt_ro"]).circle(P["felt_ri"]).extrude(-P["felt_t"])
+          .translate((0, P["front_bulk_y"] + tb, 0)))
+add("felt-seal-front", felt_f, FELT, plate=True, t=P["felt_t"])
+export_dxf("felt-seal", cq.Workplane("XY").circle(P["felt_ro"]).extrude(1).cut(cq.Workplane("XY").circle(P["felt_ri"]).extrude(3).translate((0, 0, -1))))
 
 # ---------------------------------------------------------------------------
 # Belt path (needed for the bay ceiling slots): drum -> motor pulley (right run) -> idler -> drum (left run)
@@ -528,7 +567,8 @@ ARM_Y0 = P["belt_y"] - P["belt_w"] / 2 - 1.5 - 0.5 - 4.0                       #
 BRACKET_Y = ARM_Y0 - 20.0                                                        # idler and spring bracket bolts, on the pan
 bracket_pts = [(-128.0, BRACKET_Y), (-102.0, BRACKET_Y), (55.0, BRACKET_Y), (75.0, BRACKET_Y)]
 base_holes += [(bx, by, P["m6_hole"]) for (bx, by) in bracket_pts]
-plate_xy("base-pan", -hw + tp, hw - tp, 0, D, -P["t_base"], P["t_base"], holes=base_holes, bolt_side=-1, bolt_skip=tuple(bracket_pts))   # no cuts; the exhaust leaves through the rear lower panel
+base_holes += [(P["cord_x"], P["cord_y"], P["cord_hole_d"])]           # cord strain relief bushing, under the power module (draft 6)
+plate_xy("base-pan", -hw + tp, hw - tp, 0, D, -P["t_base"], P["t_base"], holes=base_holes, bolt_side=-1, bolt_skip=tuple(bracket_pts))   # the exhaust leaves through the rear lower panel
 
 # ---------------------------------------------------------------------------
 # Outer panels
@@ -583,71 +623,146 @@ plate_xz("rear-upper-panel", -hw, hw, P["panel_split_z"], Hb, D, tp, holes=end_h
 rear_louvers = [(x, z, 60, 5) for x in (-160, -80, 0, 80) for z in range(80, 240, 20)]   # clear of the exhaust port and the cord entry
 plate_xz("rear-lower-panel", -hw, hw, 0, P["panel_split_z"] - 1, D, tp,
          holes=end_holes(0, P["panel_split_z"] - 1, [e / 2]),
-         circ_cuts=[(P["exhaust_x"], P["exhaust_z"], P["exhaust_d"] + 4),     # exhaust collar, 2 mm clearance
-                    (-250, 120, P["cord_hole_d"])],                             # cord strain relief bushing, in front of the power module
+         circ_cuts=[(P["exhaust_x"], P["exhaust_z"], P["exhaust_d"] + 4)],    # exhaust collar, 2 mm clearance; the cord enters through the base pan
          slots=rear_louvers, bolt_side=+1)
 
-# top panel in front of the console, and the console wedge (sloped face with the UCI aperture, cap, two cheeks)
+# top panel, full depth; the console box stands on it at the rear
+CD, CH = P["console_depth"], P["console_h"]
+con_y0 = D - CD                                     # the console face plate's inner surface, the front posts' front faces
+assert abs(con_y0 - ry) < 1e-6, "the console's front posts stand over the top rear cross rail"
+assert con_y0 + 120.0 <= D, "the UCI-D envelope (120 deep from the panel plane, uci-spec 4.3) must fit in front of the rear plate"
+con_z0 = Hb + tp                                    # top of the top panel
+con_z1 = con_z0 + CH                                # top of the console frame; the cap sits on it
+up_x = [(-hw, -hw + e), (hw - e, hw)]               # the 4040 console posts, inside the cheeks, over the side rails
+up_y = [(con_y0, con_y0 + e), (D - e, D)]
+cfoot_pts = [(sx * (hw - e - 23.0), yc) for sx in (-1, 1) for yc in (con_y0 + e / 2, D - e / 2)]   # foot bracket bolts through the top panel into the top rear cross rail and the rear top rail, inboard of each post
 top_holes = []
 for x in pitch_points(-hw + e, hw - e, P["panel_pitch"], 60):
     top_holes.append((x, e / 2, P["m6_hole"]))
-for y in pitch_points(e, P["console_y0"] - tp, P["panel_pitch"], 60):
-    top_holes.append((-hw + e / 2, y, P["m6_hole"])); top_holes.append((hw - e / 2, y, P["m6_hole"]))
-plate_xy("top-panel", -hw, hw, 0, P["console_y0"] - tp, Hb, tp, holes=top_holes, bolt_side=+1)   # stops 1.5 short of the face plate's outer corner
+    top_holes.append((x, D - e / 2, P["m6_hole"]))
+for y in pitch_points(e, D - e, P["panel_pitch"], 60):
+    if y < con_y0 - 12:   # not under the console posts; the console's foot bolts clamp the panel there
+        top_holes.append((-hw + e / 2, y, P["m6_hole"])); top_holes.append((hw - e / 2, y, P["m6_hole"]))
+top_holes += [(fx, fy, P["m6_hole"]) for (fx, fy) in cfoot_pts]
+plate_xy("top-panel", -hw, hw, 0, D, Hb, tp, holes=top_holes, bolt_side=+1, bolt_skip=tuple(cfoot_pts))   # the console's foot bolts are in its own hardware
 
-cy0, cf, cr = P["console_y0"], P["console_face"], P["console_rise"]
-S45 = math.sin(math.radians(45))
-CONSOLE_C = (0.0, cy0 + cr / 2, Hb + cr / 2)       # centre of the console face plate's inner surface
-N_FACE = (0.0, -S45, S45)                           # outward normal of the sloped face (front and up)
-S_FACE = (0.0, S45, S45)                            # up the slope
+# the sub-frame: a small cabinet frame of 4040 like the cabinet's own, four posts the full console height with four
+# rails between them at the top, the same M6 hardware and inside corner brackets. The posts stand on the top panel over
+# the cabinet's top rear cross rail and rear top rail; their foot brackets bolt through the top panel into those rails'
+# top slots with T-nuts, so the console's weight and the push on its knobs go straight into the cabinet frame.
+for i, (x0, x1) in enumerate(up_x):
+    for j, (y0, y1) in enumerate(up_y):
+        extrusion(f"console-post-{2 * i + j + 1}", x0, x1, y0, y1, con_z0, con_z1, "console post")
+extrusion("console-rail-front", -hw + e, hw - e, con_y0, con_y0 + e, con_z1 - e, con_z1, "console end rail")
+extrusion("console-rail-rear", -hw + e, hw - e, D - e, D, con_z1 - e, con_z1, "console end rail")
+extrusion("console-rail-left", -hw, -hw + e, con_y0 + e, D - e, con_z1 - e, con_z1, "console side rail")
+extrusion("console-rail-right", hw - e, hw, con_y0 + e, D - e, con_z1 - e, con_z1, "console side rail")
+brk_sols, brk_bolts_c = [], []
+BRK_L, BRK_T, BRK_W = 35.0, 4.0, 34.0     # catalog 4040 inside corner bracket: legs 35, 4 thick, 34 wide, one hole per leg
+
+
+def corner_bracket(face, d, c_along, z_corner, up, axis):
+    """An inside corner bracket in the corner between a post face and a horizontal surface. `axis` is "x" when the post
+    face is an X face at x=face (the bracket extends toward +d from it), "y" when it is a Y face at y=face; c_along is
+    the bracket's centre along the face; the horizontal leg lies on the surface at z_corner (up=+1) or under it (-1)."""
+    a0, a1 = sorted((face, face + d * BRK_T))
+    b0, b1 = sorted((face, face + d * BRK_L))
+    za0, za1 = sorted((z_corner, z_corner + up * BRK_L))
+    zb0, zb1 = sorted((z_corner, z_corner + up * BRK_T))
+    if axis == "x":
+        leg_a = box(a0, a1, c_along - BRK_W / 2, c_along + BRK_W / 2, za0, za1)
+        leg_b = box(b0, b1, c_along - BRK_W / 2, c_along + BRK_W / 2, zb0, zb1)
+        h_a = cq.Workplane("YZ").center(c_along, z_corner + up * (BRK_L - 12.0)).circle(P["m6_hole"] / 2).extrude(BRK_T + 2).translate((a0 - 1, 0, 0))
+        h_b = cq.Workplane("XY").center(face + d * (BRK_L - 12.0), c_along).circle(P["m6_hole"] / 2).extrude(BRK_T + 2).translate((0, 0, zb0 - 1))
+    else:
+        leg_a = box(c_along - BRK_W / 2, c_along + BRK_W / 2, a0, a1, za0, za1)
+        leg_b = box(c_along - BRK_W / 2, c_along + BRK_W / 2, b0, b1, zb0, zb1)
+        h_a = cq.Workplane("XZ").center(c_along, z_corner + up * (BRK_L - 12.0)).circle(P["m6_hole"] / 2).extrude(-(BRK_T + 2)).translate((0, a0 - 1, 0))
+        h_b = cq.Workplane("XY").center(c_along, face + d * (BRK_L - 12.0)).circle(P["m6_hole"] / 2).extrude(BRK_T + 2).translate((0, 0, zb0 - 1))
+    return leg_a.union(leg_b).cut(h_a).cut(h_b)
+
+
+def corner_bracket_v(x_face, dx, y_face, dy, zc):
+    """An inside corner bracket between two vertical faces meeting at (x_face, y_face): one leg on the plane x = x_face
+    with its thickness toward dx, the other on the plane y = y_face with its thickness toward dy; each leg runs from
+    the corner along the other face. zc is the bracket's centre height. Holes for its two M6 bolts."""
+    leg_a = box(*sorted((x_face, x_face + dx * BRK_T)), *sorted((y_face, y_face + dy * BRK_L)), zc - BRK_W / 2, zc + BRK_W / 2)
+    leg_b = box(*sorted((x_face, x_face + dx * BRK_L)), *sorted((y_face, y_face + dy * BRK_T)), zc - BRK_W / 2, zc + BRK_W / 2)
+    h_a = cq.Workplane("YZ").center(y_face + dy * (BRK_L - 12.0), zc).circle(P["m6_hole"] / 2).extrude(BRK_T + 2).translate((min(x_face, x_face + dx * BRK_T) - 1, 0, 0))
+    h_b = cq.Workplane("XZ").center(x_face + dx * (BRK_L - 12.0), zc).circle(P["m6_hole"] / 2).extrude(-(BRK_T + 2)).translate((0, min(y_face, y_face + dy * BRK_T) - 1, 0))
+    return leg_a.union(leg_b).cut(h_a).cut(h_b)
+
+
+for sx in (-1, 1):
+    xi = sx * (hw - e)                     # the post's inner face; brackets extend inboard (toward -sx)
+    for (yy0, yy1) in up_y:
+        yc = (yy0 + yy1) / 2
+        # foot: against the post's inner face, on the top panel
+        brk_sols.append(corner_bracket(xi, -sx, yc, con_z0, +1, "x"))
+        brk_bolts_c.append(place(hex_bolt_m6(), (xi - sx * (BRK_L - 12.0), yc, con_z0 + BRK_T), (0, 0, 1)))            # down through the top panel into the cabinet rail's top slot
+        brk_bolts_c.append(place(hex_bolt_m6(), (xi - sx * BRK_T, yc, con_z0 + BRK_L - 12.0), (-sx, 0, 0)))              # into the post's inner slot
+        # the end rail: against the post's inner face, under the rail
+        zt = con_z1 - e
+        brk_sols.append(corner_bracket(xi, -sx, yc, zt, -1, "x"))
+        brk_bolts_c.append(place(hex_bolt_m6(), (xi - sx * (BRK_L - 12.0), yc, zt - BRK_T), (0, 0, -1)))                # up into the rail's bottom slot
+        brk_bolts_c.append(place(hex_bolt_m6(), (xi - sx * BRK_T, yc, zt - BRK_L + 12.0), (-sx, 0, 0)))                 # into the post's inner slot
+    # the side rail, short (between the posts): at its front end a bracket against the front post's rear face, under
+    # the rail; at its rear end a bracket inside the frame between the rail's inner face and the rear end rail's front
+    # face (two brackets under one short rail would overlap)
+    yf, xc = con_y0 + e, sx * (hw - e / 2)
+    brk_sols.append(corner_bracket(yf, +1, xc, zt, -1, "y"))
+    brk_bolts_c.append(place(hex_bolt_m6(), (xc, yf + (BRK_L - 12.0), zt - BRK_T), (0, 0, -1)))                          # up into the side rail's bottom slot
+    brk_bolts_c.append(place(hex_bolt_m6(), (xc, yf + BRK_T, zt - BRK_L + 12.0), (0, 1, 0)))                             # into the front post's rear slot
+    zc = con_z1 - e / 2
+    brk_sols.append(corner_bracket_v(xi, -sx, D - e, -1, zc))
+    brk_bolts_c.append(place(hex_bolt_m6(), (xi - sx * BRK_T, D - e - (BRK_L - 12.0), zc), (-sx, 0, 0)))                 # into the side rail's inner slot
+    brk_bolts_c.append(place(hex_bolt_m6(), (xi - sx * (BRK_L - 12.0), D - e - BRK_T, zc), (0, -1, 0)))                 # into the rear end rail's front slot
+add("console-brackets (bought, 12 x 4040 inside corner brackets)", compound(brk_sols), HARDWARE)
+add("hardware-console-brackets (bought, 24 x M6 x 12 hex, washers, T-nuts)", compound(brk_bolts_c), HARDWARE)
+
+# the console plates: face (vertical, carries the UCI-D aperture), cap, two cheeks continuing the side panels, rear
+CONSOLE_C = (0.0, con_y0, con_z0 + P["uci_ap_z_off"])   # aperture centre on the face plate's inner surface, on the posts' front faces
+N_FACE = (0.0, -1.0, 0.0)                           # outward normal of the face
+S_FACE = (0.0, 0.0, 1.0)                            # up the face
+AP_Z = CONSOLE_C[2]
+uci_pts = [(sx * P["uci_hole_x"] / 2, sy * P["uci_hole_y"] / 2) for sx in (-1, 1) for sy in (-1, 1)]
+post_bolt_z = (con_z0 + 28.5, con_z1 - e - 28.5)     # two bolts per post, clear of the brackets' legs (35)
+rail_bolt_x = pitch_points(-hw + e, hw - e, P["panel_pitch"], 60)
+face_holes = [(sx * (hw - e / 2), z, P["m6_hole"]) for sx in (-1, 1) for z in post_bolt_z] + [(x, con_z1 - e / 2, P["m6_hole"]) for x in rail_bolt_x]
+face_holes += [(ux, AP_Z + uy, P["uci_hole_d"]) for (ux, uy) in uci_pts]
+plate_xz("console-face", -hw, hw, con_z0, con_z1, con_y0 - tp, tp, holes=face_holes, rect_cuts=[(0, AP_Z, P["uci_ap_w"], P["uci_ap_h"])], bolt_side=-1)
+rear_holes = [(sx * (hw - e / 2), z, P["m6_hole"]) for sx in (-1, 1) for z in post_bolt_z] + [(x, con_z1 - e / 2, P["m6_hole"]) for x in rail_bolt_x]
+plate_xz("console-rear", -hw, hw, Hb, con_z1, D, tp, holes=rear_holes, bolt_side=+1)   # from the top panel's rear edge up
+cap_holes = [(x, con_y0 + e / 2, P["m6_hole"]) for x in rail_bolt_x] + [(x, D - e / 2, P["m6_hole"]) for x in rail_bolt_x]
+cap_holes += [(sx * (hw - e / 2), (con_y0 + e + D - e) / 2, P["m6_hole"]) for sx in (-1, 1)]
+plate_xy("console-cap", -hw - tp, hw + tp, con_y0 - tp, D + tp, con_z1, tp, holes=cap_holes, bolt_side=+1)
+for side, x0, bs in (("left", -hw - tp, -1), ("right", hw, +1)):
+    ch_holes = [(yc, z, P["m6_hole"]) for yc in (con_y0 + e / 2, D - e / 2) for z in post_bolt_z] + [((con_y0 + e + D - e) / 2, con_z1 - e / 2, P["m6_hole"])]
+    plate_yz(f"console-cheek-{side}", con_y0 - tp, D + tp, Hb, con_z1, x0, tp, holes=ch_holes, bolt_side=bs)
 
 
 def on_face(solid):
-    """A solid built in the console face's local frame (x across, y up the slope, z outward from the inner surface) to the world."""
-    return solid.rotate((0, 0, 0), (1, 0, 0), 45).translate(CONSOLE_C)
+    """A solid built in the console face's local frame (x across, y up, z outward from the inner surface) to the world."""
+    return solid.rotate((0, 0, 0), (1, 0, 0), 90).translate(CONSOLE_C)
 
 
 def face_point(u, v, w):
     return (u, CONSOLE_C[1] + v * S_FACE[1] + w * N_FACE[1], CONSOLE_C[2] + v * S_FACE[2] + w * N_FACE[2])
 
 
-# sloped face: build as a plate in a tilted workplane; aperture and 4 holes
-uci_pts = [(sx * P["uci_hole_x"] / 2, sy * P["uci_hole_y"] / 2) for sx in (-1, 1) for sy in (-1, 1)]
-face = (fillet_corners(cq.Workplane("XY").rect(P["W"] - 2 * tp, cf).extrude(tp), "|Z", P["plate_corner_r"])
-        .faces(">Z").workplane().rect(P["uci_ap_w"], P["uci_ap_h"]).cutThruAll()
-        .faces(">Z").workplane().pushPoints(uci_pts).hole(P["uci_hole_d"]))
-# +45 about X: the plate rises toward the rear and its outward normal is (0, -0.707, 0.707), front and up.
-# (Draft 2 had -45 here, which laid the face the wrong way; found by the section audit, see docs/verification.md V-010.)
-face = on_face(face)
-add("console-face", face, STEEL, plate=True, t=tp)
-sk = (fillet_corners(cq.Workplane("XY").rect(P["W"] - 2 * tp, cf).extrude(1), "|Z", P["plate_corner_r"])
-      .cut(cq.Workplane("XY").rect(P["uci_ap_w"], P["uci_ap_h"]).extrude(3).translate((0, 0, -1))))
-for (ux, uy) in uci_pts:
-    sk = sk.cut(cq.Workplane("XY").center(ux, uy).circle(P["uci_hole_d"] / 2).extrude(3).translate((0, 0, -1)))
-export_dxf("console-face", sk)
-plate_xy("console-cap", -hw, hw, cy0 + cr, D, Hb + cr, tp)
-for side, x0 in (("left", -hw), ("right", hw - tp)):
-    cheek = (cq.Workplane("YZ").polyline([(cy0, Hb), (cy0 + cr, Hb + cr), (D, Hb + cr), (D, Hb)]).close()
-             .extrude(tp).edges("|X").fillet(P["small_corner_r"]).translate((x0, 0, 0)))
-    add(f"console-cheek-{side}", cheek, STEEL, plate=True, t=tp)
-    sk = cq.Workplane("XY").polyline([(cy0, Hb), (cy0 + cr, Hb + cr), (D, Hb + cr), (D, Hb)]).close().extrude(1).edges("|Z").fillet(P["small_corner_r"])
-    export_dxf(f"console-cheek-{side}", sk)
-
 # ---------------------------------------------------------------------------
 # Tier 0 control module on the console face (controls/tier0-mechanical, drawing numbers in tier0_drawings.py)
 # ---------------------------------------------------------------------------
 FP_T = P["fp_t"]
-TIMERS = {"dry-time": -80.0, "heat-time": -20.0}
-SEL_X, START_X = 45.0, 90.0
-fp_holes = [(x, y, 4.5) for (x, y) in uci_pts]                                  # UCI-D mounting pattern
-for x in TIMERS.values():
-    fp_holes += [(x, 0, 12.0), (x, 83.3 / 2, 4.0), (x, -83.3 / 2, 4.0)]          # timer shaft and yoke holes
-fp_holes += [(SEL_X, 0, 22.3), (START_X, 0, 22.3)]                               # 22 mm devices
-fp_holes += [(25.0, -38.0, 4.5), (105.0, -38.0, 4.5), (-112.0, -45.0, 4.5), (-112.0, 45.0, 4.5)]   # DIN rail standoffs, cable ties
+assert (T0.FP_W, T0.FP_H, T0.FP_R) == (P["fp_w"], P["fp_h"], P["fp_r"]), "faceplate outline: model and drawing"
+assert sorted(T0.MOUNT) == sorted((x, y) for (x, y) in uci_pts), "UCI-D mounting pattern: model and drawing"
+TIMERS = {"dry-time": T0.TIMERS["DRY TIME"], "heat-time": T0.TIMERS["HEAT TIME"]}
+SEL_X, START_X, DEV_Y = T0.SEL_X, T0.START_X, T0.DEV_Y
+fp_holes = [(x, y, d) for (x, y, d, _) in T0.holes()]
 fp = fillet_corners(cq.Workplane("XY").rect(P["fp_w"], P["fp_h"]).extrude(FP_T), "|Z", P["fp_r"])
 for (x, y, d) in fp_holes:
     fp = fp.cut(cq.Workplane("XY").center(x, y).circle(d / 2).extrude(FP_T + 2).translate((0, 0, -1)))
-for text, x, y in (("DRY TIME", -80, 50), ("HEAT TIME", -20, 50), ("HEAT", 45, 27), ("START", 90, 27), ("AIR  LOW  HIGH", 45, -27)):
+for text, x, y in T0.LABELS:
     fp = fp.faces(">Z").workplane(origin=(0, 0, FP_T)).center(x, y).text(text, 5, -0.3, combine="cut", halign="center", valign="center")
 fp_z0 = tp                      # the faceplate sits on the console face's outer surface
 add("tier0-faceplate", on_face(fp.translate((0, 0, fp_z0))), ALU, plate=True, t=FP_T)
@@ -682,21 +797,21 @@ for key, x in TIMERS.items():
 
 def device22(x, cap):
     """A 22 mm panel device: bezel on the plate, operator in front, body and contact block behind."""
-    bezel = cq.Workplane("XY").center(x, 0).circle(15.0).circle(11.15).extrude(2.5).translate((0, 0, fp_top))
-    body = cq.Workplane("XY").center(x, 0).circle(11.0).extrude(fp_top + 45).translate((0, 0, -45))
-    block = box(x - 12.5, x + 12.5, -17.5, 17.5, -45, -15)
+    bezel = cq.Workplane("XY").center(x, DEV_Y).circle(15.0).circle(11.15).extrude(2.5).translate((0, 0, fp_top))
+    body = cq.Workplane("XY").center(x, DEV_Y).circle(11.0).extrude(fp_top + 45).translate((0, 0, -45))
+    block = box(x - 12.5, x + 12.5, DEV_Y - 17.5, DEV_Y + 17.5, -45, -15)
     base = bezel.union(body).union(block)
     return base, cap(x)
 
 
 def selector_cap(x):
-    hub = cq.Workplane("XY").center(x, 0).circle(11.0).extrude(4.0)
-    lever = cq.Workplane("XY").center(x, 0).slot2D(30.0, 8.0, angle=90).extrude(6.0).translate((0, 0, 4.0))
+    hub = cq.Workplane("XY").center(x, DEV_Y).circle(11.0).extrude(4.0)
+    lever = cq.Workplane("XY").center(x, DEV_Y).slot2D(30.0, 8.0, angle=90).extrude(6.0).translate((0, 0, 4.0))
     return hub.union(lever).translate((0, 0, fp_top + 2.5))
 
 
 def start_cap(x):
-    return cq.Workplane("XY").center(x, 0).circle(11.0).extrude(8.0).edges(">Z").fillet(2.0).translate((0, 0, fp_top + 2.5))
+    return cq.Workplane("XY").center(x, DEV_Y).circle(11.0).extrude(8.0).edges(">Z").fillet(2.0).translate((0, 0, fp_top + 2.5))
 
 
 base, cap = device22(SEL_X, selector_cap)
@@ -705,10 +820,14 @@ add("tier0-selector (bought)", on_face(cap), RUBBER)
 base, cap = device22(START_X, start_cap)
 add("tier0-start-body (bought)", on_face(base), BOUGHT)
 add("tier0-start-button (bought)", on_face(cap), cq.Color(0.1, 0.6, 0.2))
-# K1 on 100 mm of DIN rail on two 12 mm standoffs behind the plate; the socket and relay stack away from the plate
-rail = box(15, 115, -55.5, -20.5, fp_z0 - 12 - 7.5, fp_z0 - 12)
-standoffs = [cq.Workplane("XY").center(x, -38).circle(4.0).extrude(12).translate((0, 0, fp_z0 - 12)) for x in (25, 105)]
-relay = box(16, 44, -74, -19, fp_z0 - 12 - 7.5 - 65, fp_z0 - 12 - 7.5)
+# K1 on 100 mm of DIN rail on two 12 mm standoffs behind the plate; the socket and relay stack away from the plate.
+# The rail's standoffs sit at T0.RAIL; the socket hangs 36 below their line and 19 above it, inside the aperture's
+# projection (uci-spec 4.3), which is why the 22 mm devices sit above the centre line (T0.DEV_Y)
+(rx0, ry_), (rx1, _) = T0.RAIL
+rail = box(rx0 - 10, rx1 + 10, ry_ - 17.5, ry_ + 17.5, fp_z0 - 12 - 7.5, fp_z0 - 12)
+standoffs = [cq.Workplane("XY").center(x, ry_).circle(4.0).extrude(12).translate((0, 0, fp_z0 - 12)) for x in (rx0, rx1)]
+relay = box(rx0 - 9, rx0 + 19, ry_ - 36, ry_ + 19, fp_z0 - 12 - 7.5 - 65, fp_z0 - 12 - 7.5)
+assert ry_ - 36 >= -P["uci_ap_h"] / 2 and ry_ + 19 <= DEV_Y - 17.5 - 2, "K1 inside the aperture's projection and clear of the 22 mm devices' blocks"
 add("tier0-k1-relay-on-din-rail (bought)", on_face(rail.union(standoffs[0]).union(standoffs[1]).union(relay)), BOUGHT)
 
 # ---------------------------------------------------------------------------
@@ -729,9 +848,9 @@ for (x, z) in ring_bolt_pts:
 for (x, z) in hinge_fixed_bolt_pts:
     sk = sk.cut(cq.Workplane("XY").center(x, z - az).circle(P["m6_hole"] / 2).extrude(3).translate((0, 0, -1)))
 export_dxf("door-ring", sk)
-ring_hw = [place(button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 10.0, 2.5), (x, ring_y0, z), (0, -1, 0)) for (x, z) in ring_bolt_pts]
+ring_hw = [place(button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 8.0, 2.5), (x, ring_y0, z), (0, -1, 0)) for (x, z) in ring_bolt_pts]
 ring_hw += [place(nut(P["m4_nut_af"], P["m4_nut_h"], 4.2), (x, 0.0, z), (0, 1, 0)) for (x, z) in ring_bolt_pts]
-add("hardware-door-ring (bought, 8 x M4 x 10 button head, nuts)", compound(ring_hw), HARDWARE)
+add("hardware-door-ring (bought, 8 x M4 x 8 button head, nuts)", compound(ring_hw), HARDWARE)
 
 disc = cq.Workplane("XZ").center(0, az).circle(P["door_disc_d"] / 2).extrude(-P["t_door"]).translate((0, disc_y0, 0))
 disc_holes = [(x, z, P["m4_hole"]) for (x, z) in hinge_swing_bolt_pts + handle_pts]
@@ -792,10 +911,17 @@ add("door-catch-strike (bought)", box(P["latch_x0"], P["latch_x1"], disc_y0 + P[
 # Ducts: riser (behind the rear bulkhead, from the bay to the inlet zone) and lint duct (front)
 # ---------------------------------------------------------------------------
 riser_top = az + P["inlet_above_axis"] + P["inlet_h"] + 10
-add("riser-duct", box(-P["riser_w"] / 2, P["riser_w"] / 2, ry + e + 2, ry + e + 2 + P["riser_depth"], bt - 120, riser_top), DUCT)
-assert ry + e + 2 + P["riser_depth"] + 2 <= D - e, "riser must clear the rear end rail"
-add("lint-duct", box(-168, 168, 2, 2 + P["lint_duct_depth"], 150, az - P["lint_slot_below_axis"] + P["lint_slot_h"] / 2), DUCT)   # 2 mm from each front stub
-add("lint-duct-transition", box(-110, 110, 2 + P["lint_duct_depth"], P["blower_y0"], 50, 190), DUCT)
+riser_y0 = ry + e + 2
+riser = box(-P["riser_w"] / 2, P["riser_w"] / 2, riser_y0, riser_y0 + P["riser_depth"], P["riser_z0"], riser_top)
+# the hood: from over the heat module's outlet, under the mid rear cross rail, into the riser (draft 6; the module slides out under it)
+hood_z1 = P["riser_z0"] + P["hood_h"]
+riser = riser.union(box(-P["hood_w"] / 2, P["hood_w"] / 2, P["hood_y0"], riser_y0 + P["riser_depth"], P["riser_z0"], hood_z1))
+add("riser-duct", riser, DUCT)
+assert riser_y0 + P["riser_depth"] + 2 <= D - e, "riser must clear the rear end rail"
+assert hood_z1 + 2 <= bt - e, "hood must pass under the mid rear cross rail"
+P["hood_area"] = P["hood_h"] * P["hood_w"]
+add("lint-duct", box(-168, 168, P["lint_duct_y0"], P["lint_duct_y0"] + P["lint_duct_depth"], 150, P["lint_duct_top"]), DUCT)   # 2 mm from each front stub, behind the ring bolts' nuts
+add("lint-duct-transition", box(-110, 110, P["lint_duct_y0"] + P["lint_duct_depth"], P["blower_y0"], 50, 190), DUCT)
 
 # ---------------------------------------------------------------------------
 # Drum: wrapped sheet, two rings, splice strip, angle baffles (all made), four rollers (bought)
@@ -985,19 +1111,29 @@ blower = blower.union(box(100, 270, P["blower_y0"] + 26, my0, mz - 10, mz + 70))
 add("blower (bought)", blower, BOUGHT)
 P["exhaust_y0"] = my0
 add("heat-module-tray", box(P["tray_x0"], P["tray_x0"] + P["tray_w"], P["tray_y0"], P["tray_y0"] + P["tray_depth"], e + es, e + es + P["t_tray"]), STEEL)
-add("heat-module (envelope)", box(P["tray_x0"] + 20, P["tray_x0"] + P["tray_w"] - 20, P["tray_y0"] + 20, P["tray_y0"] + P["tray_depth"] - 20, e + es + 2, e + es + 2 + 160), BOUGHT)
+hm_top = e + es + 2 + 160
+hm = box(P["tray_x0"] + 20, P["tray_x0"] + P["tray_w"] - 20, P["tray_y0"] + 20, P["tray_y0"] + P["tray_depth"] - 20, e + es + 2, hm_top)
+hm = hm.union(box(-120, 120, 580, 640, hm_top, P["riser_z0"] - 1.0))      # outlet collar up to 1 mm under the hood
+add("heat-module (envelope)", hm, BOUGHT)
+assert P["riser_z0"] - 1.0 > hm_top, "the hood must clear the module's top"
 add("power-module (envelope)", box(P["pm_x0"], P["pm_x0"] + P["pm_w"], P["pm_y0"], P["pm_y0"] + P["pm_depth"], e, e + P["pm_h"]), BOUGHT)
 exh = (cq.Workplane("XZ").center(P["exhaust_x"], P["exhaust_z"]).circle(P["exhaust_d"] / 2).extrude(-(D - P["exhaust_y0"]))
        .translate((0, P["exhaust_y0"], 0)))
 add("exhaust-duct (bought)", exh, DUCT)
-# cord: strain relief bushing in the rear lower panel, cord to the power module and 60 mm out the back
-bush = hexagon(24.0, 8.0).translate((0, 0, 0)).union(cq.Workplane("XY").circle(10.0).extrude(10).translate((0, 0, 8)).edges(">Z").fillet(3.0))
-bush = bush.union(cq.Workplane("XY").circle(10.9).extrude(tp + 10.5).translate((0, 0, -tp - 10)))   # thread through the panel
-bush = bush.union(hexagon(26.0, 5.0).translate((0, 0, -tp - 5)))                                     # locknut inside
-bush = bush.cut(cq.Workplane("XY").circle(4.6).extrude(40).translate((0, 0, -20)))                   # the cord passes through
-add("cord-bushing (bought, PG16 strain relief)", place(bush, (-250, D + tp, 120), (0, 1, 0)), RUBBER)
-cord = cq.Workplane("XZ").center(-250, 120).circle(4.5).extrude(-(D + tp + 18 + 60 - (P["pm_y0"] + P["pm_depth"]))).translate((0, P["pm_y0"] + P["pm_depth"], 0))
+# cord: strain relief bushing through the base pan under the power module (body inside the bay, locknut under the pan),
+# the cord up into the power module and down under the pan to the back, on the height the feet give
+cx, cyy = P["cord_x"], P["cord_y"]
+bush = hexagon(24.0, 8.0).union(cq.Workplane("XY").circle(10.0).extrude(10).translate((0, 0, 8)).edges(">Z").fillet(3.0))
+bush = bush.union(cq.Workplane("XY").circle(10.9).extrude(P["t_base"] + 5.5).translate((0, 0, -P["t_base"] - 5)))     # thread through the pan, as long as the locknut
+bush = bush.union(hexagon(26.0, 5.0).translate((0, 0, -P["t_base"] - 5)))                                            # locknut under the pan
+bush = bush.cut(cq.Workplane("XY").circle(4.6).extrude(40).translate((0, 0, -20)))                                    # the cord passes through
+add("cord-bushing (bought, PG16 strain relief)", place(bush, (cx, cyy, 0.0), (0, 0, 1)), RUBBER)
+cord_z = -P["t_base"] - 10.5         # centre line of the run under the pan: 1 mm under the locknut, 3 above the floor with the feet run in
+cord = cq.Workplane("XY").center(cx, cyy).circle(4.5).extrude(e - cord_z).translate((0, 0, cord_z))                   # up into the power module
+cord = cord.union(cq.Workplane("XZ").center(cx, cord_z).circle(4.5).extrude(-(D + 70 - cyy)).translate((0, cyy, 0)))  # back under the pan, 70 past the panel
+cord = cord.union(cq.Workplane("XY").add(cq.Solid.makeSphere(4.5, cq.Vector(cx, cyy, cord_z))))                      # the bend
 add("power-cord (bought)", cord, RUBBER)
+assert cord_z - 4.5 > -(P["foot_height"] + P["t_base"]), "the cord must clear the floor under the pan"
 roller_w = 25.0   # catalog roller width, measured at V-106
 for i, (x, z, d) in enumerate(rollers):
     r = cq.Workplane("XZ").center(x, z).circle(P["roller_d"] / 2).extrude(-roller_w).translate((0, y0d + L - P["roller_inset"] - roller_w, 0))
@@ -1119,7 +1255,8 @@ def export_view(shape, vname, pdir, turn):
         head = re.sub(r'width="[^"]*"', f'width="{h}"', head, count=1); head = re.sub(r'height="[^"]*"', f'height="{w}"', head, count=1)
         head = re.sub(r'viewBox="[^"]*"', f'viewBox="0 0 {h} {w}"', head, count=1)
         body = f'<g transform="translate(0,{w}) rotate(-90)">{body}</g>'
-    label = f'<text x="20" y="30" font-family="Helvetica, Arial, sans-serif" font-size="18">osa-dryer check view: {vname} (draft 4, not for cutting)</text>'
+    H = w if turn in (90, 270) else h
+    label = f'<text x="20" y="{H - 12}" font-family="Helvetica, Arial, sans-serif" font-size="18">osa-dryer check view: {vname} (draft {DRAFT}, not for cutting)</text>'   # along the bottom edge, clear of the drawing
     open(path, "w", encoding="utf-8").write(head + body + label + "</svg>")
 
 if "--no-views" not in sys.argv:
@@ -1127,7 +1264,7 @@ if "--no-views" not in sys.argv:
     compound_all = cq.Compound.makeCompound([s.val() if hasattr(s, "val") else s for _, s in VIEW_PARTS])
     OUTER = ("side-panel-left", "side-panel-right", "front-upper-panel", "front-lower-panel", "rear-upper-panel",
              "rear-lower-panel", "top-panel", "console-face", "console-cap", "console-cheek-left", "console-cheek-right",
-             "door-ring", "door-disc")
+             "console-rear", "door-ring", "door-disc")
     inner = cq.Compound.makeCompound([s.val() if hasattr(s, "val") else s for n, s in VIEW_PARTS if n not in OUTER and not n.startswith("door-") and not n.startswith("tier0")])
     VIEWS = {
         "iso": (compound_all, (1, -1, 0.7), 180),
@@ -1146,6 +1283,14 @@ print("parts:", len(parts), " plates:", sum(1 for p in parts if p[3]), " extrusi
 # ---------------------------------------------------------------------------
 # Interference check (verification V-010): python3 osa_dryer_cad.py <out> --check
 # ---------------------------------------------------------------------------
+if "--bbox" in sys.argv:   # every part's bounding box, for a quick look at where things are (into the audit folder)
+    os.makedirs(os.path.join(OUT, "cad", "audit"), exist_ok=True)
+    with open(os.path.join(OUT, "cad", "audit", "part-bboxes.csv"), "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["part", "xmin", "xmax", "ymin", "ymax", "zmin", "zmax"])
+        for n, s_, _, _, _ in parts:
+            bb = (s_.val() if hasattr(s_, "val") else s_).BoundingBox()
+            w.writerow([n] + [round(q, 2) for q in (bb.xmin, bb.xmax, bb.ymin, bb.ymax, bb.zmin, bb.zmax)])
 if "--check" in sys.argv:
     import itertools
     solids = [(n, s.val() if hasattr(s, "val") else s) for n, s, _, _, _ in parts]
@@ -1156,18 +1301,21 @@ if "--check" in sys.argv:
             if (bba.xmax < bbb.xmin or bbb.xmax < bba.xmin or bba.ymax < bbb.ymin or bbb.ymax < bba.ymin
                     or bba.zmax < bbb.zmin or bbb.zmax < bba.zmin):
                 continue
-            v = a.intersect(b).Volume()
+            common = a.intersect(b)
+            v = common.Volume()
         except Exception as ex:  # a failed boolean is reported, not hidden
-            bad.append((na, nb, f"boolean failed: {ex}"))
+            bad.append((na, nb, f"boolean failed: {ex}", ""))
             continue
         if v > 1.0:   # mm3; touching faces give 0
-            bad.append((na, nb, round(v, 1)))
+            cb = common.BoundingBox()
+            bad.append((na, nb, round(v, 1), " at " + " ".join(f"{q:.1f}" for q in (cb.xmin, cb.xmax, cb.ymin, cb.ymax, cb.zmin, cb.zmax))))
     if bad:
         print("INTERFERENCE:")
-        for na, nb, v in bad:
-            print(f"  {na}  x  {nb}  : {v}")
+        for na, nb, v, where in bad:
+            print(f"  {na}  x  {nb}  : {v}{where}")
     else:
         print("interference check: no overlaps")
-print("drum axis Z", P["drum_axis_z"], " H_body", P["H_body"], " H_total", round(P["H_total"], 1), " rear bulkhead Y", P["rear_bulk_y"])
+print("drum axis Z", P["drum_axis_z"], " H_body", P["H_body"], " H_total", round(P["H_total"], 1), " rear bulkhead Y", P["rear_bulk_y"],
+      " lint slot area", round(P["lint_slot_area"]), " hood section", round(P["hood_area"]))
 print("drum sheet flat", round(P["drum_flat_w"], 1), "x", P["drum_l"], " belt drawn length", round(P["belt_len_est"], 1),
       " belt crosses the ceiling at X", round(P["belt_cross_left"], 2), "and", round(P["belt_cross_right"], 2), " feet", P["foot_height"])

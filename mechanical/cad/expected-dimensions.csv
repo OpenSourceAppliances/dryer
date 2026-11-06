@@ -1,15 +1,15 @@
 id,part,check,args,expected,tol,source
-# Every row is a value the documents state (or that follows from stated values by plain arithmetic). The audit measures it from the files. Coordinates: X across (left negative), Y front (0) to back, Z up from the floor; plate-local (u;v) is (x;z) for front/rear-facing plates, (x;y) for horizontal plates, (y;z) for side plates, (x;up the slope) for the console face.
-# --- whole machine (design-rules 7, "about 690 wide, 1100 high, 750 deep including the console"; 7a Console "adds 113, total 1113")
-A-001,assembly,assembly_solids,,110,,"7a: 46 made parts, the bought parts and envelopes, and the hardware sets, each one named solid or compound (draft 4)"
+# Every row is a value the documents state (or that follows from stated values by plain arithmetic). The audit measures it from the files. Coordinates: X across (left negative), Y front (0) to back, Z up from the floor; plate-local (u;v) is (x;z) for front/rear-facing plates, (x;y) for horizontal plates, (y;z) for side plates.
+# --- whole machine (design-rules 7, "about 690 wide, 1203 high, 750 deep including the console"; 7a Console "a 200 tall box on the top panel: 1000 + 1.5 + 200 + 1.5 = 1203")
+A-001,assembly,assembly_solids,,127,,"7a: 54 made parts (draft 6 adds the console frame, its rear plate and the front felt), the bought parts and envelopes, and the hardware sets, each one named solid or compound"
 A-002,assembly,assembly_size,x,704.2,,"7: 690 wide cabinet + two 1.5 side panels + the side panels' bolt heads (1.6 washer + 4 hex) each side"
 A-003,assembly,assembly_min,x,-352.1,,"7: half width 345 + 1.5 panel + 5.6 bolt head"
 A-004,assembly,assembly_max,x,352.1,,"7: half width 345 + 1.5 panel + 5.6 bolt head"
 A-005,assembly,assembly_min,y,-57,,"7a Door: handle bar (14 round) on 30 standoffs in front of the disc at -13.5: -13.5 - 30 - 14 + 0.5 overlap"
-A-006,assembly,assembly_max,y,829.5,,"7: 750 deep + 1.5 rear panel; the cord bushing (18) and the 60 mm cord stub (bought) reach 829.5"
-A-007,assembly,assembly_min,z,-15.5,,"7c Feet: 8 pad + 6 hex under the 1.5 base pan"
-A-008,assembly,assembly_max,z,1115.612,,"7a Console: 1000 + 160 sin 45 = 1113.137, plus the 1.5 cap = 1114.637; the 160 tall Tier 0 faceplate sits 2 proud of the 160 face, its top edge reaches 1114.199 + 2 sin 45 = 1115.613"
-# --- frame (design-rules 7a Frame): 4040 posts 1000; levels bottom 0..40, mid 260..300, top 960..1000; side rails 670; end rails 610; front stubs 135; rear cross rails 610 at the rear bulkhead; 2020 tray rails 360
+A-006,assembly,assembly_max,y,820,,"7: 750 deep + 1.5 rear panel; the cord (draft 6: through the base pan, under the pan to the back) is drawn 70 past the panel"
+A-007,assembly,assembly_min,z,-19.5,,"7c Feet: 10 pad + 8 hex under the 1.5 base pan (draft 6: 18 under the pan, room for the cord to pass under)"
+A-008,assembly,assembly_max,z,1208.6,,"7a Console: 1000 + 1.5 top panel + 200 frame + 1.5 cap = 1203; the cap's bolt heads (1.6 washer + 4 hex) reach 1208.6"
+# --- frame (design-rules 7a Frame): 4040 posts 1000; levels bottom 0..40, mid 260..300, top 960..1000; side rails 670; end rails 610; front stubs 135; rear cross rails 610 at the rear bulkhead; 2020 tray rails 360; console frame (7a Console, draft 6): 4 posts 200 on the top panel from the top rear cross rail back, end rails 610 and side rails 58.5 at its top
 F-001,post-1,size,z,1000,,7a Frame
 F-002,post-1,size,x,40,,7a Frame 4040
 F-003,post-1,size,y,40,,7a Frame 4040
@@ -62,16 +62,35 @@ F-049,tray-rail-1,size,z,20,,7a Frame 2020
 F-050,tray-rail-1,min,z,40,,7a Frame: on the bottom rails
 F-051,tray-rail-2,size,y,360,,7a Frame
 F-052,tray-rail-2,min,z,40,,7a Frame
+F-062,console-post-1,size,z,200,,"7a Console: posts 200, the console height"
+F-063,console-post-1,size,x,40,,7a Console 4040
+F-064,console-post-1,min,x,-345,,"7a Console: posts at the cabinet's width, over the side rails"
+F-065,console-post-1,min,y,611.5,,"7a Console: front posts over the top rear cross rail (611.5..651.5)"
+F-066,console-post-1,min,z,1001.5,,"7a Console: on the top panel (1000 + 1.5)"
+F-067,console-post-4,max,x,345,,7a Console
+F-068,console-post-4,max,y,750,,"7a Console: rear posts over the cabinet's rear posts"
+F-069,console-post-4,max,z,1201.5,,7a Console: 1001.5 + 200
+F-070,console-rail-front,size,x,610,,"7a Console: end rails 610 between the posts, like the cabinet's"
+F-071,console-rail-front,min,z,1161.5,,7a Console: top rails in the top 40
+F-072,console-rail-front,max,z,1201.5,,7a Console
+F-073,console-rail-front,min,y,611.5,,7a Console
+F-074,console-rail-rear,max,y,750,,7a Console
+F-075,console-rail-left,size,y,58.5,,"7a Console: side rails between the posts: 138.5 - 2 x 40"
+F-076,console-rail-left,min,x,-345,,7a Console
+F-077,console-rail-right,max,x,345,,7a Console
 F-053,cut-list,cut,post-1,1000,,frame-cut-list.csv
 F-054,cut-list,cut,rail-bottom-left,670,,frame-cut-list.csv
 F-055,cut-list,cut,rail-bottom-front,610,,frame-cut-list.csv
 F-056,cut-list,cut,rail-mid-front-left,135,,frame-cut-list.csv
 F-057,cut-list,cut,rail-mid-rearcross,610,,frame-cut-list.csv
 F-058,cut-list,cut,tray-rail-1,360,,frame-cut-list.csv
+F-058b,cut-list,cut,console-post-1,200,,frame-cut-list.csv (7a Console)
+F-058c,cut-list,cut,console-rail-front,610,,frame-cut-list.csv (7a Console)
+F-058d,cut-list,cut,console-rail-left,58.5,,frame-cut-list.csv (7a Console)
 F-059,cut-list,cut,baffle-1..3,480,,7b Baffles 480 long
 F-060,cut-list,cut_qty,baffle-1..3,3,,7b three baffles
 F-061,cut-list,cut,belt (bought),2232,,"7a Drive: length of the drawn path round the drum (R 310 + half the 3.5 belt), the 30 pulley and the 40 idler at (-60, 165), replaces the 2214 two-pulley estimate (V-012)"
-# --- bulkheads (7a Bulkheads): 1.5 steel, 610 wide, mid rails to top rails; front behind the front rails with the 460 door opening, the 260 x 40 lint slot; rear in front of the rear cross rails with roller shaft holes and the inlet hole field
+# --- bulkheads (7a Bulkheads): 1.5 steel, 610 wide, mid rails to top rails; front behind the front rails with the 460 door opening and the curved lint slot inside the 540 ring bore (draft 6); rear in front of the rear cross rails with roller shaft holes and the inlet hole field
 B-001,front-bulkhead,size,x,610,,7a Bulkheads 610 wide
 B-002,front-bulkhead,thickness,,1.5,,7a Bulkheads 1.5 steel
 B-003,front-bulkhead,normal,,"0,1,0",,7a: front-facing plate
@@ -79,7 +98,7 @@ B-004,front-bulkhead,min,y,40,,7a: sits behind the front rails (0..40)
 B-005,front-bulkhead,min,z,265,,"7a: from the mid rails (260..300) to the top rails, 5 in from each rail edge"
 B-006,front-bulkhead,max,z,995,,7a: to the top rails (960..1000)
 B-007,front-bulkhead,loop,circle;0;631.5;460;460,1,,"7a: door opening 460 on the drum axis; axis Z = 300 + 1.5 + 20 + 310"
-B-008,front-bulkhead,loop,slot;0;361.5;260;40,1,,"7a: lint slot 260 x 40 below the opening, 270 below the axis"
+B-008,front-bulkhead,loop,sector;0;402.227;312.702;73.454,1,,"7a Bulkheads (draft 6): curved lint slot between radii 238 and 266 about the drum axis (8 outside the 460 opening, 4 inside the 540 bore), 36 degrees each side of straight down: its box is 2 x 266 sin 36 wide, from 631.5 - 266 to 631.5 - 238 cos 36 high"
 B-009,front-bulkhead,hole_at,10.5;-170;337.05,1,,"7a: roller shaft holes 30 degrees each side of bottom on radius 310 + 30 = 340"
 B-010,front-bulkhead,hole_at,10.5;170;337.05,1,,7a roller shaft holes
 B-011,front-bulkhead,holes,10.5;y,2,,7a two rollers per bulkhead
@@ -111,12 +130,13 @@ C-012,base-pan,max,z,0,,7a: under the frame
 C-013,base-pan,size,x,687,,7a between the side panels
 C-014,base-pan,size,y,750,,7a
 C-015,base-pan,holes,6.5;z,24,,"7a Panels M6 at 150 pitch: 20 to the rails plus 4 through-bolted for the idler and spring brackets"
-C-016,base-pan,loops,circle,28,,"7a: no cut-outs in the base pan: 24 M6 and 4 feet holes"
+C-016,base-pan,loops,circle,29,,"7a: 24 M6, 4 feet holes and the cord bushing hole (draft 6); no other cut-outs in the base pan"
 C-016b,base-pan,holes,8.5;z,4,,"7c Feet: M8 studs through the pan into the posts' centre bores"
 C-016c,base-pan,hole_at,8.5;-325;20,1,,"7c Feet: on the post centres"
 C-016d,base-pan,hole_at,8.5;325;730,1,,7c Feet
 C-016e,base-pan,hole_at,6.5;-128;370,1,,"7a Drive: idler bracket bolt, nut under the pan"
 C-016f,base-pan,hole_at,6.5;75;370,1,,"7a Drive: spring bracket bolt"
+C-016g,base-pan,hole_at,22;-250;690,1,,"7a Panels (draft 6): cord strain relief bushing through the pan under the power module"
 C-017,base-pan,outline,687;750,1,,7a
 # --- outer panels (7a Panels): 1.5 steel, M6 at 150 pitch on the extrusion slots
 P-001,side-panel-left,thickness,,1.5,,7a Panels
@@ -147,37 +167,46 @@ P-023,rear-upper-panel,holes,6.5;y,18,,"7a: 5 per post x 2, 4 on the mid rail, 4
 P-024,rear-upper-panel,size,x,690,,7
 P-025,rear-lower-panel,min,y,750,,7a
 P-026,rear-lower-panel,loop,circle;230;150;106;106,1,,"7a Air: 102 exhaust at X 230, port 2 mm larger each side"
-P-027,rear-lower-panel,loop,circle;-250;120;22;22,1,,"7a Panels: cord entry, strain relief bushing hole 22"
-P-028,rear-lower-panel,loops,slot,32,,"7a: louvers, 4 columns x 8 rows, clear of the exhaust port and the cord entry"
+P-027,rear-lower-panel,loops,circle,9,,"7a: the exhaust port and 8 M6; the cord enters through the base pan (draft 6), not this panel"
+P-028,rear-lower-panel,loops,slot,32,,"7a: louvers, 4 columns x 8 rows, clear of the exhaust port"
 P-029,rear-lower-panel,holes,6.5;y,8,,"7a: 2 per post x 2, 4 on the bottom rail"
 P-030,top-panel,min,z,1000,,7a: on the top rails
 P-031,top-panel,thickness,,1.5,,7a Panels
-P-032,top-panel,max,y,448.5,,"7a Console: wedge starts at Y 450; panel stops 1.5 short of the face plate"
+P-032,top-panel,max,y,750,,"7a Console (draft 6): the top panel runs the full depth; the console stands on it"
 P-033,top-panel,size,x,690,,7
-P-034,top-panel,holes,6.5;z,10,,"7a: 4 on the front rail, 3 on each side rail"
-# --- console (7a Console): 45 degree wedge at the rear of the top, 160 sloped face with the UCI-D aperture (uci-spec 4.1: 240 x 120, holes 4 x 4.5 on 260 x 140), a cap, two triangular cheeks
+P-034,top-panel,holes,6.5;z,20,,"7a: 4 on the front rail, 4 on the rear rail, 4 on each side rail (none under the console posts), 4 for the console's foot brackets"
+P-034b,top-panel,hole_at,6.5;282;631.5,1,,"7a Console (draft 6): foot bracket bolt into the top rear cross rail's top slot, 23 inboard of the post"
+P-034c,top-panel,hole_at,6.5;-282;730,1,,"7a Console (draft 6): foot bracket bolt into the rear top rail's top slot"
+# --- console (7a Console, draft 6): a 200 tall box on the top panel from the top rear cross rail (611.5) to the back, on its own 4040 frame; vertical face plate with the UCI-D aperture (uci-spec 4.1: 240 x 120, holes 4 x 4.5 on 260 x 140), a cap, a rear plate, two cheeks continuing the side panels
 K-001,console-face,thickness,,1.5,,7a all flat plates 1.5
-K-002,console-face,normal,,"0,-0.70710678,0.70710678",,"7a: 45 degrees, facing front and up"
-K-003,console-face,outline,687;160,1,,"7a: 160 sloped face, between the side panels"
-K-004,console-face,loop,rect;0;0;240;120,1,,uci-spec 4.1 aperture 240 x 120
-K-005,console-face,hole_at,4.5;-130;-70,1,,uci-spec 4.1 holes on 260 x 140
-K-006,console-face,hole_at,4.5;130;-70,1,,uci-spec 4.1
-K-007,console-face,hole_at,4.5;-130;70,1,,uci-spec 4.1
-K-008,console-face,hole_at,4.5;130;70,1,,uci-spec 4.1
+K-002,console-face,normal,,"0,1,0",,"7a: vertical, facing front"
+K-003,console-face,outline,690;200,1,,"7a: 690 wide between the cheeks, 200 tall from the top panel to the top of the frame"
+K-004,console-face,loop,rect;0;1084.5;240;120,1,,"uci-spec 4.1 aperture 240 x 120, centred 83 above the top panel's top: the module's nuts clear the front rail (1161.5), the faceplate clears the rail bolts"
+K-005,console-face,hole_at,4.5;-130;1014.5,1,,uci-spec 4.1 holes on 260 x 140
+K-006,console-face,hole_at,4.5;130;1014.5,1,,uci-spec 4.1
+K-007,console-face,hole_at,4.5;-130;1154.5,1,,uci-spec 4.1
+K-008,console-face,hole_at,4.5;130;1154.5,1,,uci-spec 4.1
 K-009,console-face,holes,4.5,4,,uci-spec 4.1 four holes
-K-010,console-face,min,y,448.939,,"7a: wedge starts at Y 450 on the plate's inner face; the outer corner is 1.5 sin 45 further forward"
-K-011,console-face,min,z,1000,,7a: on the top of the body
-K-012,console-face,max,z,1114.198,,"7a: 1000 + 113.137 + the 1.5 plate's corner (1.5 x cos 45)"
-K-013,console-cap,min,z,1113.137,,7a: 160 x sin 45 above the top
-K-014,console-cap,min,y,563.137,,7a: 450 + 160 x cos 45
-K-015,console-cap,max,y,750,,7
-K-016,console-cap,outline,690;186.863,1,,"7a: cap from the top of the slope to the back"
+K-010,console-face,min,y,610,,"7a: on the front faces of the front posts (611.5), 1.5 thick"
+K-011,console-face,min,z,1001.5,,7a: on the top panel
+K-012,console-face,max,z,1201.5,,7a: to the top of the frame
+K-012b,console-face,holes,6.5;y,8,,"7a Console: 2 per front post, 4 on the front rail at 150 pitch"
+K-013,console-cap,min,z,1201.5,,7a: on the frame
+K-014,console-cap,min,y,610,,7a: over the face plate
+K-015,console-cap,max,y,751.5,,7a: over the rear plate
+K-016,console-cap,outline,693;141.5,1,,"7a: over the cheeks (690 + 2 x 1.5) and from the face plate's front to the rear plate's back (1.5 + 138.5 + 1.5)"
+K-016b,console-cap,holes,6.5;z,10,,"7a Console: 4 on each end rail, 1 on each side rail"
 K-017,console-cheek-left,thickness,,1.5,,7a
 K-018,console-cheek-left,normal,,"1,0,0",,7a: side plate
-K-019,console-cheek-left,loops,rpoly,1,,"7a: one triangle (a 4-sided plate here: the slope plus the rear and top), corners rounded 3 (draft 5)"
-K-020,console-cheek-left,outline,295.757;113.137,1,,"7a: from Y 450 to 750, 113.137 high; the 45 degree tip is rounded R3 (draft 5), which pulls it back by 3 / tan 22.5 - 3 = 4.243"
-K-021,console-cheek-right,outline,295.757;113.137,1,,7a (see K-020)
-K-022,console-cheek-right,min,x,343.5,,7a: inside the side panel line
+K-019,console-cheek-left,loops,rrect,1,,"7a: a rectangle with 6 mm corners, no cuts but its holes"
+K-020,console-cheek-left,outline,141.5;201.5,1,,"7a: from the face plate's front (610) to the rear plate's back (751.5), from the top of the body (1000) to the top of the frame (1201.5)"
+K-021,console-cheek-right,outline,141.5;201.5,1,,7a (see K-020)
+K-022,console-cheek-right,min,x,345,,7a: continuing the side panel
+K-023,console-cheek-right,holes,6.5;x,5,,"7a Console: 2 per post, 1 on the side rail"
+K-024,console-rear,thickness,,1.5,,7a
+K-025,console-rear,min,y,750,,7a: continuing the rear panel
+K-026,console-rear,outline,690;201.5,1,,"7a: from the top panel's back edge (1000) to the top of the frame"
+K-027,console-rear,holes,6.5;y,8,,"7a Console: 2 per rear post, 4 on the rear rail"
 # --- door (7a Door): 2 mm ring 560 / 470 on the front panel, 2 mm disc 540
 D-001,door-ring,thickness,,2,,7a Door 2 mm
 D-002,door-ring,loop,circle;0;631.5;560;560,1,,7a Door ring 560 outside on the drum axis
@@ -191,7 +220,7 @@ D-006,door-disc,loop,circle;0;631.5;540;540,1,,7a Door disc 540
 D-007,door-disc,loops,circle,5,,"7a: a plain disc on the first build, no window; 2 handle holes and 2 hinge screw holes, all M4"
 D-007b,door-disc,hole_at,4.5;220;567.5,1,,"7a Door: handle on 128 centres at X 220"
 D-007c,door-disc,hole_at,4.5;220;695.5,1,,7a Door handle
-# --- drum (7b): 0.8 sheet 1945.3 x 550 wrapped on two 2 mm rings 618.4 / 480, 30 tabs per edge (24 x 20, 4.5 hole), seam holes at 50 pitch, 3 x 4 baffle holes 6.5; 620 diameter by 550 long, 35 to each side panel
+# --- drum (7b): 0.8 sheet 1945.3 x 550 wrapped on two 2 mm rings 618.4 / 540 (draft 6), 30 tabs per edge (24 x 16, 4.5 hole), seam holes at 50 pitch, 3 x 4 baffle holes 6.5; 620 diameter by 550 long, 35 to each side panel
 R-001,drum-sheet,cyl,"310;y;0,631.5",1,,"7b: 620 outside diameter on the drum axis (0, 631.5)"
 R-002,drum-sheet,cyl,"309.2;y;0,631.5",1,,7b: 0.8 wall
 R-003,drum-sheet,cyl_length,310;y,551.6,,"7b: 550 long, plus the 0.8 tab root at each end that follows the sheet surface"
@@ -203,35 +232,37 @@ R-008,drum-sheet,holes,4.5;radial,16,,"7b: seam holes at 50 pitch, 8 per edge, b
 R-009,drum-sheet,holes,6.5;radial,12,,7b: three columns of four baffle holes
 R-010,drum-sheet,solids,,1,,"7b: one sheet, tabs are part of it"
 R-011,drum-ring-front,cyl,"309.2;y;0,631.5",1,,"7b: ring 618.4 outside, the sheet's inside"
-R-012,drum-ring-front,cyl,"240;y;0,631.5",1,,7b: ring 480 inside
+R-012,drum-ring-front,cyl,"270;y;0,631.5",1,,"7b: ring 540 inside (draft 6: room for the curved lint slot inside the bore)"
 R-013,drum-ring-front,thickness,,2,,7b: 2 mm rings
 R-014,drum-ring-front,min,y,50,,7b: front ring at the sheet's front edge
 R-015,drum-ring-front,holes,4.5;y,30,,7b: 30 tab holes
 R-016,drum-ring-front,loop,circle;0;631.5;618.4;618.4,1,,7b ring outside
-R-017,drum-ring-front,loop,circle;0;631.5;480;480,1,,7b ring inside
+R-017,drum-ring-front,loop,circle;0;631.5;540;540,1,,7b ring inside
 R-018,drum-ring-rear,max,y,600,,7b: rear ring at the sheet's rear edge
 R-019,drum-ring-rear,holes,4.5;y,30,,7b
-R-020,drum-ring-rear,cyl,"240;y;0,631.5",1,,7b
+R-020,drum-ring-rear,cyl,"270;y;0,631.5",1,,7b
 R-021,drum-splice,size,y,544,,7b Splice 60 x 544
 R-022,drum-splice,min,y,53,,"7b: between the rings, 1 mm off each"
 R-023,drum-splice,holes,4.5;radial,16,,7b: holes matching the seam holes
 R-024,drum-splice,cyl,"309.2;y;0,631.5",1,,7b: inside the sheet
 R-025,drum-splice,cyl,"308.2;y;0,631.5",1,,7b: 1 mm strip
-R-026,dxf,dxf_outline,drum-sheet;1945.274;590,,,"7b: 1945.3 x 550 plus 20 mm tabs on both long edges"
+R-026,dxf,dxf_outline,drum-sheet;1945.274;582,,,"7b: 1945.3 x 550 plus 16 mm tabs on both long edges (draft 6)"
 R-027,dxf,dxf_circles_d,drum-sheet;4.5,76,,"7b: 60 tab holes + 16 seam holes"
 R-028,dxf,dxf_circles_d,drum-sheet;6.5,12,,7b: baffle holes
 R-029,dxf,dxf_circle_at,drum-sheet;4.5;15;55,1,,"7b: seam hole 15 in from the edge, first one 55 from the front (roller track 45 + 10)"
 R-030,dxf,dxf_circle_at,drum-sheet;4.5;1930.274;455,1,,"7b: seam hole on the other edge, last one before the rear roller track"
 R-031,dxf,dxf_circle_at,drum-sheet;6.5;324.212;105,1,,"7b: first baffle hole; column at a sixth of the width, 170 before the middle"
-R-032,dxf,dxf_circle_at,drum-sheet;4.5;32.421;-10,1,,"7b: first tab hole, tab centred half a pitch from the seam, hole 10 out on the tab"
+R-032,dxf,dxf_circle_at,drum-sheet;4.5;32.421;-8,1,,"7b: first tab hole, tab centred half a pitch from the seam, hole 8 out on the 16 tab"
 R-033,dxf,dxf_outline,drum-ring;618.4;618.4,,,7b Rings 618.4 outside
-R-034,dxf,dxf_circles_d,drum-ring;480,1,,7b Rings 480 inside
+R-034,dxf,dxf_circles_d,drum-ring;540,1,,7b Rings 540 inside (draft 6)
 R-035,dxf,dxf_circles_d,drum-ring;4.5,30,,7b: 30 holes
-R-036,dxf,dxf_circle_at,drum-ring;4.5;-31.276;297.561,1,,"7b: tab hole on radius 299.2 at 6 degrees from the top (first tab centre)"
+R-036,dxf,dxf_circle_at,drum-ring;4.5;-31.484;299.55,1,,"7b: tab hole on radius 301.2 (309.2 - 8) at 6 degrees from the top (first tab centre)"
 R-037,dxf,dxf_outline,drum-splice;60;544,,,7b Splice 60 x 544
 R-038,dxf,dxf_circles_d,drum-splice;4.5,16,,7b
 R-039,dxf,dxf_circle_at,drum-splice;4.5;15;52,1,,"7b: splice hole under the first seam hole (55 - 2 ring - 1)"
-# --- drive and bay (7a Drive, Air, Power module): motor axis 120 high, pulley at Y 402, blower inlet facing front, exhaust 102 at X 230, tray Y 420..670, riser 260 x 50, lint duct 336 x 36, power module 170 x 250 x 180 rear left
+R-040,dxf,dxf_outline,felt-seal;582;582,,,"7b Seals (draft 6): felt annulus outside radius 291, one drawing for both ends"
+R-041,dxf,dxf_circles_d,felt-seal;546,1,,"7b Seals: inside radius 273, outside the 540 ring bore"
+# --- drive and bay (7a Drive, Air, Power module): motor axis 120 high, pulley at Y 402, blower inlet facing front, exhaust 102 at X 230, tray Y 420..670, riser 260 x 50 with a 300 x 28 hood under the mid rear cross rail (draft 6), lint duct 336 x 33, power module 170 x 250 x 180 rear left
 M-001,motor (bought),size,y,210,,"bom: NEMA 48 frame envelope 200 long (V-106) plus the 6 mm front shaft to the blower and the 4 mm rear shaft to the pulley"
 M-002,motor (bought),min,y,184,,"7a: motor behind the blower (frame from 190, shaft stub to the blower's back face at 184)"
 M-003,motor (bought),cyl,"70;y;0,120",1,,"7a Drive: axis at 120 high, 140 envelope"
@@ -246,12 +277,14 @@ M-010,heat-module-tray,min,y,420,,7a Air: tray Y 420 to 670
 M-011,heat-module-tray,max,y,670,,7a Air
 M-012,heat-module-tray,size,x,320,,"7a: tray 320 wide, centred"
 M-013,heat-module-tray,min,z,60,,7a: on the 2020 tray rails (40 + 20)
-M-014,riser-duct,size,x,260,,7a Air riser 260 x 50
-M-015,riser-duct,size,y,50,,7a Air riser 260 x 50
-M-016,riser-duct,min,y,653.5,,"7a: behind the mid rear cross rail (ends 651.5) with 2 mm"
+M-014,riser-duct,size,x,300,,"7a Air (draft 6): the hood over the heat module's outlet is 300 wide; the riser itself 260 x 50"
+M-015,riser-duct,size,y,143.5,,"7a Air (draft 6): hood from Y 560 to the riser's back at 703.5"
+M-016,riser-duct,min,y,560,,"7a Air (draft 6): the hood starts over the module's outlet collar (580..640) with 20 to spare"
+M-016b,riser-duct,min,z,230,,"7a Air (draft 6): riser and hood bottom at 230, above the module's outlet collar (229), so the module leaves by the back under it"
+M-016c,riser-duct,max,y,703.5,,"7a: riser ends 6.5 in front of the rear rail (710)"
 M-017,lint-duct,size,x,336,,"7a Air: lint duct 336 x 36 between the front stubs with 2 mm each side"
-M-018,lint-duct,size,y,36,,7a Air
-M-019,lint-duct,min,y,2,,7a: 2 off the front panel
+M-018,lint-duct,size,y,33,,"7a Air (draft 6): 33 deep, behind the ring bolts' nuts and tips"
+M-019,lint-duct,min,y,5,,"7a (draft 6): 0.5 behind the ring bolts' tips (4.5), 5 off the front panel's back"
 M-020,lint-duct,max,y,38,,7a: 2 off the front bulkhead
 M-021,power-module (envelope),size,x,170,,7a Power module 170 x 250 x 180
 M-022,power-module (envelope),size,y,250,,7a
@@ -293,9 +326,16 @@ X-023,clearance,clearance,blower (bought);lint-duct-transition,0,,7a: transition
 X-024,clearance,clearance,exhaust-duct (bought);rear-lower-panel,2,,7a: duct through the port with 2 mm
 X-025,clearance,clearance,power-module (envelope);side-panel-left,5,,7a: rear left of the bay
 X-026,clearance,clearance,drum-sheet;top-panel,58.5,,"7a: drum top 941.5, top panel at 1000"
+X-027,clearance,clearance,riser-duct;rail-mid-rearcross,2,,"7a Air (draft 6): the hood (top 258) passes under the mid rear cross rail (260)"
+X-028,clearance,clearance,riser-duct;heat-module (envelope),1,,"7a Air (draft 6): hood bottom 230 over the module's outlet collar (229)"
+X-029,clearance,clearance,felt-seal-front;drum-ring-front,0.5,,"7b Seals (draft 6): front felt from 41.5 to 49.5 on the front bulkhead, ring face at 50"
+X-030,clearance,clearance,"lint-duct;hardware-door-ring (bought, 8 x M4 x 8 button head, nuts)",0.5,,"7a (draft 6): M4 x 8 ring bolts end at 4.5, the duct starts at 5"
+X-031,clearance,clearance,console-post-1;top-panel,0,,7a Console: posts on the top panel
+X-032,clearance,clearance,"power-cord (bought);feet (bought, 4 x M8 leveling feet, 50 pad)",45.5,,"7a Panels (draft 6): the cord runs at X -250, the rear left foot pad (radius 25) at X -325"
+X-033,clearance,clearance,power-cord (bought);base-pan,6,,"7a (draft 6): cord centre line 10.5 under the pan's bottom, 4.5 radius"
 
 # --- draft 4: hardware, feet, belt, door, control module (design-rules 7a Door, 7a Drive, 7c; controls/tier0-mechanical README)
-H-001,"feet (bought, 4 x M8 leveling feet, 50 pad)",min,z,-15.5,,"7c Feet: pad 8 and hex 6 under the pan"
+H-001,"feet (bought, 4 x M8 leveling feet, 50 pad)",min,z,-19.5,,"7c Feet (draft 6): pad 10 and hex 8 under the pan"
 H-002,"feet (bought, 4 x M8 leveling feet, 50 pad)",size,x,700,,"7c Feet: 50 pads on the post centres at X +-325"
 H-003,"belt (bought, PJ 5 rib)",size,y,12,,"7a Drive: PJ 5 ribs, 12 wide, centred on the pulley at Y 402"
 H-004,"belt (bought, PJ 5 rib)",min,y,396,,7a Drive
@@ -315,17 +355,21 @@ H-017,clearance,clearance,"door-seal (bought, OEM door seal);door-ring",2,,"7a D
 H-018,"door-handle (bought, D handle 128 centres)",min,y,-57,,7a Door: handle 128 centres
 H-019,"door-handle (bought, D handle 128 centres)",cyl,"7;y;220,567.5",1,,7a Door: handle standoff
 H-020,felt-seal-rear,thickness,,8,,"7a Drum and door: 8 mm felt"
-H-021,felt-seal-rear,loop,circle;0;631.5;570;570,1,,"7b Seals: felt annulus to radius 285, inboard of the rear tabs (289.2)"
-H-022,felt-seal-rear,loop,circle;0;631.5;500;500,1,,"7b Seals: felt annulus from radius 250, outside the ring bore 480"
+H-021,felt-seal-rear,loop,circle;0;631.5;582;582,1,,"7b Seals (draft 6): felt annulus to radius 291, inboard of the 16 tall tabs (293.2)"
+H-022,felt-seal-rear,loop,circle;0;631.5;546;546,1,,"7b Seals (draft 6): felt annulus from radius 273, outside the 540 ring bore"
 H-023,clearance,clearance,felt-seal-rear;drum-ring-rear,2,,"7a: felt from 602 to 610, ring back face at 600"
+H-023b,felt-seal-front,thickness,,8,,"7a Drum and door: 8 mm felt at the front too (draft 6)"
+H-023c,felt-seal-front,loop,circle;0;631.5;582;582,1,,7b Seals
+H-023d,felt-seal-front,max,y,49.5,,"7b Seals: on the front bulkhead's back (41.5), ring face at 50"
 H-024,tier0-faceplate,thickness,,2,,tier0 README: 2 mm aluminum
 H-025,tier0-faceplate,outline,280;160,1,,tier0 README: 280 x 160
 H-026,tier0-faceplate,holes,4.5,8,,"tier0_drawings: 4 mounting, 2 DIN rail standoffs, 2 cable ties"
 H-027,tier0-faceplate,holes,12,2,,tier0_drawings: two timer shaft holes
 H-028,tier0-faceplate,holes,4,4,,tier0_drawings: four yoke holes at 83.3
 H-029,tier0-faceplate,holes,22.3,2,,tier0_drawings: two 22 mm devices
-H-030,tier0-faceplate,hole_at,12;-80;0,1,,tier0_drawings: DRY TIME shaft
-H-031,tier0-faceplate,hole_at,22.3;90;0,1,,tier0_drawings: START
+H-030,tier0-faceplate,hole_at,12;-80;1084.5,1,,"tier0_drawings: DRY TIME shaft on the faceplate's centre line, the aperture centre (1084.5)"
+H-031,tier0-faceplate,hole_at,22.3;90;1104.5,1,,"tier0_drawings (faceplate draft 2): START, 20 above the centre line so K1 fits below the 22 mm devices"
+H-031b,tier0-faceplate,hole_at,4.5;25;1060.5,1,,"tier0_drawings (faceplate draft 2): K1 rail standoff, 24 below the centre line; the socket hangs 36 below it, to the aperture's edge"
 H-032,clearance,clearance,tier0-faceplate;console-face,0,,uci-spec 4.1: faceplate on the chassis panel
 H-034,clearance,clearance,"feet (bought, 4 x M8 leveling feet, 50 pad);base-pan",0,,7c Feet: hex against the pan
 H-035,clearance,clearance,"hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts);front-bulkhead",2.5,,"7b: bolt tips at 44, bulkhead back face at 41.5"

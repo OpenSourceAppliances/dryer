@@ -29,9 +29,11 @@ What moves and how (all as-built joints, so nothing is displaced when the joint 
     timer knobs (2)  revolute about the shaft axis, normal to the console face, against the faceplate
     HEAT selector    revolute, three positions AIR / LOW / HIGH at 0, 45 and 90 degrees
     START button     slider along its axis, 3 mm press
-    heat module tray slider along Y, tray and module envelope together, 250 mm pull-out toward the front
+    heat module tray slider along Y, tray and module envelope together, 250 mm pull-out toward the back
 Everything else is grounded. The belt is drawn on its path and does not deform.
-Draft 2, 2026-11-06 (draft 1 made its own barebones faceplate, knobs and hinge pin; the model carries them now).
+Draft 3, 2026-11-06 (draft 1 made its own barebones faceplate, knobs and hinge pin; draft 2 jointed the model's own;
+draft 3 follows model draft 6: vertical console face, the tray slides out the back, the rear lower panel is left out
+of the moved poses).
 Units in the API are cm; the numbers below are written in mm and converted.
 """
 import math
@@ -50,7 +52,7 @@ except NameError:
 CM = 0.1   # mm -> cm
 
 # geometry the STEP carries (mm), same numbers as osa_dryer_cad.py and docs/design-rules.md
-N = (0.0, -0.70710678, 0.70710678)            # console face normal, front and up
+N = (0.0, -1.0, 0.0)                          # console face normal: the face is vertical, looking forward (draft 6)
 Y_AXIS = (0.0, 1.0, 0.0)
 Z_AXIS = (0.0, 0.0, 1.0)
 
@@ -253,7 +255,7 @@ def build():
     faces = [f for f in tray.bRepBodies.item(0).faces if f.geometry.surfaceType == adsk.core.SurfaceTypes.PlaneSurfaceType]
     face = min(faces, key=lambda f: f.centroid.y)       # the end face at the front of the tray: its normal is the slide axis
     geo = adsk.fusion.JointGeometry.createByPlanarFace(face, None, adsk.fusion.JointKeyPointTypes.CenterKeyPoint)
-    slider(root, tray, rail, geo, "tray", positive_dir=(0.0, -1.0, 0.0))   # positive = pulled out toward the front
+    slider(root, tray, rail, geo, "tray", positive_dir=(0.0, 1.0, 0.0))    # positive = pulled out toward the back (draft 6: the module leaves by the back)
     log.append("tray slide")
 
     app.activeViewport.refresh()
@@ -266,7 +268,7 @@ def build():
 
 
 POSITIVE_DIRS = {"door": (0.0, 0.0, -1.0), "knob dry-time": N, "knob heat-time": N, "selector": N,
-                 "start button": (-N[0], -N[1], -N[2]), "tray": (0.0, -1.0, 0.0)}
+                 "start button": (-N[0], -N[1], -N[2]), "tray": (0.0, 1.0, 0.0)}
 
 
 def reconnect():
@@ -347,10 +349,14 @@ def _owner_name(ent):
         return getattr(ent, "name", str(ent))
 
 
+SERVICE_PANEL = ("rear-lower-panel", "hardware-rear-lower-panel")   # off before the heat module comes out (7 Access)
+
+
 def check_poses(ts=(0.0, 0.25, 0.5), min_mm3=1.0):
     """Fusion's own interference analysis at several points of the motion. Returns a list of
     (t, part a, part b, overlap volume in mm3) and prints a summary. The rest pose (t = 0) should be clean;
-    anything that appears while something moves is a collision in the design."""
+    anything that appears while something moves is a collision in the design. At the moved poses the rear lower
+    panel and its bolts are left out, as they are off when the heat module is pulled."""
     app, design = get_design()
     root = design.rootComponent
     found = []
@@ -359,6 +365,8 @@ def check_poses(ts=(0.0, 0.25, 0.5), min_mm3=1.0):
         adsk.doEvents()
         coll = adsk.core.ObjectCollection.create()
         for o in root.allOccurrences:
+            if t > 0 and any(o.component.name.startswith(sp) for sp in SERVICE_PANEL):
+                continue
             if o.isLightBulbOn:
                 coll.add(o)
         inp = design.createInterferenceInput(coll)
@@ -390,18 +398,18 @@ def check_poses(ts=(0.0, 0.25, 0.5), min_mm3=1.0):
 APPEARANCES = [
     ("Paint - Enamel Glossy (White)", ("side-panel-left", "side-panel-right", "front-upper-panel", "front-lower-panel",
                                        "rear-upper-panel", "rear-lower-panel", "top-panel", "console-face", "console-cap",
-                                       "console-cheek-left", "console-cheek-right", "door-disc")),
+                                       "console-cheek-left", "console-cheek-right", "console-rear", "door-disc")),
     ("Paint - Enamel Glossy (Dark Grey)", ("door-ring",)),
-    ("Aluminum - Anodized Rough (Grey)", ("post-", "rail-", "tray-rail-")),
+    ("Aluminum - Anodized Rough (Grey)", ("post-", "rail-", "tray-rail-", "console-post", "console-rail")),
     ("Steel - Galvanized (Small)", ("front-bulkhead", "rear-bulkhead", "bay-ceiling", "base-pan", "heat-module-tray",
                                     "lint-duct", "riser-duct", "blower (bought", "power-module (envelope)", "motor-mount-")),
     ("Stainless Steel - Brushed Linear Long", ("drum-sheet", "drum-ring-front", "drum-ring-rear", "drum-splice")),
     ("Aluminum - Satin", ("baffle-", "exhaust-duct", "idler-arm", "idler-bracket", "spring-bracket")),
     ("Rubber - Hard", ("roller-", "belt (bought", "feet (bought", "cord-bushing", "power-cord")),
     ("Rubber - Soft", ("door-seal",)),
-    ("Fabric (Grey)", ("felt-seal-rear",)),
+    ("Fabric (Grey)", ("felt-seal-",)),
     ("Paint - Metallic (Dark Grey)", ("motor (bought",)),
-    ("Steel - Satin", ("pulley (bought", "heat-module (envelope)", "idler-pulley", "idler-spring", "hardware-")),
+    ("Steel - Satin", ("pulley (bought", "heat-module (envelope)", "idler-pulley", "idler-spring", "hardware-", "console-brackets")),
     ("Stainless Steel - Satin", ("door-hinge-", "door-handle", "door-catch")),
     ("Aluminum - Brushed Linear", ("tier0-faceplate",)),
     ("Plastic - Matte (Black)", ("tier0-knob-", "tier0-selector", "tier0-start-body", "tier0-k1-relay")),

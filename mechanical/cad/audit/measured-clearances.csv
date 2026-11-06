@@ -22,19 +22,19 @@ door-ring,front-upper-panel,0.0
 door-disc,door-ring,8.0
 console-face,console-cheek-left,0.0
 console-face,console-cheek-right,0.0
-console-face,top-panel,0.439
+console-face,top-panel,0.0
 console-face,console-cap,0.0
 front-bulkhead,bay-ceiling,0.5
 rear-bulkhead,bay-ceiling,0.5
 lint-duct,rail-mid-front-left,2.0
 lint-duct,rail-mid-front-right,2.0
 lint-duct,front-bulkhead,2.0
-lint-duct,front-upper-panel,2.0
-riser-duct,rear-bulkhead,42.0
+lint-duct,front-upper-panel,5.0
+riser-duct,rear-bulkhead,7.0
 riser-duct,rail-mid-rear,6.5
 riser-duct,bay-ceiling,2.0
 heat-module (envelope),heat-module-tray,0.5
-heat-module (envelope),bay-ceiling,78.0
+heat-module (envelope),bay-ceiling,71.0
 motor (bought),base-pan,50.0
 blower (bought),front-bulkhead,55.057
 blower (bought),lint-duct-transition,0.0
@@ -53,7 +53,24 @@ drum-sheet,front-upper-panel,49.2
 "door-hinge-2-swing (bought, flag hinge, lift-off half)",door-ring,1.523
 "door-seal (bought, OEM door seal)",door-ring,2.0
 felt-seal-rear,drum-ring-rear,2.0
+felt-seal-front,drum-ring-front,0.5
+felt-seal-front,drum-sheet,2.2
+felt-seal-rear,drum-sheet,2.506
 tier0-faceplate,console-face,0.0
+riser-duct,heat-module (envelope),1.0
+riser-duct,rail-mid-rearcross,2.0
+riser-duct,heat-module-tray,168.5
+lint-duct,"hardware-door-ring (bought, 8 x M4 x 8 button head, nuts)",0.5
+console-post-1,top-panel,0.0
+console-post-1,console-cheek-left,0.0
+console-rail-front,console-cap,0.0
+console-rear,rear-upper-panel,0.0
+console-cheek-left,side-panel-left,0.0
+tier0-k1-relay-on-din-rail (bought),console-rail-front,82.0
+tier0-k1-relay-on-din-rail (bought),top-panel,23.0
+power-cord (bought),"cord-bushing (bought, PG16 strain relief)",0.1
+power-cord (bought),"feet (bought, 4 x M8 leveling feet, 50 pad)",45.5
+power-cord (bought),base-pan,6.0
 "feet (bought, 4 x M8 leveling feet, 50 pad)",base-pan,0.0
 "hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts)",front-bulkhead,2.5
 "idler-pulley (bought, flat idler 40 with bearing)",motor (bought),4.5

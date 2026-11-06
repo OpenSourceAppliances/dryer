@@ -1,8 +1,10 @@
 # Dryer Universal Control Interface (UCI-D)
 
-Version 1.0, draft 3, 2026-11-05.
+Version 1.0, draft 4, 2026-11-06.
 
 Status: draft. No chassis and no module implements it yet. Anything marked "check" in section 13 needs a real-world check before this becomes version 1.0.
+
+Changes in draft 4: the faceplate fasteners are M4 button head socket screws (2.5 mm hex key) instead of Phillips pan heads, following the dryer's decision to use one M4 head type everywhere (`DECISIONS.md` 2026-11-06); a chassis supplies nuts or press nuts behind its panel either way. Section 4.2.
 
 Changes in draft 3: the aperture grows from 240 x 100 to 240 x 120, the faceplate to 280 x 160, the hole pattern to 260 x 140, and the envelope to 240 x 120 x 120 (the aperture's own projection), because a standard wall-device yoke (the spring-wound timers) is about 106 mm tall and would not pass a 100 mm opening. Section 13 item 1 updated.
 
@@ -97,7 +99,7 @@ The module supplies its own faceplate. It covers the aperture and carries the kn
 | Corner radius | 10 max |
 | Mounting holes | 4 x 4.5 diameter on the 260 x 140 pattern |
 | Thickness | 1.5 to 3 for metal; up to 4 for a printed plastic faceplate |
-| Fasteners | 4 x M4 pan-head Phillips, 8 to 12 long, with washers. Phillips so the charter's service set (10 mm socket, 13 mm socket, Phillips driver, multimeter) covers it. |
+| Fasteners | 4 x M4 button head socket screws (ISO 7380, 2.5 mm hex key), 8 to 12 long, with washers under the heads where the faceplate is thinner than 2 mm. The chassis provides the nuts behind its panel (plain nuts, or press nuts if the panel is steel). One head type for every M4 on the appliance; the dryer's service set is the charter's four tools plus 2.5 and 4 mm hex keys. |
 | Material | Laser-cut aluminum or steel preferred. A 3D-printed faceplate is acceptable for a module, since it is non-structural trim, and the print file must be in the repo. |
 | Grounding | A metal faceplate is bonded to the chassis panel through at least one mounting screw with a star washer on bare metal, or by a separate ground wire with a ring terminal. |
 

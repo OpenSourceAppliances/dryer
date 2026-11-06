@@ -421,6 +421,16 @@ def classify(loop):
         horizontal = abs(c0[1] - c1[1]) < 1e-3
         w, h = (length, 2 * r) if horizontal else (2 * r, length)
         return dict(type="slot", cx=(c0[0] + c1[0]) / 2, cy=(c0[1] + c1[1]) / 2, w=w, h=h, n=4)
+    if len(arcs) == 2 and len(lines) == 2 and dist(arcs[0].c, arcs[1].c) < 1e-3 and abs(arcs[0].r - arcs[1].r) > 1e-3 \
+            and all(abs(a.sweep() - arcs[0].sweep()) < 1e-6 for a in arcs):
+        # an annular sector (the curved lint slot): two concentric arcs of the same sweep joined by two radial lines.
+        # Box and centre are the loop's own (for the inside-the-outline and overlap tests); the arc centre and radii
+        # are kept for the rows that name them
+        x0, y0, x1, y1 = loop_bbox(loop)
+        r0, r1 = sorted(a.r for a in arcs)
+        span = arcs[0].sweep()
+        return dict(type="sector", cx=(x0 + x1) / 2, cy=(y0 + y1) / 2, w=x1 - x0, h=y1 - y0, n=4,
+                    ccx=arcs[0].c[0], ccy=arcs[0].c[1], r0=r0, r1=r1, span_deg=math.degrees(span), area=span / 2 * (r1 ** 2 - r0 ** 2))
     if arcs and lines and all(abs(a.r - arcs[0].r) < 1e-3 for a in arcs) and all(a.sweep() <= math.pi + 1e-3 for a in arcs):
         # a polygon with every corner rounded to one radius (the notched ceiling plate, the cheeks): size from the box
         x0, y0, x1, y1 = loop_bbox(loop)
@@ -553,6 +563,11 @@ def loops_overlap(l1, l2):
     """Do two inner loops (circle/rect/slot/polygon, treated by bounding shapes) overlap? Conservative."""
     if l1["type"] == "circle" and l2["type"] == "circle":
         return dist((l1["cx"], l1["cy"]), (l2["cx"], l2["cy"])) < (l1["w"] + l2["w"]) / 2 - 1e-6
+    # a sector against a circle about the sector's own centre (the curved lint slot round the door opening): the
+    # circle has to cross the sector's ring of radii to overlap it
+    for sec, circ in ((l1, l2), (l2, l1)):
+        if sec["type"] == "sector" and circ["type"] == "circle" and dist((sec["ccx"], sec["ccy"]), (circ["cx"], circ["cy"])) < 1e-3:
+            return sec["r0"] - 1e-6 < circ["w"] / 2 < sec["r1"] + 1e-6
     # rectangle test on bounding boxes for everything else (slots and rects are axis-aligned)
     ax0, ax1 = l1["cx"] - l1["w"] / 2, l1["cx"] + l1["w"] / 2
     ay0, ay1 = l1["cy"] - l1["h"] / 2, l1["cy"] + l1["h"] / 2
@@ -727,7 +742,14 @@ CLEAR_PAIRS = [
     ("belt (bought, PJ 5 rib)", "drum-sheet"), ("belt (bought, PJ 5 rib)", "pulley (bought)"), ("belt (bought, PJ 5 rib)", "idler-pulley (bought, flat idler 40 with bearing)"),
     ("belt (bought, PJ 5 rib)", "bay-ceiling"), ("belt (bought, PJ 5 rib)", "motor (bought)"), ("belt (bought, PJ 5 rib)", "heat-module-tray"),
     ("door-hinge-1-fixed (bought, flag hinge, pinned half)", "door-disc"), ("door-hinge-2-swing (bought, flag hinge, lift-off half)", "door-ring"),
-    ("door-seal (bought, OEM door seal)", "door-ring"), ("felt-seal-rear", "drum-ring-rear"), ("tier0-faceplate", "console-face"),
+    ("door-seal (bought, OEM door seal)", "door-ring"), ("felt-seal-rear", "drum-ring-rear"), ("felt-seal-front", "drum-ring-front"),
+    ("felt-seal-front", "drum-sheet"), ("felt-seal-rear", "drum-sheet"), ("tier0-faceplate", "console-face"),
+    ("riser-duct", "heat-module (envelope)"), ("riser-duct", "rail-mid-rearcross"), ("riser-duct", "heat-module-tray"),
+    ("lint-duct", "hardware-door-ring (bought, 8 x M4 x 8 button head, nuts)"), ("console-post-1", "top-panel"),
+    ("console-post-1", "console-cheek-left"), ("console-rail-front", "console-cap"), ("console-rear", "rear-upper-panel"),
+    ("console-cheek-left", "side-panel-left"), ("tier0-k1-relay-on-din-rail (bought)", "console-rail-front"),
+    ("tier0-k1-relay-on-din-rail (bought)", "top-panel"), ("power-cord (bought)", "cord-bushing (bought, PG16 strain relief)"),
+    ("power-cord (bought)", "feet (bought, 4 x M8 leveling feet, 50 pad)"), ("power-cord (bought)", "base-pan"),
     ("feet (bought, 4 x M8 leveling feet, 50 pad)", "base-pan"), ("hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts)", "front-bulkhead"),
     ("idler-pulley (bought, flat idler 40 with bearing)", "motor (bought)"), ("hardware-idler-axle (bought, M8 x 30 bolt, nut)", "motor (bought)"),
 ]
@@ -791,7 +813,8 @@ for name, m in parts.items():
         gen(name + ".dxf", "DXF exists for a flat part", "part not flat", False)
 
 # frame rails: every M6 hole in a panel or plate must sit on a rail centre line, within the rail's length
-rails = {n: m for n, m in parts.items() if n.startswith("rail-") or n.startswith("post-") or n.startswith("tray-rail")}
+rails = {n: m for n, m in parts.items() if n.startswith("rail-") or n.startswith("post-") or n.startswith("tray-rail")
+         or n.startswith("console-post") or n.startswith("console-rail")}
 
 
 def hole_on_rail(cx, cy, cz, axis):
@@ -821,9 +844,12 @@ def hole_on_rail(cx, cy, cz, axis):
 
 
 PANELS = ("side-panel-left", "side-panel-right", "front-upper-panel", "front-lower-panel", "rear-upper-panel",
-          "rear-lower-panel", "top-panel", "base-pan", "bay-ceiling", "front-bulkhead", "rear-bulkhead")
+          "rear-lower-panel", "top-panel", "base-pan", "bay-ceiling", "front-bulkhead", "rear-bulkhead",
+          "console-face", "console-rear", "console-cap", "console-cheek-left", "console-cheek-right")
 # M6 holes that are bolted through with a nut instead of into a rail: the idler and spring brackets on the base pan
 # (design-rules 7a Drive) and the two fixed hinge leaves on the front upper panel (7a Door). Listed, not inferred.
+# The console's four foot bolts through the top panel land on the top rear cross rail and the rear top rail, so the
+# rail check covers them.
 THROUGH_BOLTED = {"base-pan": [(-128.0, 370.0), (-102.0, 370.0), (55.0, 370.0), (75.0, 370.0)],
                   "front-upper-panel": [(-266.0, 581.5), (-252.0, 581.5)]}
 for name in PANELS:
@@ -843,15 +869,22 @@ for name in PANELS:
     gen(name, "every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole)",
         f"{len(holes)} M6 holes, {len(through)} through-bolted, {len(off)} off a rail" + (f": {off[:4]}" if off else ""), not off)
 
+# the console (draft 6) is a 4040 frame like the cabinet's, so its plates are in PANELS above and its members in rails;
+# its M4 holes are the UCI-D module pattern on the face only
+m = parts["console-face"]
+m4 = [g for g in m["cylinders"] if abs(g["r"] - 2.25) < 1e-3]
+gen("console-face", "the only M4 holes are the four UCI-D module holes (uci-spec 4.1)", f"{len(m4)} M4 holes", len(m4) == 4)
+
 # V-011: every round feature has a named diameter
 ALLOWED_D = {4.5: "M4 clearance", 5.0: "louver slot ends (60 x 5)", 6.5: "M6 clearance", 8.5: "M8 clearance (feet studs)", 10.0: "inlet holes", 10.5: "roller shafts",
              40.0: "lint slot ends (260 x 40)",
              22.0: "cord strain relief bushing", 106.0: "exhaust port (102 duct + 2 each side)", 460.0: "door opening",
-             470.0: "door ring bore", 480.0: "front panel ring opening / drum ring bore", 540.0: "door disc", 560.0: "door ring",
+             470.0: "door ring bore", 480.0: "front panel ring opening", 540.0: "door disc / drum ring bore", 560.0: "door ring",
              616.4: "splice inside", 618.4: "drum ring / sheet inside", 620.0: "drum outside",
              12.0: "plate corner radius 6 / timer shaft holes", 6.0: "corner radius 3 (cheeks, tabs, splice, idler arm ends)", 20.0: "faceplate corner radius 10",
              4.0: "4040 corner radius 2 / timer yoke holes", 3.0: "2020 corner radius 1.5", 6.8: "4040 centre bore (tapped M8 for the feet)", 4.2: "2020 centre bore",
-             22.3: "22 mm panel devices", 500.0: "felt seal inside", 570.0: "felt seal outside"}
+             22.3: "22 mm panel devices", 546.0: "felt seal inside (radius 273)", 582.0: "felt seal outside (radius 291)",
+             476.0: "lint slot inner arc (radius 238)", 532.0: "lint slot outer arc (radius 266)"}
 bad_d = []
 for n, m in parts.items():
     for g in m["cylinders"]:
@@ -870,17 +903,25 @@ gen("all parts", "V-011: every round feature deeper than 0.5 mm has a diameter o
 # V-013: air path areas from the measured features, against the blower outlet (102 round)
 try:
     a_outlet = math.pi * 51 ** 2
-    riser = parts["riser-duct"]
-    a_riser = riser["sx"] * riser["sy"]
+    # the riser's vertical part, cut level at Z 400 (above the hood, below the ceiling), and its hood over the heat
+    # module's outlet, cut at Y 630 (the hood runs from Y 560 to the riser); each section is one rectangle (draft 6)
+    def section_area(name, origin, normal, u, v):
+        lps, _ = section_loops(part_shapes[name], origin, normal, u, v)
+        outer = max(lps, key=lambda l: l["w"] * l["h"])
+        assert outer["type"] == "rect", (name, outer)
+        inner = [l for l in lps if l is not outer]
+        return outer["w"] * outer["h"] - sum(l["w"] * l["h"] for l in inner), outer
+    a_riser, riser_sec = section_area("riser-duct", (0, 0, 400), (0, 0, 1), (1, 0, 0), (0, 1, 0))
+    a_hood, hood_sec = section_area("riser-duct", (0, 630, 0), (0, 1, 0), (1, 0, 0), (0, 0, 1))
     lint = parts["lint-duct"]
     a_lint = lint["sx"] * lint["sy"]
-    slot = [l for l in parts["front-bulkhead"]["loops"] if l["type"] == "slot"][0]
-    a_slot = (slot["w"] - slot["h"]) * slot["h"] + math.pi * (slot["h"] / 2) ** 2
+    slot = [l for l in parts["front-bulkhead"]["loops"] if l["type"] == "sector"][0]
+    a_slot = slot["area"]
     inlet = [g for g in parts["rear-bulkhead"]["cylinders"] if abs(2 * g["r"] - 10) < 0.011]
     a_inlet = sum(math.pi * g["r"] ** 2 for g in inlet)
     port = [l for l in parts["rear-lower-panel"]["loops"] if l["type"] == "circle" and abs(l["w"] - 106) < 0.011][0]
     a_exh = a_outlet   # the duct itself, 102 round
-    areas = dict(riser=a_riser, lint_duct=a_lint, lint_slot=a_slot, inlet_field=a_inlet, exhaust_duct=a_exh)
+    areas = dict(riser=a_riser, riser_hood=a_hood, lint_duct=a_lint, lint_slot=a_slot, inlet_field=a_inlet, exhaust_duct=a_exh)
     gen("air path", "V-013: every opening in the air path is at least the blower outlet (102 round, %.0f mm2)" % a_outlet,
         ", ".join(f"{k} {v:.0f}" for k, v in areas.items()), all(v >= a_outlet - 0.5 for v in areas.values()))
 except Exception as ex:

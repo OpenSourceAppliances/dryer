@@ -1,6 +1,6 @@
 # Tier 0: mechanical control module
 
-Draft 2, 2026-11-05. Status: faceplate drawn (`mechanical/drawings/tier0-faceplate.dxf` and `.svg`), wiring drawn (`tier0-wiring.svg`). Nothing built.
+Draft 3, 2026-11-06. Status: faceplate drawn, draft 2 (`mechanical/drawings/tier0-faceplate.dxf` and `.svg`: the 22 mm devices 20 above the centre line and the K1 rail 24 below it, so the K1 socket stays inside the aperture's projection; the faceplate's four screws are M4 button heads), wiring drawn (`tier0-wiring.svg`). Nothing built.
 
 The reference control module for the dryer. No microcontroller, no firmware, no printed circuit board. Two knobs, a switch, a button, and one relay. It plugs into J1 only.
 
@@ -65,8 +65,8 @@ Vendor part numbers go in `bom.csv` with two vendors each. These are the part fa
 | START | Momentary push button, normally open, 22 mm panel mount, rated for 24 V DC | Schneider XB4, Eaton M22, IDEC, Omron A22 |
 | K1 | Plug-in relay, 24 V DC coil with suppression diode, 2 changeover contacts, 5 A or more, with a matching socket | Omron MY2, Finder 55.32 or 56.32, Schneider RXM2AB, IDEC RH2B, and their sockets |
 | Plug to J1 | Mini-Fit Jr. 16-circuit plug housing with male crimp terminals | Molex 5559 and 5558, or compatible |
-| Faceplate | Laser-cut 2 mm aluminum, 280 x 160 mm, UCI-D hole pattern, shaft holes and yoke holes for two timers, two 22.3 mm holes | `mechanical/drawings/tier0-faceplate.dxf`; the shaft hole size and knob diameter are to be checked on a timer in hand |
-| K1 mounting | 100 mm of 35 mm DIN rail on two M4 standoffs, 12 mm long, behind the faceplate | Any |
+| Faceplate | Laser-cut 2 mm aluminum, 280 x 160 mm, UCI-D hole pattern, shaft holes and yoke holes for two timers on the centre line, two 22.3 mm holes 20 above it, held by four M4 x 10 button heads (2.5 mm hex key) with nuts inside the console | `mechanical/drawings/tier0-faceplate.dxf`; the shaft hole size and knob diameter are to be checked on a timer in hand |
+| K1 mounting | 100 mm of 35 mm DIN rail on two M4 standoffs, 12 mm long, behind the faceplate on a line 24 below its centre; the socket hangs 36 below that line, to the aperture's bottom edge, and 19 above it, under the 22 mm devices' contact blocks | Any |
 | Timer nuts | 6-32 hex nuts and washers, 4 off, for the screws supplied with the timers | Hardware store |
 | Wire and terminals | 0.5 mm2 stranded, 105 °C, with 6.3 mm insulated quick-disconnects for the timers and switch, crimped with a ratcheting crimper | Any |
 
@@ -76,7 +76,9 @@ The timers are wall-box devices. Their yoke (the steel strap with the slotted ea
 
 ## In the CAD model
 
-`mechanical/cad/osa_dryer_cad.py` draws the module on the console face from the numbers in `mechanical/drawings/tier0_drawings.py`: the faceplate (`mechanical/step/tier0-faceplate.step`, with its legends engraved 0.3 mm), the two timers as their maker's body size behind their yokes, 40 mm skirted knobs, the 22 mm selector and START with their bodies and contact blocks, and K1 on its rail. In Fusion the knobs, the selector and START move (`mechanical/cad/fusion_motion/`). Drawing it found that the UCI envelope (240 x 120 x 120 behind the aperture) is deeper than the console wedge: straight back from the aperture there is about 20 mm at its bottom edge, 80 at its centre and 140 at its top edge before the top panel's plane, and K1 as drawn on its rail reaches 50 mm below that plane, into the drum compartment. Either the console gets a floor (and the module's deep parts sit high) or the envelope changes; `docs/verification.md` V-015.
+`mechanical/cad/osa_dryer_cad.py` draws the module on the console face and takes the faceplate's numbers from `mechanical/drawings/tier0_drawings.py` itself (it imports the file), so the faceplate in the model and `tier0-faceplate.dxf` cannot drift apart: the faceplate (`mechanical/step/tier0-faceplate.step`, with its legends engraved 0.3 mm), the two timers as their maker's body size behind their yokes, 40 mm skirted knobs, the 22 mm selector and START with their bodies and contact blocks, and K1 on its rail. In Fusion the knobs, the selector and START move (`mechanical/cad/fusion_motion/`).
+
+Two things the drawing found. Draft 5 of the chassis model showed that the UCI envelope (240 x 120 x 120 behind the aperture) did not fit the console wedge; the console is now a 200 mm box on its own frame, 138.5 deep, and the whole envelope sits inside it (`DECISIONS.md` 2026-11-06, `docs/verification.md` V-015). Then the module itself broke the envelope: K1's socket on a rail 38 below the centre line hung 14 mm below the aperture's projection, where the chassis panel is. Faceplate draft 2 moves the selector and START 20 above the centre line and the rail to 24 below it, which puts the socket's bottom edge exactly on the aperture's; the model asserts it. Everything behind the plate now passes through the aperture, which is the test the envelope rule exists for.
 
 ## Still to do
 
@@ -84,4 +86,4 @@ The timers are wall-box devices. Their yoke (the steel strap with the slotted ea
 2. Write the K1 socket's terminal numbers onto `tier0-wiring.svg` once the socket is in hand.
 3. Confirm K1's coil current at 24 V is under 50 mA (most 24 V DC plug-in relays draw 30 to 40 mA).
 4. Confirm the timer contacts are happy switching 24 V DC at the relay coil current. If the maker lists a minimum load above what the chassis provides, add a parallel load resistor on the chassis side and record it.
-5. Cut one faceplate and fit everything to it before the drawing is called done.
+5. Cut one faceplate and fit everything to it before the drawing is called done. The K1 socket is drawn 55 across the rail and 28 along it from memory, not from a sheet; the socket bought decides whether the 24 mm rail line holds, and if the socket is taller the rail line moves up and the 22 mm devices with it, inside the 120 the aperture gives.
