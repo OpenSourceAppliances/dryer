@@ -39,7 +39,7 @@ The joint list and the signs the script worked out (so that a positive value in 
 
 Result: 0 overlaps over the three poses (`fusion-motion-interference.txt`). The archive with the joints and appearances is `mechanical/fusion/osa-dryer-assembly-motion.f3d` (Fusion's own format, 11.1 MB; open it in Fusion and drag any joint).
 
-The independent re-measure of every STEP with Fusion's kernel (V-014) was last run on draft 5; the draft 6 run is pending (the part files reached the machine after the first attempt, which measured the old ones and was discarded).
+The independent re-measure of every STEP with Fusion's kernel (V-014) was rerun on draft 6 the same day: 633 bodies, 711 comparisons, no difference beyond the usual face-count split on the drum sheet (`audit-report.md` section 3).
 
 ---
 
