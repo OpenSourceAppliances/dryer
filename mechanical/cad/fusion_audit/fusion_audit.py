@@ -210,6 +210,35 @@ def main():
     return n_bodies, n_err
 
 
+def measure_active(out_csv=None):
+    """Measure the active document only (the parametric build, mechanical/cad/fusion_build), writing the same CSV with every
+    body under its component's name as an 'osa-dryer-assembly' row, so cad_audit.py --fusion <csv> --fusion-partial compares
+    each built part with the script's geometry."""
+    app = adsk.core.Application.get()
+    design = adsk.fusion.Design.cast(app.activeProduct)
+    out_csv = out_csv or os.path.join(OUT_DIR, "fusion-build-measured.csv")
+    rows = []
+    with open(os.path.splitext(out_csv)[0] + ".log", "w", encoding="utf-8") as logf:
+        log(logf, f"fusion_audit measure_active {time.strftime('%Y-%m-%d %H:%M:%S')}  Fusion {app.version}")
+        bodies = all_bodies(design)
+        log(logf, f"{len(bodies)} bodies in the active document")
+        for name, body in bodies:
+            try:
+                measure_body(rows, logf, "osa-dryer-assembly", name, body)
+            except Exception:
+                log(logf, "  ERROR " + traceback.format_exc())
+                rows.append(dict(record="error", file="osa-dryer-assembly", body=name, note=traceback.format_exc().splitlines()[-1]))
+        with open(out_csv, "w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=FIELDS)
+            w.writeheader()
+            for r in rows:
+                w.writerow(r)
+        n_bodies = sum(1 for r in rows if r["record"] == "body")
+        n_err = sum(1 for r in rows if r["record"] == "error")
+        log(logf, f"done: {n_bodies} bodies, {n_err} errors; wrote {os.path.relpath(out_csv, REPO)}")
+    return n_bodies, n_err
+
+
 def run(context):
     """Entry point when run from Scripts and Add-Ins."""
     try:

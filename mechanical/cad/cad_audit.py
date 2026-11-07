@@ -74,6 +74,7 @@ OUT = sys.argv[1] if len(sys.argv) > 1 else "."
 FUSION_CSV = None
 if "--fusion" in sys.argv:
     FUSION_CSV = sys.argv[sys.argv.index("--fusion") + 1]
+FUSION_PARTIAL = "--fusion-partial" in sys.argv   # the CSV holds only some of the parts (the parametric build, part way through): compare those, do not miss the rest
 HERE = os.path.dirname(os.path.abspath(__file__))
 AUD = os.path.join(HERE, "audit")      # next to this script, whatever <outdir> is
 os.makedirs(AUD, exist_ok=True)
@@ -1437,6 +1438,8 @@ if FUSION_CSV:
         fl = by_file.get(src, [])
         if not fl and not ref["cylinders"]:
             continue
+        if FUSION_PARTIAL and not fl:
+            continue
         left = list(fl)
         missing = []
         for g in ref["cylinders"]:
@@ -1468,6 +1471,10 @@ if FUSION_CSV:
             fv = float(r["value_mm"])
             fusion_rows.append(("osa-dryer-assembly", f"{key[0]} / {key[1]}", "minimum distance (mm)", f"OCP {ref:.3f} / Fusion {fv:.3f}", "PASS" if abs(fv - ref) <= 0.02 else "FAIL"))
     missing_in_fusion = [n for n in parts if (n, n) not in seen and not any(k[0] == n for k in seen)]
+    if FUSION_PARTIAL:
+        n_cmp = len({k[1] for k in seen if k[0] == "osa-dryer-assembly"})
+        fusion_rows.append(("osa-dryer-assembly", "", "parts of the parametric build compared with the script's assembly", f"{n_cmp} of {len(assembly)} named solids", "PASS"))
+        missing_in_fusion = []
     if missing_in_fusion:
         fusion_rows.append(("", "", "part files measured in Fusion", f"{len(missing_in_fusion)} not in the Fusion CSV: {missing_in_fusion[:5]}", "FAIL"))
 

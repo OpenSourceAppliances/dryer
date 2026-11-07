@@ -176,6 +176,67 @@ P = dict(
     fp_w=620.0, fp_h=160.0, fp_r=10.0, fp_t=2.0,   # 620 wide (UCI-D draft 6): 35 to the console's edges, like the 37 above it
     knob_d=40.0, knob_skirt_h=3.0, knob_body_d=30.0, knob_h=20.0,
 )
+
+
+class Ex(float):
+    """A number that remembers how it was made from the named parameters, for the Fusion build (mechanical/cad/fusion_build):
+    the plates' outlines and hole rows come out as expressions in the user parameters a builder can change in Fusion.
+    Lengths only; a product or ratio of two lengths drops back to a plain float."""
+
+    def __new__(cls, v, expr=None):
+        o = float.__new__(cls, float(v))
+        o.expr = expr if expr is not None else f"{float(v):g} mm"
+        return o
+
+    @staticmethod
+    def _e(o):
+        return o.expr if isinstance(o, Ex) else f"{float(o):g} mm"
+
+    def __add__(self, o):
+        return Ex(float(self) + float(o), f"({self.expr} + {Ex._e(o)})")
+
+    def __radd__(self, o):
+        return Ex(float(o) + float(self), f"({Ex._e(o)} + {self.expr})")
+
+    def __sub__(self, o):
+        return Ex(float(self) - float(o), f"({self.expr} - {Ex._e(o)})")
+
+    def __rsub__(self, o):
+        return Ex(float(o) - float(self), f"({Ex._e(o)} - {self.expr})")
+
+    def __mul__(self, o):
+        if isinstance(o, Ex):
+            return float(self) * float(o)
+        return Ex(float(self) * float(o), f"({self.expr} * {float(o):g})")
+
+    __rmul__ = __mul__
+
+    def __truediv__(self, o):
+        if isinstance(o, Ex):
+            return float(self) / float(o)
+        return Ex(float(self) / float(o), f"({self.expr} / {float(o):g})")
+
+    def __neg__(self):
+        return Ex(-float(self), f"(-{self.expr})")
+
+    def __pos__(self):
+        return self
+
+
+# the user parameters of the Fusion build: P key -> parameter name. Everything derived from these carries an expression.
+USER_PARAMS = [("W", "cab_w"), ("D", "cab_d"), ("ext", "ext"), ("ext_small", "ext_small"), ("bay_top", "bay_top"),
+               ("t_panel", "t_panel"), ("t_bulk", "t_bulk"), ("t_base", "t_base"), ("drum_d", "drum_d"), ("drum_l", "drum_l"),
+               ("drum_front_y", "drum_front_y"), ("door_opening_d", "door_d"), ("panel_pitch", "panel_pitch"),
+               ("console_h", "console_h"), ("uci_ap_w", "uci_w"), ("uci_ap_h", "uci_h"),
+               ("drum_clear_bottom", "drum_clear_bottom"), ("drum_clear_top", "drum_clear_top")]
+for _k, _n in USER_PARAMS:
+    P[_k] = Ex(P[_k], _n)
+# derived parameters the Fusion build defines by these formulas, so the expressions downstream stay readable
+DERIVED_PARAMS = [("half_w", "half_w", "cab_w / 2"), ("inner_w", "inner_w", "cab_w - 2 * ext"),
+                  ("drum_axis_z", "drum_axis_z", "bay_top + t_base + drum_clear_bottom + drum_d / 2"),
+                  ("H_body", "cab_h", "drum_axis_z + drum_d / 2 + drum_clear_top + ext"),
+                  ("front_bulk_y", "front_bulk_y", "ext"), ("rear_bulk_y", "rear_bulk_y", "drum_front_y + drum_l + 10 mm"),
+                  ("rear_cross_y", "rear_cross_y", "rear_bulk_y + t_bulk"), ("console_depth", "console_depth", "cab_d - rear_cross_y")]
 P["drum_rim_r"] = P["drum_d"] / 2
 P["bp_y0"] = P["blower_y0"] - P["t_panel"]                   # the blower plate's front face: the spool's foam lands on it (draft 9)
 P["drum_flat_w"] = math.pi * (P["drum_d"] - P["drum_t"])   # sheet length at the mid-surface
@@ -188,6 +249,8 @@ P["rear_cross_y"] = P["rear_bulk_y"] + P["t_bulk"]  # rear cross rails start her
 P["console_depth"] = P["D"] - P["rear_cross_y"]      # the console's front posts stand over the top rear cross rail (draft 6): 138.5
 P["inner_w"] = P["W"] - 2 * P["ext"]                # 610 between the posts
 P["half_w"] = P["W"] / 2
+for _k, _n, _f in DERIVED_PARAMS:   # the value as computed above, named for the Fusion build
+    P[_k] = Ex(P[_k], _n)
 P["belt_y"] = P["motor_y0"] + P["motor_len"] + 12.0   # pulley centre on the rear shaft
 P["belt_track_y"] = P["belt_y"] - P["drum_front_y"]   # belt track on the drum, in flat-pattern Y (from the front edge)
 P["r_mid"] = (P["drum_d"] - P["drum_t"]) / 2          # sheet mid-surface radius; flat X maps to angle at this radius
@@ -199,6 +262,23 @@ for _off in P["baffle_hole_offsets"]:   # no baffle bolt in the belt track
 # ---------------------------------------------------------------------------
 parts = []          # (name, solid, color, is_plate, thickness)
 cut_list = []       # (item, profile, length_mm, qty, note)
+plate_log = []      # every flat plate as drawn, with the expressions its numbers carry (for the Fusion build)
+
+
+def _ex(v):
+    return getattr(v, "expr", None)
+
+
+def _rec(vals):
+    """A tuple of numbers as [floats..., expressions...] for the plate log."""
+    return [float(v) for v in vals] + [_ex(v) for v in vals]
+
+
+def record_plate(name, kind, u0, u1, v0, v1, pos, t, holes, rect_cuts, circ_cuts, slots, sectors, r):
+    plate_log.append(dict(name=name, kind=kind, u0=float(u0), u1=float(u1), v0=float(v0), v1=float(v1), pos=float(pos), t=float(t), r=float(r),
+                          ex=dict(u0=_ex(u0), u1=_ex(u1), v0=_ex(v0), v1=_ex(v1), pos=_ex(pos), t=_ex(t)),
+                          holes=[_rec(h) for h in holes], rect_cuts=[_rec(c) for c in rect_cuts], circ_cuts=[_rec(c) for c in circ_cuts],
+                          slots=[_rec(c) for c in slots], sectors=[_rec(c) for c in sectors]))
 STEEL = cq.Color(0.72, 0.72, 0.75)
 ALU = cq.Color(0.85, 0.85, 0.88)
 BOUGHT = cq.Color(0.95, 0.75, 0.55)
@@ -362,6 +442,7 @@ def plate_xz(name, x0, x1, z0, z1, y0, t, holes=(), rect_cuts=(), circ_cuts=(), 
     for (xc, zc, r0, r1, half) in sectors:
         solid = solid.cut(sector_xz(xc, zc, r0, r1, half, t + 2).translate((0, y0 - 1, 0)))
     add(name, solid, STEEL, plate=True, t=t)
+    record_plate(name, "xz", x0, x1, z0, z1, y0, t, holes, rect_cuts, circ_cuts, slots, sectors, r)
     # 2D for DXF: same features, in plate-local coordinates (x right, y up)
     sk = fillet_corners(cq.Workplane("XY").center((x0 + x1) / 2, (z0 + z1) / 2).rect(w, h).extrude(1), "|Z", r)
     for (x, z, d) in list(holes) + list(circ_cuts):
@@ -389,6 +470,7 @@ def plate_xy(name, x0, x1, y0, y1, z0, t, holes=(), rect_cuts=(), circ_cuts=(), 
     for (xc, yc, cw, ch) in rect_cuts:
         solid = solid.cut(cq.Workplane("XY").center(xc, yc).rect(cw, ch).extrude(t + 2).translate((0, 0, z0 - 1)))
     add(name, solid, STEEL, plate=True, t=t)
+    record_plate(name, "xy", x0, x1, y0, y1, z0, t, holes, rect_cuts, circ_cuts, (), (), r)
     sk = fillet_corners(cq.Workplane("XY").center((x0 + x1) / 2, (y0 + y1) / 2).rect(w, d).extrude(1), "|Z", r)
     for (x, y, dd) in list(holes) + list(circ_cuts):
         sk = sk.cut(cq.Workplane("XY").center(x, y).circle(dd / 2).extrude(3).translate((0, 0, -1)))
@@ -411,6 +493,7 @@ def plate_yz(name, y0, y1, z0, z1, x0, t, holes=(), rect_cuts=(), r=None, bolt_s
     for (yc, zc, cw, ch) in rect_cuts:
         solid = solid.cut(cq.Workplane("YZ").center(yc, zc).rect(cw, ch).extrude(t + 2).translate((x0 - 1, 0, 0)))
     add(name, solid, STEEL, plate=True, t=t)
+    record_plate(name, "yz", y0, y1, z0, z1, x0, t, holes, rect_cuts, (), (), (), r)
     sk = fillet_corners(cq.Workplane("XY").center((y0 + y1) / 2, (z0 + z1) / 2).rect(d, h).extrude(1), "|Z", r)
     for (y, z, dd) in holes:
         sk = sk.cut(cq.Workplane("XY").center(y, z).circle(dd / 2).extrude(3).translate((0, 0, -1)))
@@ -445,7 +528,7 @@ def pitch_points(a0, a1, pitch, inset):
     """Hole positions along a run from a0 to a1 with the given pitch, inset from the ends."""
     a, b = a0 + inset, a1 - inset
     n = max(1, int(round((b - a) / pitch)))
-    return [a + i * (b - a) / n for i in range(n + 1)]
+    return [a if i == 0 else a + i * (b - a) / n for i in range(n + 1)]
 
 
 # ---------------------------------------------------------------------------
@@ -2330,6 +2413,10 @@ for name, solid, color, plate, t in parts:
     exporters.export(solid, os.path.join(OUT, "step", f"{name}.step"))
     fix_step_header(os.path.join(OUT, "step", f"{name}.step"))
 
+import json
+with open(os.path.join(OUT, "cad", "plates.json"), "w", encoding="utf-8") as f:   # every flat plate with its expressions, for the Fusion build
+    json.dump(dict(draft=DRAFT, user_params=[(k, n, float(P[k])) for k, n in USER_PARAMS],
+                   derived_params=[(n, f, float(P[k])) for k, n, f in DERIVED_PARAMS], plates=plate_log), f, indent=0)
 with open(os.path.join(OUT, "drawings", "frame-cut-list.csv"), "w", newline="") as f:
     w = csv.writer(f)
     w.writerow(["item", "profile", "length_mm", "qty", "note"])
