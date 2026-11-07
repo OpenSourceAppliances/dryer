@@ -55,7 +55,8 @@ from OCP.TCollection import TCollection_ExtendedString
 from OCP.TDataStd import TDataStd_Name
 from OCP.TDF import TDF_LabelSequence
 from OCP.TDocStd import TDocStd_Document
-from OCP.TopAbs import TopAbs_EDGE, TopAbs_FACE, TopAbs_SHELL, TopAbs_SOLID, TopAbs_VERTEX
+from OCP.BRepClass3d import BRepClass3d_SolidClassifier
+from OCP.TopAbs import TopAbs_EDGE, TopAbs_FACE, TopAbs_IN, TopAbs_SHELL, TopAbs_SOLID, TopAbs_VERTEX
 from OCP.TopExp import TopExp_Explorer
 from OCP.TopoDS import TopoDS
 from OCP.XCAFDoc import XCAFDoc_DocumentTool
@@ -759,7 +760,7 @@ CLEAR_PAIRS = [
     ("power-module-cover", "rear-upper-panel"), ("power-module-plate", "bay-ceiling"),
     ("power-module-rail-B1-devices (bought, envelopes: RLY_MOTOR, RLY_HEAT, RLY_HEAT_LO: 3 x 38.51 class, PTC1 to PTC3 in fuse terminals, F2: UK 5-HESI, X4 heat module SELV: 4 x UK 2.5 N, 2 end clamps)", "rear-upper-panel"),
     ("power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)", "power-module-cover"),
-    ("power-cord (bought)", "bay-ceiling"), ("power-cord (bought)", "grommets (bought, 3 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1)"),
+    ("power-cord (bought)", "bay-ceiling"), ("power-cord (bought)", "grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2)"),
     ("power-cord (bought)", "power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)"),
     ("hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)", "lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)"),
     ("hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)", "drum-sheet"),
@@ -767,7 +768,7 @@ CLEAR_PAIRS = [
     ("drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)", "drum-ring-front"), ("drum-glides-rear (bought, 2 x nylon drum glide pads, 45 x 20 x 9.5)", "drum-ring-rear"),
     ("drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)", "felt-seal-front-long"), ("drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)", "felt-seal-front-short"),
     ("motor (bought)", "base-pan"), ("blower (bought)", "front-bulkhead"), ("blower (bought)", "spool-bars (40 x 8 aluminium flat bar: 2 x 156, 2 x 140)"), ("blower (bought)", "ps1-air-proving-switch (bought, envelope)"),
-    ("pulley (bought)", "bay-ceiling"), ("exhaust-duct (bought)", "rear-lower-panel"), ("exhaust-duct (bought)", "tray-rail-2"), ("drum-sheet", "front-upper-panel"),
+    ("pulley (bought)", "bay-ceiling"), ("exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)", "rear-lower-panel"), ("exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)", "tray-rail-2"), ("drum-sheet", "front-upper-panel"),
     ("belt (bought, PJ 5 rib)", "drum-sheet"), ("belt (bought, PJ 5 rib)", "pulley (bought)"), ("belt (bought, PJ 5 rib)", "idler-pulley (bought, flat idler 40 with bearing)"),
     ("belt (bought, PJ 5 rib)", "bay-ceiling"), ("belt (bought, PJ 5 rib)", "motor (bought)"), ("belt (bought, PJ 5 rib)", "heat-module-tray"),
     ("door-hinge-1-fixed (bought, flag hinge, pinned half)", "door-disc"), ("door-hinge-2-swing (bought, flag hinge, lift-off half)", "door-ring"),
@@ -782,6 +783,15 @@ CLEAR_PAIRS = [
     ("power-cord (bought)", "feet (bought, 4 x M8 leveling feet, 50 pad)"), ("power-cord (bought)", "base-pan"),
     ("feet (bought, 4 x M8 leveling feet, 50 pad)", "base-pan"), ("hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts)", "front-bulkhead"),
     ("idler-pulley (bought, flat idler 40 with bearing)", "motor (bought)"), ("hardware-idler-axle (bought, M8 x 30 bolt, nut)", "motor (bought)"),
+    # draft 9: the blower plate, the exhaust set, the sensors, the blanks, the clamps
+    ("blower-plate", "blower (bought)"), ("blower-plate", "spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate)"),
+    ("th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope)", "blower-plate"), ("exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)", "heat-module-tray"),
+    ("moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope)", "basket-lip-plate"),
+    ("moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope)", "drum-ring-front"),
+    ("ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route)", "exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet)"),
+    ("exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes)", "rear-lower-panel"), ("entry-blank", "rear-lower-panel"),
+    ("cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes)", "base-pan"), ("blower-plate-feet (angle 20x20x2, 2 x 90)", "base-pan"),
+    ("blower-plate", "tray-rail-2"), ("exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)", "motor (bought)"), ("exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)", "exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes)"),
 ]
 for a, b in CLEAR_PAIRS:
     if a in assembly and b in assembly:
@@ -884,7 +894,8 @@ PANELS = ("side-panel-left", "side-panel-right", "front-upper-panel", "front-low
 # The console's four foot bolts through the top panel land on the top rear cross rail and the rear top rail, so the
 # rail check covers them.
 THROUGH_BOLTED = {"base-pan": [(-128.0, 370.0), (-102.0, 370.0), (55.0, 370.0), (75.0, 370.0),
-                              (-22.0, 230.0), (22.0, 230.0), (-22.0, 350.0), (22.0, 350.0), (235.0, 70.0), (265.0, 70.0)],   # draft 8: the motor cradles and the PS1 bracket
+                              (-22.0, 230.0), (22.0, 230.0), (-22.0, 350.0), (22.0, 350.0), (235.0, 70.0), (265.0, 70.0),   # draft 8: the motor cradles and the PS1 bracket
+                              (-110.0, 74.0), (-70.0, 74.0), (70.0, 74.0), (110.0, 74.0)],   # draft 9: the blower plate's feet
                   "front-upper-panel": [(-266.0, 581.5), (-252.0, 581.5)]}
 for name in PANELS:
     m = parts[name]
@@ -915,7 +926,7 @@ ALLOWED_D = {4.5: "M4 clearance", 5.0: "louver slot ends (60 x 5)", 6.5: "M6 cle
              22.0: "cord strain relief bushing, cord and console grommets", 106.0: "exhaust port (102 duct + 2 each side)", 460.0: "door opening",
              470.0: "door ring bore", 480.0: "front panel ring opening", 540.0: "door disc / drum ring bore", 560.0: "door ring",
              616.4: "splice inside", 618.4: "drum ring / sheet inside", 620.0: "drum outside",
-             12.0: "plate corner radius 6 / timer shaft holes / lint box hang spacers / door switch cable grommets (draft 8)", 6.0: "corner radius 3 (cheeks, tabs, splice, idler arm ends)", 20.0: "faceplate corner radius 10",
+             12.0: "plate corner radius 6 / timer shaft holes / lint box hang spacers", 16.0: "door switch cable and moisture pair grommets (draft 9) / moisture bar terminals", 6.0: "corner radius 3 (cheeks, tabs, splice, idler arm ends)", 20.0: "faceplate corner radius 10",
              4.0: "4040 corner radius 2 / timer yoke holes", 3.0: "2020 corner radius 1.5", 6.8: "4040 centre bore (tapped M8 for the feet)", 4.2: "2020 centre bore / M4 tapped in the duct bars, drawn at the thread",
              22.3: "22 mm panel devices", 546.0: "felt seal inside (radius 273)", 582.0: "felt seal outside (radius 291)",
              476.0: "lint slot inner arc (radius 238)", 534.0: "lint slot outer arc (radius 267, draft 8)",
@@ -926,7 +937,9 @@ ALLOWED_D = {4.5: "M4 clearance", 5.0: "louver slot ends (60 x 5)", 6.5: "M6 cle
              479.0: "basket plates inside (radius 239.5)", 531.0: "basket plates outside (radius 265.5)", 464.0: "basket lip inside (radius 232)",
              537.0: "basket lip outside (radius 268.5)", 489.0: "basket far flange inside (radius 244.5)", 521.0: "basket far flange outside (radius 260.5)",
              477.8: "basket mesh inside (radius 238.9)", 532.2: "basket mesh outside (radius 266.1)", 467.8: "basket lip flange inside (radius 233.9)",
-             10.0: "inlet holes / D-pull bar"}
+             10.0: "inlet holes / D-pull bar",
+             # draft 9: the blanked entries in the rear lower panel, the exhaust tap
+             25.0: "gas entry (3/8 NPT bulkhead fitting)", 20.0: "condensate drain (hose grommet) / faceplate corner radius 10", 6.5: "M6 clearance / air-proving tap in the exhaust pipe"}
 bad_d = []
 for n, m in parts.items():
     for g in m["cylinders"]:
@@ -1002,6 +1015,39 @@ except Exception as ex:
     gen("air path", "V-013 air path areas", f"could not compute: {ex}", False)
 
 # interference on the re-imported assembly (the script checks the live model; this checks the file)
+def _solids(shape):
+    ex = TopExp_Explorer(shape, TopAbs_SOLID)
+    out = []
+    while ex.More():
+        out.append(ex.Current())
+        ex.Next()
+    return out or [shape]
+
+
+def point_in(shape, p):
+    """Is the point inside any solid of the shape? Classification is reliable where a boolean on a many-faced bar is not."""
+    for sol in _solids(shape):
+        c = BRepClass3d_SolidClassifier(sol, gp_Pnt(*p), 1e-6)
+        if c.State() == TopAbs_IN:
+            return True
+    return False
+
+
+def sampled_overlap(sa, sb, box, n=4):
+    """A grid of n^3 points through the boxes' overlap, tested against both shapes: the fraction inside both times the box's
+    volume. Draft 9: a 2 mm overlap between a blank plate and the bottom rail's T-slot top returned 0 from the boolean and
+    115 mm3 from Fusion; the sample finds it."""
+    x0, y0, z0, x1, y1, z1 = box
+    hits = 0
+    for i in range(n):
+        for j in range(n):
+            for k in range(n):
+                p = (x0 + (i + 0.5) * (x1 - x0) / n, y0 + (j + 0.5) * (y1 - y0) / n, z0 + (k + 0.5) * (z1 - z0) / n)
+                if point_in(sa, p) and point_in(sb, p):
+                    hits += 1
+    return hits / n ** 3 * (x1 - x0) * (y1 - y0) * (z1 - z0)
+
+
 inter = []
 names = list(assembly)
 for a, b in itertools.combinations(names, 2):
@@ -1020,9 +1066,20 @@ for a, b in itertools.combinations(names, 2):
         v = volume(com.Shape()) if com.IsDone() else -1
     except Exception as ex:
         v = -1
+    if 0 <= v <= 1.0:   # the boolean found nothing: sample the overlap box as well, where it is thicker than a touch
+        ob = (max(ba[0], bb[0]), max(ba[1], bb[1]), max(ba[2], bb[2]), min(ba[3], bb[3]), min(ba[4], bb[4]), min(ba[5], bb[5]))
+        if all(ob[i + 3] - ob[i] > 0.5 for i in range(3)):
+            try:
+                vs = sampled_overlap(assembly[a]["shape"], assembly[b]["shape"], ob)
+            except Exception:
+                vs = 0.0
+            if vs > 1.0:
+                v = round(vs, 1)
+                inter.append((a, b, f"sampled {v}"))
+                continue
     if v > 1.0 or v < 0:
         inter.append((a, b, round(v, 2)))
-gen("assembly", "no two solids overlap by more than 1 mm3 (file re-import)", f"{len(names)} solids, {len(inter)} overlaps" + (f": {inter[:5]}" if inter else ""), not inter)
+gen("assembly", "no two solids overlap by more than 1 mm3 (file re-import, boolean and point sample)", f"{len(names)} solids, {len(inter)} overlaps" + (f": {inter[:5]}" if inter else ""), not inter)
 expected_names = set(parts)
 gen("assembly", "every part file is a named solid in the assembly", f"{len(expected_names - set(assembly))} missing", not (expected_names - set(assembly)))
 

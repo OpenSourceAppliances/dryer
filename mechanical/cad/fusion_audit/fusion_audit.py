@@ -54,7 +54,7 @@ CLEAR_PAIRS = [
     ("trunk-front", "rear-bulkhead"), ("trunk-front", "rail-mid-rearcross"), ("trunk-rear", "rail-mid-rear"), ("trunk-front", "bay-ceiling"),
     ("hood-top", "rail-mid-rearcross"), ("hood-bottom", "heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)"), ("heat-module-top", "bay-ceiling"),
     ("motor (bought)", "base-pan"), ("blower (bought)", "front-bulkhead"), ("lint-box-back", "front-bulkhead"),
-    ("pulley (bought)", "bay-ceiling"), ("exhaust-duct (bought)", "rear-lower-panel"), ("power-module-plate", "trunk-front"),
+    ("pulley (bought)", "bay-ceiling"), ("exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)", "rear-lower-panel"), ("blower-plate", "blower (bought)"), ("blower-plate", "tray-rail-2"), ("entry-blank", "rear-lower-panel"), ("power-module-plate", "trunk-front"),
     ("power-module-plate", "bay-ceiling"), ("drum-sheet", "front-upper-panel"),
     # draft 7: single-body parts only (a compound's distance would be taken from its first body)
     ("heat-module-wall-front", "idler-spring (bought, extension spring)"), ("heat-module-tray", "idler-spring (bought, extension spring)"),

@@ -52,5 +52,7 @@ trunk top bar,flat bar 50x8 aluminum,244.0,1,"riser trunk top, tapped M4 on both
 nozzle side bar,flat bar 40x8 aluminum,158.0,2,"inlet nozzle sides, tapped M4 on both edges"
 nozzle end bar,flat bar 40x8 aluminum,212.0,2,"inlet nozzle top and bottom, tapped M4 on both edges"
 ps1-bracket,angle 20x20x2 aluminum,60,1,"air-proving switch bracket, on the base pan"
+blower-plate feet,angle 20x20x2 aluminum,90.0,2,"blower plate feet, on the base pan"
+exhaust duct (bought),4 in (102) aluminium pipe,609.5,1,from 2 past the housing's collar to 50 proud of the rear lower panel; one 6.5 hole on top at Y 300 for the tap
 idler-arm,flat bar 25x4 aluminum,175.4,1,"idler arm, two 8.5 holes and one 5.2 hole on the drill press"
 "idler-bracket, spring-bracket",angle 40x40x3 aluminum,50,2,"idler pivot and spring anchor, bolted through the base pan"

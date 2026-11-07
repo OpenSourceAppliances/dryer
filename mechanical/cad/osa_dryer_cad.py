@@ -10,7 +10,13 @@ One file holds every number. Run it and it writes:
 Coordinate system: X across the cabinet (left negative), Y from front (0) to back, Z up from the floor.
 All dimensions mm. Needs cadquery (pip install cadquery). Also runs in FreeCAD's CadQuery workbench.
 
-Status: draft 8, 2026-11-06. Draft 8 draws the ducts as parts: 1.5 mm plates screwed into the tapped edges of aluminium
+Status: draft 9, 2026-11-06. Draft 9 finishes the parts of the reference build: the blower plate the housing hangs on
+(a 1.5 mm plate on two angle feet in front of the housing, the spool's foam on its face), the exhaust set (the housing's
+102 collar, a catalog 4 in pipe through the rear lower panel's port as the hose spigot, two clamps, the air-proving tap
+and tube), the two chassis sensors the UCI-D wires to J2 (the exhaust thermistor on the lint box's back plate, the
+moisture bar set on the front bulkhead's drum side), the gas and condensate entries in the rear lower panel with their
+blanking plates, and the harness's cable clamps. The no-heat module is the electric module's tray and box with nothing
+in them (DECISIONS.md). Draft 8 draws the ducts as parts: 1.5 mm plates screwed into the tapped edges of aluminium
 flat bar frames (the lint box between the front stubs with the bulkhead as its back wall, a spool to the blower, the riser's
 hood, trunk and nozzle), the throat liner the drawing showed was missing (a rolled strip between the door ring and the
 bulkhead; the lint box's top follows it), the lint basket (mesh on laser-cut sector plates through the widened slot, a
@@ -41,7 +47,7 @@ import cadquery as cq
 from cadquery import exporters
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "."
-DRAFT = 8
+DRAFT = 9
 HERE = os.path.dirname(os.path.abspath(__file__))
 for sub in ("step", "drawings"):
     os.makedirs(os.path.join(OUT, sub), exist_ok=True)
@@ -101,8 +107,14 @@ P = dict(
     # door switch (draft 8): plunger through the ring and panel at 45 degrees right of bottom on the ring bolts' radius, the disc presses it
     ds_angle_deg=45.0, ds_r=258.0, ds_plunger_d=8.0, ds_body=(30.0, 25.0, 45.0),
     ps1_xy=(250.0, 70.0), tf_x=(130.0, 180.0, 230.0),   # air-proving switch on an angle bracket on the pan; exhaust thermostats on the blower's outlet box
-    ds_grommet_ceil=(290.0, 60.0, 12.0), ds_grommet_bulk=(290.0, 330.0, 12.0),   # the door switch cable: up through the bay ceiling behind the bulkhead, through the bulkhead to the switch (draft 8)
+    ds_grommet_ceil=(290.0, 60.0, 16.0), ds_grommet_bulk=(290.0, 330.0, 16.0),   # the door switch cable and the moisture pair: up through the bay ceiling behind the bulkhead, through the bulkhead to the front gap (draft 8; 16 mm in draft 9 for the second cable)
     clamp_pts=((-250.0, 120.0), (-250.0, 280.0), (-250.0, 440.0), (-250.0, 600.0)),   # M4 cable clamps along the bay's left side for the bay harness (draft 8)
+    # draft 9: the blower plate, the exhaust set, the two chassis sensors, the blanked entries
+    bp_x=130.0, bp_z1=245.0, bp_foot_x=(45.0, 135.0), bp_screws=((-88.0, 60.0), (88.0, 60.0), (-88.0, 180.0), (88.0, 180.0)),   # 1.5 mm plate in front of the housing on two 20x20x2 angle feet; the housing's screws on a nominal 176 x 120 pattern (V-107)
+    exhaust_wall=1.0, exhaust_collar_len=25.0, exhaust_proud=50.0, exhaust_tap_y=300.0, clamp_w=12.0,   # catalog 4 in pipe over the housing's collar, 50 proud of the rear panel as the hose spigot; PS1's tap on its top
+    th1_xz=(120.0, 160.0), th1_body=(36.0, 14.0, 30.0), th1_nib=(10.0, 8.5, 16.0), th1_nib_dz=-5.0, th1_bolt_dz=10.0,   # exhaust thermistor on the lint box's back plate, right of the spool, sensing inside the box: body (w, depth, h) centred at (x, z) on the bay side, its nib through a 12 x 18 slot, one M4 x 20 through the plate and the body
+    ms_angle_deg=58.0, ms_r=250.0, ms_len=90.0, ms_w=30.0, ms_t=8.0, ms_tab=35.0,   # moisture bar set on the front bulkhead's drum side, right of the lint slot, inside the ring bore (its corners reach radius 268.8); two M4 at +-35 along the bars
+    gas_entry=(-230.0, 150.0, 25.0), cond_entry=(-230.0, 66.0, 20.0), blank_w=60.0, blank_h=44.0, blank_dx=21.0,   # the gas and condensate entries in the rear lower panel (x, z, hole), blanked by 60 x 44 plates on two M4; the lower blank 4 above the bottom rail (Fusion found it 2 into the rail at Z 60)
     # rear air inlet zone
     inlet_w=200.0, inlet_h=130.0, inlet_above_axis=50.0, inlet_hole_d=10.0, inlet_pitch=14.0,   # inside the ring opening (R 240)
     # console: a vertical box at the rear of the top on its own 4040 sub-frame (draft 6), holding the full UCI envelope
@@ -112,7 +124,7 @@ P = dict(
     m6_hole=6.5, m4_hole=4.5, panel_pitch=150.0,
     # bay layout (envelopes)
     motor_axis_z=120.0, motor_len=200.0, motor_d=140.0, motor_y0=190.0,   # motor behind the blower, pulley on its rear shaft
-    blower_d=220.0, blower_w=100.0, blower_y0=84.0,                       # blower on the front shaft, inlet facing front
+    blower_d=220.0, blower_w=100.0, blower_y0=85.5,                       # blower on the front shaft, inlet facing front; its inlet face on the back of the blower plate (draft 9: 84 + 1.5)
     tray_w=340.0, tray_depth=280.0, tray_y0=420.0, tray_x0=-170.0, t_tray=1.5,   # on the two 2020 tray rails (X +-150..170), draft 7; starts 3 behind the idler spring (409..417)
     # electric heat module (draft 7): a laser-cut 1.5 mm duct box on the tray, joined with 20x20x2 aluminium angle and M4 (no
     # brake, no rivets), the catalog element along X inside it on two angle rails, a round catalog collar on top under the
@@ -165,6 +177,7 @@ P = dict(
     knob_d=40.0, knob_skirt_h=3.0, knob_body_d=30.0, knob_h=20.0,
 )
 P["drum_rim_r"] = P["drum_d"] / 2
+P["bp_y0"] = P["blower_y0"] - P["t_panel"]                   # the blower plate's front face: the spool's foam lands on it (draft 9)
 P["drum_flat_w"] = math.pi * (P["drum_d"] - P["drum_t"])   # sheet length at the mid-surface
 P["drum_axis_z"] = P["bay_top"] + P["t_base"] + P["drum_clear_bottom"] + P["drum_d"] / 2
 P["H_body"] = P["drum_axis_z"] + P["drum_d"] / 2 + P["drum_clear_top"] + P["ext"]
@@ -417,6 +430,7 @@ def export_dxf(name, sketch_solid):
     exporters.export(sec, path)
     try:   # put every entity on a layer called CUT, which is what laser shops ask for; harmless if ezdxf is missing
         import ezdxf
+        ezdxf.options.write_fixed_meta_data_for_testing = True   # fixed timestamps and GUIDs, so an unchanged drawing is an unchanged file (draft 9)
         doc = ezdxf.readfile(path)
         if "CUT" not in doc.layers:
             doc.layers.add("CUT")
@@ -538,12 +552,22 @@ for ang in GLIDE_ANGLES:
 # Draft 8: six 4.5 holes for the M4 that pull the lint box's side bars against it from the drum side (outside the felt)
 LB_BAR_X = P["lb_x"] - P["bar_t"] / 2
 lb_bulk_pts = [(sx * LB_BAR_X, z) for sx in (-1, 1) for z in P["lb_bulk_screw_z"]]
+# draft 9: the moisture bar set on the drum side, right of the lint slot, inside the ring bore: two M4 holes along the bars
+# and a 16 hole for its two terminals, which reach the front gap and run with the door switch cable
+_ms = math.radians(P["ms_angle_deg"])
+MS_U, MS_T = (math.sin(_ms), -math.cos(_ms)), (math.cos(_ms), math.sin(_ms))        # outward along the radius, and along the bars
+MS_C = (P["ms_r"] * MS_U[0], az + P["ms_r"] * MS_U[1])
+MS_PTS = [(MS_C[0] + k * MS_T[0], MS_C[1] + k * MS_T[1]) for k in (-P["ms_tab"], P["ms_tab"])]
 plate_xz("front-bulkhead", bulk_x0, bulk_x1, bulk_z0, bulk_z1, P["front_bulk_y"], tb,
-         holes=bulk_holes(front=True) + rollers + glide_holes + [(x, z, P["m4_hole"]) for (x, z) in lb_bulk_pts] + [P["ds_grommet_bulk"]],
+         holes=bulk_holes(front=True) + rollers + glide_holes + [(x, z, P["m4_hole"]) for (x, z) in lb_bulk_pts] + [P["ds_grommet_bulk"]]
+         + [(x, z, P["m4_hole"]) for (x, z) in MS_PTS] + [(MS_C[0], MS_C[1], 16.0)],
          circ_cuts=[(0, az, P["door_opening_d"])],
          sectors=[(0, az, P["lint_slot_r0"], P["lint_slot_r1"], P["lint_slot_half_deg"])], bolt_side=+1)
 P["lint_slot_area"] = math.radians(2 * P["lint_slot_half_deg"]) / 2 * (P["lint_slot_r1"] ** 2 - P["lint_slot_r0"] ** 2)
 assert P["lint_slot_r1"] < P["ring_id"] / 2 and P["lint_slot_r0"] > P["door_opening_d"] / 2, "lint slot must sit between the door opening and the ring bore"
+_ms_half = math.degrees(math.atan2(P["ms_len"] / 2, P["ms_r"]))
+assert math.hypot(P["ms_r"] - P["ms_w"] / 2, P["ms_len"] / 2) > P["door_opening_d"] / 2 + 3.0 and math.hypot(P["ms_r"] + P["ms_w"] / 2, P["ms_len"] / 2) < P["ring_id"] / 2 - 1.0, "the moisture bar set's corners sit on the bulkhead between the opening and the ring bore"
+assert P["ms_angle_deg"] - _ms_half > P["bk_half_deg"] + 2.0 + 6.0, "the moisture bars clear the basket's lip ring"
 
 # rear bulkhead: inlet hole field, roller shaft holes, mounting holes; bolt heads on its front face (the cross rails are behind it)
 inlet = []
@@ -725,9 +749,11 @@ base_holes += [(P["cord_x"], P["cord_y"], P["cord_hole_d"])]           # cord st
 CRADLE_Y = (P["motor_y0"] + 25.0, P["motor_y0"] + P["motor_len"] - 55.0)   # the motor's two cradle mounts (30 deep, Y from these)
 cradle_pts = [(sx * 22.0, yy + 15.0) for yy in CRADLE_Y for sx in (-1, 1)]   # draft 8: two M6 per cradle through the pan
 ps1_pts = [(P["ps1_xy"][0] + k, P["ps1_xy"][1]) for k in (-15.0, 15.0)]     # draft 8: the air-proving switch's angle bracket
-base_holes += [(x, y, P["m6_hole"]) for (x, y) in cradle_pts + ps1_pts]
+BP_FOOT_Y = P["bp_y0"] - 20.0 / 2                                             # draft 9: the blower plate's two 20x20x2 angle feet, in front of the plate; bolts on the foot legs' centre line
+bp_foot_pts = [(sx * x, BP_FOOT_Y) for sx in (-1, 1) for x in (70.0, 110.0)]
+base_holes += [(x, y, P["m6_hole"]) for (x, y) in cradle_pts + ps1_pts + bp_foot_pts]
 base_holes += [(x, y, P["m4_hole"]) for (x, y) in P["clamp_pts"]]   # cable clamps for the bay harness (draft 8)
-plate_xy("base-pan", -hw + tp, hw - tp, 0, D, -P["t_base"], P["t_base"], holes=base_holes, bolt_side=-1, bolt_skip=tuple(bracket_pts + cradle_pts + ps1_pts))   # the exhaust leaves through the rear lower panel
+plate_xy("base-pan", -hw + tp, hw - tp, 0, D, -P["t_base"], P["t_base"], holes=base_holes, bolt_side=-1, bolt_skip=tuple(bracket_pts + cradle_pts + ps1_pts + bp_foot_pts))   # the exhaust leaves through the rear lower panel
 
 # ---------------------------------------------------------------------------
 # Outer panels
@@ -787,10 +813,17 @@ plate_xz("front-lower-panel", -hw, hw, 0, P["panel_split_z"] - 1, -tp, tp,
          holes=end_holes(0, P["panel_split_z"] - 1, [e / 2]), slots=louvers, bolt_side=-1)
 plate_xz("rear-upper-panel", -hw, hw, P["panel_split_z"], Hb, D, tp, holes=end_holes(P["panel_split_z"], Hb, [bt - e / 2, Hb - e / 2]), bolt_side=+1)
 rear_louvers = [(x, z, 60, 5) for x in (-160, -80, 0, 80) for z in range(80, 240, 20)]   # clear of the exhaust port and the cord entry
+# draft 9: the gas entry (3/8 NPT bulkhead fitting, gas module) and the condensate drain (grommeted hose, heat pump module)
+# at the left, blanked on every other build by a 60 x 44 plate on two M4 inside the panel
+ENTRIES = (P["gas_entry"], P["cond_entry"])
+entry_holes = [(x, z, d) for (x, z, d) in ENTRIES] + [(x + k, z, P["m4_hole"]) for (x, z, d) in ENTRIES for k in (-P["blank_dx"], P["blank_dx"])]
 plate_xz("rear-lower-panel", -hw, hw, 0, P["panel_split_z"] - 1, D, tp,
-         holes=end_holes(0, P["panel_split_z"] - 1, [e / 2]),
-         circ_cuts=[(P["exhaust_x"], P["exhaust_z"], P["exhaust_d"] + 4)],    # exhaust collar, 2 mm clearance; the cord enters through the base pan
+         holes=end_holes(0, P["panel_split_z"] - 1, [e / 2]) + entry_holes,
+         circ_cuts=[(P["exhaust_x"], P["exhaust_z"], P["exhaust_d"] + 4)],    # the exhaust duct passes with 2 mm clearance; the cord enters through the base pan
          slots=rear_louvers, bolt_side=+1)
+for (x, z, d) in ENTRIES:
+    assert x + P["blank_w"] / 2 < -190.0 - 4.0 and x - P["blank_w"] / 2 > -hw + e + 8.0, "the blanking plates sit between the post's bolts and the louvers"
+    assert z - P["blank_h"] / 2 > e + 2.0, "the blanking plates stand clear of the bottom rail itself (its bolt heads are lower)"
 
 # top panel, full depth; the console box stands on it at the rear
 CD, CH = P["console_depth"], P["console_h"]
@@ -1272,12 +1305,10 @@ P["drum_rpm"] = 1725.0 * P["motor_pulley_d"] / P["drum_d"]
 assert 45.0 <= P["drum_rpm"] <= 57.0, f"drum speed {P['drum_rpm']:.1f} rpm is outside the 45 to 55 target (pulley {P['motor_pulley_d']})"
 blower = cq.Workplane("XZ").center(0, mz).circle(P["blower_d"] / 2).extrude(-P["blower_w"]).translate((0, P["blower_y0"], 0))
 blower = blower.cut(cq.Workplane("XZ").center(0, mz).circle(65.0).extrude(-8).translate((0, P["blower_y0"], 0)))     # inlet mouth, facing the transition
-blower = blower.union(box(100, 270, P["blower_y0"] + 26, my0, mz - 10, mz + 70))                                     # tangential outlet turning into the exhaust duct
+OB_Z0, OB_Z1 = P["exhaust_z"] - P["exhaust_d"] / 2 - 5.0, P["exhaust_z"] + P["exhaust_d"] / 2 + 5.0                 # the outlet box round the 102 collar (draft 9: 94 to 206)
+blower = blower.union(box(100, P["exhaust_x"] + P["exhaust_d"] / 2 + 10.0, P["blower_y0"] + 26, my0, OB_Z0, OB_Z1))   # tangential outlet box, its discharge collar on its rear face
 add("blower (bought)", blower, BOUGHT)
-P["exhaust_y0"] = my0
-exh = (cq.Workplane("XZ").center(P["exhaust_x"], P["exhaust_z"]).circle(P["exhaust_d"] / 2).extrude(-(D - P["exhaust_y0"]))
-       .translate((0, P["exhaust_y0"], 0)))
-add("exhaust-duct (bought)", exh, DUCT)
+P["exhaust_y0"] = my0   # the housing's discharge collar starts on the outlet box's rear face; the duct set is drawn after the thermostats (draft 9)
 
 # ---------------------------------------------------------------------------
 # Electric heat module (draft 7): a laser-cut duct box on the tray, joined with 20x20x2 aluminium angle and M4 button
@@ -1599,7 +1630,7 @@ for (gx, gy, gd), gz in ((P["grommet_cord"], bt + tp / 2), (P["grommet_harness"]
     grommets.append(place(grommet(gd), (gx, gy, gz), (0, 0, 1)))
 gx, gz, gd = P["ds_grommet_bulk"]
 grommets.append(place(grommet(gd), (gx, P["front_bulk_y"] + tb / 2, gz), (0, 1, 0)))   # in the front bulkhead, for the door switch cable (draft 8)
-add("grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2)", compound(grommets), RUBBER)
+add("grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2)", compound(grommets), RUBBER)
 
 # cord: strain relief bushing through the base pan at the rear left (body inside the bay, locknut under the pan), the cord
 # up through the bay and the ceiling grommet to X1 on the power module, and down under the pan to the back on the height the feet give
@@ -1728,8 +1759,13 @@ sp_side_pts = [(sx * (SP_H - BAR_T / 2), z) for sx in (-1, 1) for z in (80.0, 16
 sp_top_pts = [(x, SPZ1 - BAR_T / 2) for x in (-40.0, 0.0, 40.0)]   # the spool's top bar (190 to 198)
 lb_back_holes = [(sx * LB_BAR_X, z, P["m4_hole"]) for sx in (-1, 1) for z in (80.0, 160.0, 240.0)] + [(x, LBZ0 + BAR_T / 2, P["m4_hole"]) for x in (-120.0, 120.0)]
 lb_back_holes += [(x, z, P["m4_hole"]) for (x, z) in sp_side_pts + sp_top_pts + spool_bottom_pts]
+TH1_X, TH1_Z = P["th1_xz"]                                                               # draft 9: the exhaust thermistor's slot and bolt hole, right of the spool
+TH1_NW, TH1_ND, TH1_NH = P["th1_nib"]
+lb_back_holes.append((TH1_X, TH1_Z + P["th1_bolt_dz"], P["m4_hole"]))
 plate_xz("lint-box-back", -LB_X, LB_X, LBZ0, P["lb_rear_plate_z1"], lb_by1, tp, holes=lb_back_holes,
-         rect_cuts=[(0, (SPZI0 + SPZI1) / 2, 2 * SPI, SPZI1 - SPZI0)])                   # 140 x 120 into the spool
+         rect_cuts=[(0, (SPZI0 + SPZI1) / 2, 2 * SPI, SPZI1 - SPZI0),                   # 140 x 120 into the spool
+                    (TH1_X, TH1_Z + P["th1_nib_dz"], TH1_NW + 2.0, TH1_NH + 2.0)])       # 12 x 18 for the thermistor's nib
+assert TH1_X - P["th1_body"][0] / 2 > SP_H + 4.0 and TH1_X + P["th1_body"][0] / 2 < LB_BAR_X - BAR_T / 2 - 4.0, "the thermistor's body sits between the spool's bar and the box's side bar"
 assert P["lb_rear_plate_z1"] > bulk_z0 and lb_by1 + tp <= P["front_bulk_y"] + 1e-9, "the lower back plate laps the bulkhead's foot and sits in front of it"
 # foam between the side bars and the bulkhead above the back plate (3 mm tape, compressed to the 1.5 gap)
 foam = []
@@ -1759,10 +1795,10 @@ sp_bars.append(bar)
 add("spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140)", compound(sp_bars), ALU)
 cut_list.append(("spool side bar", "flat bar 40x8 aluminum", round(SPZ1 - SPZ0, 1), 2, "spool sides, tapped M4 on the front edge"))
 cut_list.append(("spool end bar", "flat bar 40x8 aluminum", round(2 * SPI, 1), 2, "spool top and bottom, tapped M4 on the front edge"))
-sp_foam = [box(min(sx * SPI, sx * SP_H), max(sx * SPI, sx * SP_H), sp_y1, P["blower_y0"], SPZ0, SPZ1) for sx in (-1, 1)]
-sp_foam += [box(-SPI, SPI, sp_y1, P["blower_y0"], z0_, z0_ + BAR_T) for z0_ in (SPZ0, SPZI1)]
-add("spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower's inlet face)", compound(sp_foam), FELT)
-assert abs(P["blower_y0"] - sp_y1 - P["sp_foam"]) < 1e-9, "the spool's foam fills the gap to the blower's inlet face"
+sp_foam = [box(min(sx * SPI, sx * SP_H), max(sx * SPI, sx * SP_H), sp_y1, P["bp_y0"], SPZ0, SPZ1) for sx in (-1, 1)]
+sp_foam += [box(-SPI, SPI, sp_y1, P["bp_y0"], z0_, z0_ + BAR_T) for z0_ in (SPZ0, SPZI1)]
+add("spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate)", compound(sp_foam), FELT)
+assert abs(P["bp_y0"] - sp_y1 - P["sp_foam"]) < 1e-9, "the spool's foam fills the gap to the blower plate's front face (draft 9)"
 assert SPI > 65.0 + 2.0 and SPZI1 > mz + 65.0 + 2.0, "the spool must clear the blower's 130 inlet mouth sideways and above"
 assert SPZ0 == LBZ0 and LBZ0 >= e + es + 2.0, "the spool's bottom bar sits behind the box's, both 2 above the tray rails"
 P["spool_area"] = 2 * SPI * (SPZI1 - SPZI0)
@@ -1997,7 +2033,7 @@ add("hardware-ps1 (bought, 2 x M6 x 12 hex, nuts, through the base pan; 2 x M4 x
 # 54 x 14 brackets, each with two screws into the housing (the kit's screws; the housing is measured at V-107)
 tf_hw = []
 tf_sols = []
-oz = mz + 70.0                                                                          # the outlet box's top face
+oz = OB_Z1                                                                              # the outlet box's top face (206, draft 9)
 for x in P["tf_x"]:
     br_ = box(x - 7.0, x + 7.0, 123.0, 177.0, oz, oz + 2.0)
     bd2 = box(x - 11.0, x + 11.0, 139.0, 161.0, oz + 2.0, oz + 15.0)
@@ -2009,7 +2045,142 @@ for x in P["tf_x"]:
     tf_sols.append(t_)
 add("exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet)", compound(tf_sols), BOUGHT)
 add("hardware-exhaust-thermostats (bought, 6 x M4 x 8 button head into the housing)", compound(tf_hw), HARDWARE)
+
+# ---------------------------------------------------------------------------
+# Draft 9: the blower plate, the exhaust set, the two chassis sensors, the blanked entries, the cable clamps
+# ---------------------------------------------------------------------------
+# --- the blower plate: a 1.5 mm steel plate standing on the base pan in front of the housing, with the spool's bore cut
+# through it, carrying the housing on its own screws (the bought housing's pattern, V-107; drawn on a nominal 180 x 120)
+# and standing on two 20x20x2 angle feet bolted through the pan. The spool's foam lands on its front face.
+BP_X, BP_Z1, BP_Y0 = P["bp_x"], P["bp_z1"], P["bp_y0"]
+bp_screw_pts = [(x, z) for (x, z) in P["bp_screws"]]
+bp_leg_pts = [(sx * x, 10.0) for sx in (-1, 1) for x in (70.0, 110.0)]                 # M4 through the plate into the feet's vertical legs
+bp_holes = [(x, z, P["m4_hole"]) for (x, z) in bp_screw_pts + bp_leg_pts]
+plate_xz("blower-plate", -BP_X, BP_X, 0.0, BP_Z1, BP_Y0, tp, holes=bp_holes,
+         rect_cuts=[(0, (SPZI0 + SPZI1) / 2, 2 * SPI, SPZI1 - SPZI0)])                   # the spool's bore, 140 x 120
+bp_hw = []
+for (x, z) in bp_screw_pts:                                                             # housing screws from the plate's front, into the housing's bosses
+    blower = blower.cut(cq.Workplane("XZ").center(x, z).circle(2.1).extrude(-9.0).translate((0, P["blower_y0"] - 1.0, 0)))
+    bp_hw.append(place(m4b8, (x, BP_Y0, z), (0, -1, 0)))
+    assert math.hypot(x, z - mz) < P["blower_d"] / 2 - 2.0 and abs(x) > SP_H + P["m4_head_d"] / 2 + 2.0, "the housing's screws sit on its face, clear of the spool's foam"
+bp_feet = []
+for sx in (-1, 1):
+    x0_, x1_ = sorted((sx * P["bp_foot_x"][0], sx * P["bp_foot_x"][1]))
+    foot = angle_x(x0_, x1_, BP_Y0, -1, 0.0, +1)                                         # vertical leg on the plate's front face, foot forward on the pan
+    for (x, z) in bp_leg_pts:
+        if x0_ <= x <= x1_:
+            foot = hole_y(foot, x, z)
+            bp_hw.append(place(m4b8, (x, P["blower_y0"], z), (0, 1, 0)))                 # head on the plate's back, below the housing
+            bp_hw.append(place(m4n_, (x, BP_Y0 - A_T, z), (0, -1, 0)))
+    for (x, y) in bp_foot_pts:
+        if x0_ <= x <= x1_:
+            foot = foot.cut(cq.Workplane("XY").center(x, y).circle(P["m6_hole"] / 2).extrude(A_T + 2).translate((0, 0, -1)))
+            bp_hw.append(place(hex_bolt_m6(), (x, y, -P["t_base"]), (0, 0, -1)))          # head under the pan
+            bp_hw.append(place(nut(P["m6_nut_af"], P["m6_nut_h"], 6.2), (x, y, A_T), (0, 0, 1)))
+    bp_feet.append(foot)
+add("blower-plate-feet (angle 20x20x2, 2 x 90)", compound(bp_feet), ALU)
+cut_list.append(("blower-plate feet", "angle 20x20x2 aluminum", round(P["bp_foot_x"][1] - P["bp_foot_x"][0], 1), 2, "blower plate feet, on the base pan"))
+add("hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan)", compound(bp_hw), HARDWARE)
+assert BP_X + 4.0 < 150.0 and BP_Z1 + 10.0 < bt - e and P["bp_foot_x"][1] + 10.0 < 150.0, "the blower plate and its feet clear the tray rails and the bay ceiling's rails"
+assert BP_Y0 - A_L > lb_by1 + tp + 2.0 or SPZ0 > A_L + 2.0, "the feet lie under the spool, clear of the lint box's back plate"
+
+# --- the exhaust set: the housing's own 102 discharge collar on the outlet box (the interface flange of design-rules 3.2),
+# a catalog 4 in aluminium pipe over it, along the bay floor's right side and through the rear lower panel's 106 port,
+# 50 proud as the vent hose spigot; two worm-drive clamps (one on the collar, one bearing on the panel from inside); a
+# tap for the air-proving switch on the pipe's top, a barb fitting and the tube down to PS1
+EX_X, EX_Z, EX_D = P["exhaust_x"], P["exhaust_z"], P["exhaust_d"]
+EX_R, EX_WALL = EX_D / 2, P["exhaust_wall"]
+EX_Y0 = P["exhaust_y0"]
+blower = blower.union(cq.Workplane("XZ").center(EX_X, EX_Z).circle(EX_R - EX_WALL - 0.5).circle(EX_R - EX_WALL - 1.5)
+                      .extrude(-P["exhaust_collar_len"]).translate((0, EX_Y0, 0)))         # the collar: 1 mm wall, 0.5 inside the pipe's bore
 parts[[n for n, *_ in parts].index("blower (bought)")] = ("blower (bought)", blower, BOUGHT, False, None)
+EX_Y1 = D + tp + P["exhaust_proud"]                                                        # the spigot's end, outside the rear lower panel
+EX_LEN = EX_Y1 - (EX_Y0 + 2.0)
+exh = cq.Workplane("XZ").center(EX_X, EX_Z).circle(EX_R).circle(EX_R - EX_WALL).extrude(-EX_LEN).translate((0, EX_Y0 + 2.0, 0))
+exh = exh.cut(cq.Workplane("XY").center(EX_X, P["exhaust_tap_y"]).circle(3.25).extrude(20).translate((0, 0, EX_Z + EX_R - 10)))   # the tap, 6.5
+add("exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)", exh, DUCT)
+cut_list.append(("exhaust duct (bought)", "4 in (102) aluminium pipe", round(EX_LEN, 1), 1, "from 2 past the housing's collar to 50 proud of the rear lower panel; one 6.5 hole on top at Y 300 for the tap"))
+clamps_ = []
+for yc in (EX_Y0 + 8.0, D - P["clamp_w"]):                                                 # over the collar joint; inside the panel, bearing on it
+    ring_ = cq.Workplane("XZ").center(EX_X, EX_Z).circle(EX_R + 0.7).circle(EX_R).extrude(-P["clamp_w"]).translate((0, yc, 0))
+    ring_ = ring_.union(box(EX_X - 11.0, EX_X + 11.0, yc, yc + P["clamp_w"], EX_Z + EX_R + 0.7, EX_Z + EX_R + 10.7))   # the worm screw housing, on top
+    clamps_.append(ring_)
+add("exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes)", compound(clamps_), HARDWARE)
+tap_z = EX_Z + EX_R                                                                        # the pipe's top at the tap
+barb = hexagon(10.0, 5.0).translate((EX_X, P["exhaust_tap_y"], tap_z))                      # the fitting's hex on the pipe
+barb = barb.union(cq.Workplane("XY").center(EX_X, P["exhaust_tap_y"]).circle(2.5).extrude(15.0).translate((0, 0, tap_z + 5.0)))   # the barb, 5 mm, for the tube
+barb = barb.union(cq.Workplane("XY").center(EX_X, P["exhaust_tap_y"]).circle(3.0).extrude(9.0).translate((0, 0, tap_z - 9.0)))    # the thread through the hole, its nut inside
+barb = barb.union(hexagon(10.0, 4.0).translate((EX_X, P["exhaust_tap_y"], tap_z - 1.5 - 4.0)))                                  # the locknut under the pipe's curved wall (1.5 down at the hex's corners)
+add("exhaust-tap-barb (bought, 1/8 NPT or M6 brass barb fitting with a locknut, 5 mm barb, envelope)", barb, HARDWARE)
+PS1_PORT = (px_, py_ + 24.0, 60.0)                                                         # the switch's port on top of its body (V-205 sets which port)
+tube_pts = [(EX_X, P["exhaust_tap_y"], tap_z + 20.0), (EX_X, P["exhaust_tap_y"], 240.0), (PS1_PORT[0], PS1_PORT[1], 240.0), PS1_PORT]   # from the barb's end (the tube slides over it)
+tube_path = cq.Workplane("XY").polyline(tube_pts)
+ps1_tube = cq.Workplane("XY").workplane(offset=tube_pts[0][2]).center(tube_pts[0][0], tube_pts[0][1]).circle(3.0).sweep(tube_path, transition="round")
+add("ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route)", ps1_tube, RUBBER)
+assert tube_pts[1][2] > oz + 15.0 + P["m4_head_h"] + 10.0 and tube_pts[1][2] < bt - e - 10.0, "the tube passes over the thermostats, under the bay ceiling's rails"
+assert PS1_PORT[1] < P["blower_y0"] + 26 - 3.0, "the tube's drop sits in front of the outlet box"
+assert EX_X - EX_R > P["tray_w"] / 2 + 5.0, "the pipe runs beside the heat module's tray"
+
+# --- the exhaust thermistor TH1 (uci-spec 7.1, TEMP_EXH): an appliance-market exhaust thermistor on the bay side of the
+# lint box's back plate, right of the spool, its sensing nib through a slot into the box; one M4 x 20 from inside the box
+# through the plate and the body, nut on the body. Envelope; the bought part's slot and hole are V-112.
+TB_W, TB_D, TB_H = P["th1_body"]
+th1_y0 = lb_by1 + tp                                                                      # the back plate's bay-side face
+th1 = box(TH1_X - TB_W / 2, TH1_X + TB_W / 2, th1_y0, th1_y0 + TB_D, TH1_Z - TB_H / 2, TH1_Z + TB_H / 2)
+th1 = th1.union(box(TH1_X - TH1_NW / 2, TH1_X + TH1_NW / 2, th1_y0 - TH1_ND, th1_y0, TH1_Z + P["th1_nib_dz"] - TH1_NH / 2, TH1_Z + P["th1_nib_dz"] + TH1_NH / 2))
+th1 = hole_y(th1, TH1_X, TH1_Z + P["th1_bolt_dz"])
+th1 = th1.union(box(TH1_X - 4.0, TH1_X + 4.0, th1_y0 + TB_D, th1_y0 + TB_D + 8.0, TH1_Z - 12.0, TH1_Z + 4.0))   # two 6.3 mm spade terminals, below the bolt's nut
+add("th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope)", th1, BOUGHT)
+m4b20 = button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 20.0, 2.5)
+add("hardware-th1 (bought, 1 x M4 x 20 button head from inside the lint box, nut on the body)",
+    compound([place(m4b20, (TH1_X, lb_by1, TH1_Z + P["th1_bolt_dz"]), (0, -1, 0)), place(m4n_, (TH1_X, th1_y0 + TB_D, TH1_Z + P["th1_bolt_dz"]), (0, 1, 0))]), HARDWARE)
+assert th1_y0 + TB_D + 8.0 < BP_Y0 - 4.0, "the thermistor and its terminals sit in front of the blower plate"
+assert th1_y0 - TH1_ND > lb_by0 + 2.0, "the nib stays inside the box"
+
+# --- the moisture bar set (uci-spec 7.2, MOIST): an appliance-market sensor bar set (two stainless strips on an insulating
+# base) on the front bulkhead's drum side, right of the lint slot, inside the ring bore, along the tangent at 58 degrees
+# right of bottom; two M4 x 16 from the drum side through its tabs, nuts in the front gap; its two terminals through a 16
+# hole to the front gap. Envelope; the bought set's footprint and tab holes are V-112.
+MS_L, MS_W, MS_T_ = P["ms_len"], P["ms_w"], P["ms_t"]
+ms_y0 = P["front_bulk_y"] + tb                                                             # the bulkhead's drum-side face
+ms = box(-MS_L / 2, MS_L / 2, 0.0, MS_T_, -MS_W / 2, MS_W / 2)
+for k in (-P["ms_tab"], P["ms_tab"]):
+    ms = ms.cut(cq.Workplane("XZ").center(k, 0).circle(2.25).extrude(-MS_T_ - 2).translate((0, -1, 0)))
+ms = ms.cut(box(-8.0, 8.0, -1.0, 2.0, -9.0, 9.0))                                           # the terminals' recess over the bulkhead's hole
+ms = ms.rotate((0, 0, 0), (0, 1, 0), -P["ms_angle_deg"]).translate((MS_C[0], ms_y0, MS_C[1]))
+add("moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope)", ms, BOUGHT)
+m4b16 = button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 16.0, 2.5)
+ms_hw = [place(m4b16, (x, ms_y0 + MS_T_, z), (0, 1, 0)) for (x, z) in MS_PTS] + [place(m4n_, (x, P["front_bulk_y"], z), (0, -1, 0)) for (x, z) in MS_PTS]
+add("hardware-moisture-bars (bought, 2 x M4 x 16 button head from the drum side, nuts in the front gap)", compound(ms_hw), HARDWARE)
+for (x, z) in MS_PTS:
+    assert math.hypot(x, z - az) > P["liner_ri"] + P["liner_t"] + P["m4_nut_af"] / 2 + 2.0, "the bars' nuts clear the throat liner"
+assert ms_y0 + MS_T_ <= y0d + 20.0, "the bar set reaches into the drum's mouth no further than the baffles' ends"   # inside the ring bore it touches the load, which is the point
+
+# --- the two blanked entries in the rear lower panel: 60 x 44 x 1.5 plates inside the panel on two M4 x 8, heads outside
+blank_hw = []
+for i, (x, z, d) in enumerate(ENTRIES):
+    if i == 0:   # the gas entry's blank is the drawn part; the condensate drain's is the same plate, cut twice
+        blank0 = plate_xz("entry-blank", x - P["blank_w"] / 2, x + P["blank_w"] / 2, z - P["blank_h"] / 2, z + P["blank_h"] / 2, D - tp, tp,
+                          holes=[(x + k, z, P["m4_hole"]) for k in (-P["blank_dx"], P["blank_dx"])])
+    else:
+        add("entry-blank-2 (the second entry-blank, cut two to drawings/entry-blank.dxf; on the condensate drain)", blank0.translate((x - ENTRIES[0][0], 0, z - ENTRIES[0][1])), STEEL)
+    for k in (-P["blank_dx"], P["blank_dx"]):
+        blank_hw.append(place(m4b8, (x + k, D + tp, z), (0, 1, 0)))                          # head outside the panel
+        blank_hw.append(place(m4n_, (x + k, D - tp, z), (0, -1, 0)))                        # nut on the blank's inside face
+add("hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts)", compound(blank_hw), HARDWARE)
+
+# --- the cable clamps for the bay harness: four nylon P-clips for a 12 mm bundle on the base pan's left side (draft 8
+# placed their holes), M4 x 8 through the clip and the pan, nut under the pan. Envelopes.
+clip_sols, clip_hw = [], []
+for (x, y) in P["clamp_pts"]:
+    tab = box(x - 8.0, x + 8.0, y - 5.0, y + 5.0, 0.0, 1.5)
+    tab = tab.cut(cq.Workplane("XY").center(x, y).circle(2.25).extrude(4).translate((0, 0, -1)))
+    loop = cq.Workplane("XZ").center(x + 15.0, 7.5).circle(7.5).circle(6.0).extrude(-10.0).translate((0, y - 5.0, 0))
+    clip_sols.append(tab.union(loop))
+    clip_hw.append(place(m4b8, (x, y, 1.5), (0, 0, 1)))
+    clip_hw.append(place(m4n_, (x, y, -P["t_base"]), (0, 0, -1)))
+add("cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes)", compound(clip_sols), RUBBER)
+add("hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan)", compound(clip_hw), HARDWARE)
 
 # rollers: four catalog drum rollers on ISO 7379 shoulder screws through the bulkheads (7b). The shoulder bears on the
 # bulkhead and the nut clamps it there; the roller turns on the shoulder between a 1.0 shim under the head and a spacer
@@ -2225,7 +2396,7 @@ if "--bbox" in sys.argv:   # every part's bounding box, for a quick look at wher
 if "--check" in sys.argv or "--check-new" in sys.argv:
     import itertools
     solids = [(n, s.val() if hasattr(s, "val") else s) for n, s, _, _, _ in parts]
-    NEW = ("lint-box", "spool", "basket", "liner", "hood", "trunk", "nozzle", "riser-hardware", "door-switch", "ps1", "exhaust-thermostats", "motor-mount", "hardware-motor", "hardware-door-switch", "hardware-basket", "hardware-liner", "hardware-ps1", "hardware-exhaust")
+    NEW = ("blower-plate", "hardware-blower-plate", "blower (bought)", "exhaust", "ps1-tube", "th1", "hardware-th1", "moisture", "hardware-moisture", "entry-blank", "hardware-entry", "cable-clamps", "hardware-cable", "lint-box-back", "front-bulkhead", "rear-lower-panel", "base-pan", "spool-foam", "grommets")
     bad = []
     for (na, a), (nb, b) in itertools.combinations(solids, 2):
         if "--check-new" in sys.argv and not (na.startswith(NEW) or nb.startswith(NEW)):

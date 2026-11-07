@@ -2,14 +2,14 @@
 
 Produced by `mechanical/cad/cad_audit.py` from the STEP and DXF files on disk. Every number below was measured from the files, not read from the script.
 
-Parts measured: 78 STEP files, 198 named solids in the assembly, 46 DXF drawings.
-Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures: 0.**
+Parts measured: 80 STEP files, 213 named solids in the assembly, 48 DXF drawings.
+Document checks: 603, generic checks: 741, Fusion comparisons: 1099. **Failures: 0.**
 
 ## 1. Values stated in the documents, against the files
 
 | id | part | check | expected | measured | result | source |
 |---|---|---|---|---|---|---|
-| A-001 | assembly | assembly_solids | 198 | 198 | PASS | 7a: made parts, bought parts and envelopes, and the hardware sets, each one named solid or compound (draft 8 adds the liner, the lint box, spool and basket, the riser hood, trunk and nozzle, the door switch, PS1, the exhaust thermostats and their hardware) |
+| A-001 | assembly | assembly_solids | 213 | 213 | PASS | 7a: made parts, bought parts and envelopes, and the hardware sets, each one named solid or compound (draft 9 adds the blower plate and its feet, the exhaust duct set, the tap, barb and tube, the two sensors, the two blanks, the cable clamps and their hardware) |
 | A-002 | assembly | assembly_size x | 704.2 | 704.2 | PASS | 7: 690 wide cabinet + two 1.5 side panels + the side panels' bolt heads (1.6 washer + 4 hex) each side |
 | A-003 | assembly | assembly_min x | -352.1 | -352.1 | PASS | 7: half width 345 + 1.5 panel + 5.6 bolt head |
 | A-004 | assembly | assembly_max x | 352.1 | 352.1 | PASS | 7: half width 345 + 1.5 panel + 5.6 bolt head |
@@ -111,7 +111,7 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | B-009 | front-bulkhead | hole_at 8.5;-180.173;343.164 | 1 | (-180.173, 343.164) d 8.500 | PASS | 7b Rollers (draft 7): 8.5 holes for the roller studs' M8 threads, 32 degrees each side of bottom on radius 310 + 30 = 340: 340 sin 32 = 180.173, 631.5 - 340 cos 32 = 343.164 (30 degrees put the studs' nuts into the lint duct's sides) |
 | B-010 | front-bulkhead | hole_at 8.5;180.173;343.164 | 1 | (180.173, 343.164) d 8.500 | PASS | 7b roller stud holes (draft 7) |
 | B-011 | front-bulkhead | holes 8.5;y | 2 | 2 | PASS | 7b two rollers per bulkhead |
-| B-011b | front-bulkhead | holes 4.5;y | 10 | 10 | PASS | 7b Seals (draft 7): two M4 per drum glide, two glides per bulkhead; draft 8 adds six for the lint box's side bars |
+| B-011b | front-bulkhead | holes 4.5;y | 12 | 12 | PASS | 7b Seals (draft 7): two M4 per drum glide, two glides per bulkhead; draft 8 adds six for the lint box's side bars; draft 9 two for the moisture bar set |
 | B-011c | front-bulkhead | hole_at 4.5;-207.889;822.419 | 1 | (-207.889, 822.419) d 4.500 | PASS | 7b Seals (draft 7): glide at 45 degrees from straight up on radius 282 (centre -199.404, 830.904), holes 12 each side along the tangent: -199.404 - 12 cos 45, 830.904 - 12 sin 45 |
 | B-012 | front-bulkhead | outline 610;730 | 1 | rrect 610.000 x 730.000 | PASS | 7a Bulkheads |
 | B-013 | rear-bulkhead | size x | 610 | 610.0 | PASS | 7a Bulkheads |
@@ -143,8 +143,8 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | C-012 | base-pan | max z | 0 | 0.0 | PASS | 7a: under the frame |
 | C-013 | base-pan | size x | 687 | 687.0 | PASS | 7a between the side panels |
 | C-014 | base-pan | size y | 750 | 750.0 | PASS | 7a |
-| C-015 | base-pan | holes 6.5;z | 30 | 30 | PASS | 7a Panels M6 at 150 pitch: 20 to the rails plus 4 through-bolted for the idler and spring brackets, 4 for the motor cradles and 2 for the PS1 bracket (draft 8) |
-| C-016 | base-pan | loops circle | 39 | 39 | PASS | 7a: 30 M6, 4 feet holes, the cord bushing hole and 4 M4 cable clamp holes (draft 8); no other cut-outs in the base pan |
+| C-015 | base-pan | holes 6.5;z | 34 | 34 | PASS | 7a Panels M6 at 150 pitch: 20 to the rails plus 4 through-bolted for the idler and spring brackets, 4 for the motor cradles and 2 for the PS1 bracket (draft 8), 4 for the blower plate's feet (draft 9) |
+| C-016 | base-pan | loops circle | 43 | 43 | PASS | 7a: 34 M6, 4 feet holes, the cord bushing hole and 4 M4 cable clamp holes (draft 8); no other cut-outs in the base pan |
 | C-016b | base-pan | holes 8.5;z | 4 | 4 | PASS | 7c Feet: M8 studs through the pan into the posts' centre bores |
 | C-016c | base-pan | hole_at 8.5;-325;20 | 1 | (-325.000, 20.000) d 8.500 | PASS | 7c Feet: on the post centres |
 | C-016d | base-pan | hole_at 8.5;325;730 | 1 | (325.000, 730.000) d 8.500 | PASS | 7c Feet |
@@ -180,7 +180,7 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | P-024 | rear-upper-panel | size x | 690 | 690.0 | PASS | 7 |
 | P-025 | rear-lower-panel | min y | 750 | 750.0 | PASS | 7a |
 | P-026 | rear-lower-panel | loop circle;230;150;106;106 | 1 | 1 | PASS | 7a Air: 102 exhaust at X 230, port 2 mm larger each side |
-| P-027 | rear-lower-panel | loops circle | 9 | 9 | PASS | 7a: the exhaust port and 8 M6; the cord enters through the base pan (draft 6), not this panel |
+| P-027 | rear-lower-panel | loops circle | 15 | 15 | PASS | 7a: the exhaust port and 8 M6; the cord enters through the base pan (draft 6), not this panel; draft 9 adds the gas entry (25), the condensate drain (20) and their blanks' four M4 |
 | P-028 | rear-lower-panel | loops slot | 32 | 32 | PASS | 7a: louvers, 4 columns x 8 rows, clear of the exhaust port |
 | P-029 | rear-lower-panel | holes 6.5;y | 8 | 8 | PASS | 7a: 2 per post x 2, 4 on the bottom rail |
 | P-030 | top-panel | min z | 1000 | 1000.0 | PASS | 7a: on the top rails |
@@ -280,18 +280,19 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | R-041c | dxf | dxf_loops felt-seal-short;sector | 1 | 1 | PASS | 7b Seals (draft 7) |
 | R-041d | cut-list | cut felt-seal-long | 1282 | 1282.0 | PASS | 7b Seals (draft 7): strip length on the glide radius 282: 2 x 2.2729 x 282 |
 | R-041e | cut-list | cut felt-seal-short | 396 | 396.0 | PASS | 7b Seals (draft 7): 2 x 0.7021 x 282 |
-| M-001 | motor (bought) | size y | 210 | 210.0 | PASS | bom: NEMA 48 frame envelope 200 long (V-106) plus the 6 mm front shaft to the blower and the 4 mm rear shaft to the pulley |
-| M-002 | motor (bought) | min y | 184 | 184.0 | PASS | 7a: motor behind the blower (frame from 190, shaft stub to the blower's back face at 184) |
+| M-001 | motor (bought) | size y | 208.5 | 208.5 | PASS | bom: NEMA 48 frame envelope 200 long (V-106) plus the 4.5 mm front shaft to the blower (draft 9: the housing stands 1.5 further back on the blower plate) and the 4 mm rear shaft to the pulley |
+| M-002 | motor (bought) | min y | 185.5 | 185.5 | PASS | 7a: motor behind the blower (frame from 190, shaft stub to the blower's back face at 185.5, draft 9) |
 | M-003 | motor (bought) | cyl 70;y;0,120 | 1 | 1 | PASS | 7a Drive: axis at 120 high, 140 envelope |
 | M-004 | pulley (bought) | cyl 10;y;0,120 | 5 | 5 | PASS | 7a Drive (draft 7): PJ pulley, 20 pitch diameter: 1725 x 20 / 620 = 56 drum rpm (V-012); five rib bands between four grooves |
 | M-004b | pulley (bought) | cyl 11;y;0,120 | 1 | 1 | PASS | 7a Drive (draft 7): the pulley's hub, 22 |
 | M-003b | motor (bought) | cyl 6.35;y;0,120 | 2 | 2 | PASS | bom (draft 7): 1/2 in shafts both ends (V-106) |
 | M-005 | pulley (bought) | min y | 394 | 394.0 | PASS | 7a Drive: pulley centred at Y 402, 16 wide |
 | M-006 | blower (bought) | cyl 110;y;0,120 | 1 | 1 | PASS | 7a Blower envelope 220 on the motor axis |
-| M-007 | blower (bought) | min y | 84 | 84.0 | PASS | 7a Blower on the front shaft |
-| M-008 | exhaust-duct (bought) | cyl 51;y;230,150 | 1 | 1 | PASS | 7a Air: 102 exhaust along the bay floor at X 230, 150 high |
-| M-009 | exhaust-duct (bought) | max y | 750 | 750.0 | PASS | 7a Air: to the rear lower panel |
-| M-009b | exhaust-duct (bought) | min y | 190 | 190.0 | PASS | 7a Air: from the back of the blower's outlet box (draft 4), along the bay floor to the port |
+| M-007 | blower (bought) | min y | 85.5 | 85.5 | PASS | 7a Blower on the front shaft; its inlet face on the back of the 1.5 blower plate at 84 (draft 9) |
+| M-008 | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | cyl 51;y;230,150 | 1 | 1 | PASS | 7a Air: 102 exhaust along the bay floor at X 230, 150 high (draft 9: a catalog 4 in pipe, 1 mm wall) |
+| M-008b | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | cyl 50;y;230,150 | 1 | 1 | PASS | 7a Air (draft 9): the pipe's 100 bore |
+| M-009 | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | max y | 801.5 | 801.5000001 | PASS | 7a Air (draft 9): through the rear lower panel's port, 50 proud of its outer face (751.5) as the vent hose spigot |
+| M-009b | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | min y | 192 | 191.9999999 | PASS | 7a Air (draft 9): over the housing's 25 long collar from 2 past the outlet box's rear face (190), along the bay floor to the port |
 | M-010 | heat-module-tray | min y | 420 | 420.0 | PASS | 7a Air: tray Y 420 to 670 |
 | M-011 | heat-module-tray | max y | 700 | 700.0 | PASS | 7a Air (draft 7): tray Y 420 to 700, starting 3 behind the idler spring |
 | M-012 | heat-module-tray | size x | 340 | 340.0 | PASS | 7a (draft 7): tray 340 wide, centred, out to the tray rails' outer faces |
@@ -352,8 +353,8 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | X-020 | clearance | clearance trunk-rear;rail-mid-rear | 4.5 | 4.5 | PASS | 7a (draft 8): the trunk ends at 705.5, the rear rail starts at 710 |
 | X-021 | clearance | clearance heat-module-element (bought, 279838 class open-coil element on its frame, envelope);heat-module-tray | 20 | 20.0 | PASS | 7a Heat module (draft 7): the element sits on the rails' top legs at 81.5, the tray's top at 61.5 |
 | X-022 | clearance | clearance motor (bought);base-pan | 50 | 50.0 | PASS | 7a: motor axis 120 high |
-| X-023 | clearance | clearance blower (bought);spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140) | 4 | 4.0 | PASS | 7a (draft 8): the spool's bars end 4 in front of the blower's inlet face; 6 mm foam compressed to 4 fills it |
-| X-024 | clearance | clearance exhaust-duct (bought);rear-lower-panel | 2 | 2.0 | PASS | 7a: duct through the port with 2 mm |
+| X-023 | clearance | clearance blower (bought);spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140) | 5.5 | 5.5 | PASS | 7a (draft 9): the spool's bars end 4 in front of the blower plate (6 mm foam compressed to 4 fills it) and the plate is 1.5 in front of the housing's inlet face |
+| X-024 | clearance | clearance exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap);rear-lower-panel | 2 | 2.0 | PASS | 7a: duct through the port with 2 mm |
 | X-025 | clearance | clearance power-module-plate;trunk-front | 20 | 20.0 | PASS | 7a Power module (draft 8): the plate's right edge at X -150, the trunk's front plate from X -130 |
 | X-026 | clearance | clearance drum-sheet;top-panel | 58.5 | 58.5 | PASS | 7a: drum top 941.5, top panel at 1000 |
 | X-027 | clearance | clearance hood-top;rail-mid-rearcross | 2 | 2.0 | PASS | 7a Air (draft 8): the hood's top plate (258) passes under the mid rear cross rail (260) |
@@ -419,9 +420,9 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | G-011 | clearance | clearance hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts);lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom) | 6.173 | 6.173 | PASS | 7b Rollers (draft 8): the front nuts' washers (radius 8) at X 180.173 beside the box's side bars at 166, overlapping them in Y |
 | G-012 | clearance | clearance hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts);drum-sheet | 22 | 22.0 | PASS | 7b Rollers (draft 7): the heads (radius 8) on radius 340, the sheet at 310 |
 | G-013 | clearance | clearance hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts);roller-front-1 (bought) | 0 | 0.0 | PASS | 7b Rollers (draft 7): the shim and the spacer touch the roller's faces; the shoulder has 0.25 in the bore |
-| G-014 | grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2) | solids | 5 | 5 | PASS | 7a Panels (draft 8): cord, bay harness and door switch cable grommets in the bay ceiling, console harness grommet in the top panel, door switch cable grommet in the front bulkhead |
+| G-014 | grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2) | solids | 5 | 5 | PASS | 7a Panels (draft 8): cord, bay harness and door switch cable grommets in the bay ceiling, console harness grommet in the top panel, door switch cable grommet in the front bulkhead |
 | G-015 | clearance | clearance power-cord (bought);bay-ceiling | 6.5 | 6.5 | PASS | 7a (draft 7): the 9 cord up the middle of the 22 grommet hole |
-| G-016 | clearance | clearance power-cord (bought);grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2) | 3 | 3.0 | PASS | 7a (draft 7): the grommet's 15 bore round the 9 cord |
+| G-016 | clearance | clearance power-cord (bought);grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2) | 3 | 3.0 | PASS | 7a (draft 7): the grommet's 15 bore round the 9 cord |
 | G-017 | power-cord (bought) | max z | 320 | 320.0 | PASS | 7a Power module (draft 7): the cord ends under X1 (rail A1 at 360, blocks 47 tall) after its grommet |
 | G-018 | clearance | clearance power-cord (bought);power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps) | 16.5 | 16.5 | PASS | 7a Power module (draft 7): the cord's end at 320 under X1's bottom at 336.5 |
 | E-001 | heat-module-tray | holes 4.5;z | 13 | 13 | PASS | 7a Heat module (draft 7): 4 into the tray rails' slots (which also hold the box's side angles), 3 each for the two inside bottom angles and the terminal plate's foot |
@@ -526,7 +527,7 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | W-038 | hardware-power-module-plate (bought, 4 x M6 x 12 hex, washers, T-nuts) | solids | 4 | 4 | PASS | 7a (draft 7) |
 | N-001 | front-bulkhead | hole_at 4.5;162;310 | 1 | (162.000, 310.000) d 4.500 | PASS | 7a Bulkheads (draft 8): M4 from the drum side into the lint box's side bars, outside the felt; the lowest head clears the bay ceiling's front edge |
 | N-002 | front-bulkhead | hole_at 4.5;-162;380 | 1 | (-162.000, 380.000) d 4.500 | PASS | 7a Bulkheads (draft 8) |
-| N-003 | front-bulkhead | holes 4.5;y | 10 | 10 | PASS | 7a Bulkheads (draft 8): four glide holes and six lint box holes |
+| N-003 | front-bulkhead | holes 4.5;y | 12 | 12 | PASS | 7a Bulkheads (draft 8): four glide holes and six lint box holes; draft 9 adds the moisture bar set's two |
 | N-004 | rear-bulkhead | hole_at 4.5;110;690 | 1 | (110.000, 690.000) d 4.500 | PASS | 7a Bulkheads (draft 8): M4 from the drum side into the nozzle's side bars |
 | N-005 | rear-bulkhead | hole_at 4.5;-70;812.5 | 1 | (-70.000, 812.500) d 4.500 | PASS | 7a Bulkheads (draft 8): into the nozzle's top bar |
 | N-006 | rear-bulkhead | holes 4.5;y | 14 | 14 | PASS | 7a Bulkheads (draft 8): four glide holes and ten nozzle holes |
@@ -556,14 +557,61 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | N-030 | clearance | clearance door-switch (bought, two-contact plunger switch, envelope);door-disc | 0.5 | 0.5 | PASS | 7a Door (draft 8): the plunger, drawn pressed, 0.5 off the closed disc's back face |
 | N-031 | clearance | clearance nozzle-bars (40 x 8 aluminium flat bar: 2 sides, top, bottom);rear-bulkhead | 1 | 1.0 | PASS | 7a Air (draft 8): 1 of compressed foam between the nozzle's bars and the bulkhead |
 | N-032 | clearance | clearance basket-pull (bought, D-pull, 64 mm centres, 25 projection);door-disc | 28 | 28.0 | PASS | 7 Lint management (draft 8): the pull's bar ends at Y 16.5, the closed disc's back at -11.5 |
-| N-033 | bay-ceiling | hole_at 12;290;60 | 1 | (290.000, 60.000) d 12.000 | PASS | 7a Panels (draft 8): the door switch cable's grommet at the right front, behind the bulkhead |
-| N-034 | front-bulkhead | hole_at 12;290;330 | 1 | (290.000, 330.000) d 12.000 | PASS | 7a Bulkheads (draft 8): the door switch cable's grommet, outside the felt and the drum |
+| N-033 | bay-ceiling | hole_at 16;290;60 | 1 | (290.000, 60.000) d 16.000 | PASS | 7a Panels (draft 8): the door switch cable's grommet at the right front, behind the bulkhead; 16 in draft 9 so the moisture pair shares it |
+| N-034 | front-bulkhead | hole_at 16;290;330 | 1 | (290.000, 330.000) d 16.000 | PASS | 7a Bulkheads (draft 8): the door switch cable's grommet, outside the felt and the drum; 16 in draft 9 so the moisture pair shares it |
 | N-035 | base-pan | hole_at 4.5;-250;280 | 1 | (-250.000, 280.000) d 4.500 | PASS | 7a Panels (draft 8): one of four M4 cable clamp holes along the left side for the bay harness |
 | N-036 | base-pan | holes 4.5;z | 4 | 4 | PASS | 7a Panels (draft 8): the four cable clamp holes |
 | N-037 | cut-list | cut trunk top bar | 244 | 244.0 | PASS | 7a Air (draft 8): the trunk's top bar between its side bars |
 | N-038 | cut-list | cut hood end bar | 334 | 334.0 | PASS | 7a Air (draft 8): the hood's front and rear bars between its side bars |
 | N-039 | cut-list | cut nozzle end bar | 212 | 212.0 | PASS | 7a Air (draft 8) |
 | N-040 | cut-list | cut_qty lint-box side bar | 2 | 2 | PASS | 7a Air (draft 8) |
+| Q-001 | blower-plate | thickness | 1.5 | 1.5 | PASS | 7a Drive (draft 9): 1.5 steel |
+| Q-002 | blower-plate | normal | 0,1,0 | (-0.0, -1.0, -0.0) | PASS | 7a Drive (draft 9): stands across the bay in front of the housing |
+| Q-003 | blower-plate | outline 260;245 | 1 | rrect 260.000 x 245.000 | PASS | 7a Drive (draft 9): 260 wide, from the pan to 245, 15 under the mid rails |
+| Q-004 | blower-plate | min y | 84 | 84.0 | PASS | 7a Drive (draft 9): its front face carries the spool's foam |
+| Q-005 | blower-plate | max y | 85.5 | 85.5 | PASS | 7a Drive (draft 9): the housing's inlet face sits on its back |
+| Q-006 | blower-plate | loop rect;0;130;140;120 | 1 | 1 | PASS | 7a Drive (draft 9): the spool's bore, 140 x 120, cut through it |
+| Q-007 | blower-plate | holes 4.5;y | 8 | 8 | PASS | 7a Drive (draft 9): four for the housing's screws (nominal pattern, V-107), four into the feet's legs |
+| Q-008 | blower-plate | hole_at 4.5;88;60 | 1 | (88.000, 60.000) d 4.500 | PASS | 7a Drive (draft 9): housing screw |
+| Q-009 | blower-plate | hole_at 4.5;-88;180 | 1 | (-88.000, 180.000) d 4.500 | PASS | 7a Drive (draft 9): housing screw |
+| Q-010 | blower-plate | hole_at 4.5;110;10 | 1 | (110.000, 10.000) d 4.500 | PASS | 7a Drive (draft 9): into the right foot's leg |
+| Q-011 | blower-plate | loops circle | 8 | 8 | PASS | 7a Drive (draft 9) |
+| Q-012 | base-pan | hole_at 6.5;70;74 | 1 | (70.000, 74.000) d 6.500 | PASS | 7a Drive (draft 9): blower plate foot bolt |
+| Q-013 | base-pan | hole_at 6.5;-110;74 | 1 | (-110.000, 74.000) d 6.500 | PASS | 7a Drive (draft 9): blower plate foot bolt |
+| Q-014 | entry-blank | thickness | 1.5 | 1.5 | PASS | 7a Panels (draft 9): 1.5 steel |
+| Q-015 | entry-blank | outline 60;44 | 1 | rrect 60.000 x 44.000 | PASS | 7a Panels (draft 9): 60 x 44, inside the rear lower panel over the gas entry |
+| Q-016 | entry-blank | holes 4.5;y | 2 | 2 | PASS | 7a Panels (draft 9): two M4 |
+| Q-017 | entry-blank | hole_at 4.5;-251;150 | 1 | (-251.000, 150.000) d 4.500 | PASS | 7a Panels (draft 9): 21 left of the entry |
+| Q-018 | entry-blank | min y | 748.5 | 748.5 | PASS | 7a Panels (draft 9): on the panel's inside face |
+| Q-019 | entry-blank | max y | 750 | 750.0 | PASS | 7a Panels (draft 9) |
+| Q-020 | rear-lower-panel | hole_at 25;-230;150 | 1 | (-230.000, 150.000) d 25.000 | PASS | 7a Panels (draft 9): the gas entry, for a 3/8 NPT bulkhead fitting on the gas module; blanked otherwise |
+| Q-021 | rear-lower-panel | hole_at 20;-230;66 | 1 | (-230.000, 66.000) d 20.000 | PASS | 7a Panels (draft 9): the condensate drain, for a hose grommet on the heat pump module; blanked otherwise |
+| Q-022 | rear-lower-panel | holes 4.5;y | 4 | 4 | PASS | 7a Panels (draft 9): the two blanks' M4 |
+| Q-023 | rear-lower-panel | hole_at 4.5;-209;66 | 1 | (-209.000, 66.000) d 4.500 | PASS | 7a Panels (draft 9) |
+| Q-024 | front-bulkhead | hole_at 16;212.012;499.02 | 1 | (212.012, 499.020) d 16.000 | PASS | 7a Bulkheads (draft 9): the moisture bar set's terminals, on radius 250 at 58 degrees right of bottom: 250 sin 58, 631.5 - 250 cos 58 |
+| Q-025 | front-bulkhead | hole_at 4.5;193.465;469.339 | 1 | (193.465, 469.339) d 4.500 | PASS | 7a Bulkheads (draft 9): the bar set's M4, 35 along the bars from its centre |
+| Q-026 | front-bulkhead | hole_at 4.5;230.559;528.702 | 1 | (230.559, 528.702) d 4.500 | PASS | 7a Bulkheads (draft 9) |
+| Q-027 | lint-box-back | hole_at 4.5;120;170 | 1 | (120.000, 170.000) d 4.500 | PASS | 7a Air (draft 9): the exhaust thermistor's M4, right of the spool |
+| Q-028 | lint-box-back | loop rect;120;155;12;18 | 1 | 1 | PASS | 7a Air (draft 9): the thermistor's nib through the plate into the box, 12 x 18 |
+| Q-029 | lint-box-back | holes 4.5;y | 19 | 19 | PASS | 7a Air (draft 8): 6 side bar, 2 bottom bar, 4 spool side, 3 spool top, 3 spool bottom; draft 9 adds the thermistor's one |
+| Q-030 | cut-list | cut exhaust duct (bought) | 609.5 | 609.5 | PASS | 7a Air (draft 9): from Y 192 to 801.5 |
+| Q-031 | cut-list | cut blower-plate feet | 90 | 90.0 | PASS | 7a Drive (draft 9) |
+| Q-032 | cut-list | cut_qty blower-plate feet | 2 | 2 | PASS | 7a Drive (draft 9) |
+| Q-033 | clearance | clearance blower-plate;blower (bought) | 0 | 0.0 | PASS | 7a Drive (draft 9): the housing's inlet face on the plate's back |
+| Q-034 | clearance | clearance blower-plate;spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate) | 0 | 0.0 | PASS | 7a Drive (draft 9): the spool's foam on the plate's front face |
+| Q-035 | clearance | clearance th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope);blower-plate | 22 | 22.0 | PASS | 7a Air (draft 9): the thermistor's terminals end at Y 62, the plate at 84 |
+| Q-036 | clearance | clearance exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap);tray-rail-2 | 57.75 | 57.747 | PASS | 7a Air (draft 9): the pipe (axis 230, 150, radius 51) beside and above the right tray rail: its top inner corner (168.5, 58.5, rounded 1.5) is 110.25 from the axis |
+| Q-037 | clearance | clearance exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap);heat-module-tray | 55.92 | 55.922 | PASS | 7a Air (draft 9): beside and above the tray: its top right edge (170, 61.5) is 106.92 from the pipe's axis |
+| Q-038 | clearance | clearance moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope);basket-lip-plate | 40.15 | 40.148 | PASS | 7 Lint management (draft 9): the bar set (47.2 degrees right of bottom at its near end, radius 235 to 265) clear of the lip ring (to 37.5 degrees, radius 232 to 268.5): measured 40.15 |
+| Q-039 | clearance | clearance moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope);drum-ring-front | 1.3 | 1.306 | PASS | 7a Bulkheads (draft 9): the bar set ends at Y 49.5, the ring's front face is at 50, and its corners reach radius 268.8 inside the 270 bore: sqrt(0.5^2 + 1.2^2) |
+| Q-040 | clearance | clearance ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route);exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet) | 16.16 | 16.162 | PASS | 7a Air (draft 9): the tube (radius 3, on 240) runs over the thermostats (to 221): 16 plus the rounded bend |
+| Q-041 | clearance | clearance exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes);rear-lower-panel | 0 | 0.0 | PASS | 7a Air (draft 9): the inside clamp bears on the panel |
+| Q-042 | clearance | clearance entry-blank;rear-lower-panel | 0 | 0.0 | PASS | 7a Panels (draft 9) |
+| Q-043 | clearance | clearance cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes);base-pan | 0 | 0.0 | PASS | 7a Panels (draft 9) |
+| Q-044 | clearance | clearance blower-plate-feet (angle 20x20x2, 2 x 90);base-pan | 0 | 0.0 | PASS | 7a Drive (draft 9) |
+| Q-045 | clearance | clearance blower-plate;tray-rail-2 | 20 | 20.0 | PASS | 7a Drive (draft 9): the plate (to X 130) and the tray rails (from 150) |
+| Q-046 | clearance | clearance exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap);motor (bought) | 110.95 | 110.948 | PASS | 7a Air (draft 9): the pipe's axis (230, 150) is 231.95 from the motor's (0, 120), less the frame's 70 and the pipe's 51 |
+| Q-047 | clearance | clearance exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap);exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes) | 0 | 0.0 | PASS | 7a Air (draft 9): the clamps on the pipe |
 
 ## 2. Generic checks on every part
 
@@ -572,14 +620,14 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | base-pan | one solid | 1 | PASS |
 | base-pan | valid B-rep (BRepCheck) | 1 | PASS |
 | base-pan | closed shells | 1 | PASS |
-| base-pan | volume positive | 770329.3 | PASS |
+| base-pan | volume positive | 770130.2 | PASS |
 | base-pan | in the assembly with the same volume and place | True | PASS |
 | base-pan | section edges all closed | 0 | PASS |
-| base-pan | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 40 loops, 0 unclassified | PASS |
-| base-pan | every cut lies inside the outline | 39 | PASS |
+| base-pan | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 44 loops, 0 unclassified | PASS |
+| base-pan | every cut lies inside the outline | 43 | PASS |
 | base-pan | no two cuts overlap | 0 overlapping pairs | PASS |
 | base-pan.dxf | DXF entities join into closed loops | 0 open chains | PASS |
-| base-pan.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 40 matched, 0 only in STEP, 0 only in DXF | PASS |
+| base-pan.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 44 matched, 0 only in STEP, 0 only in DXF | PASS |
 | base-pan.dxf | DXF drawn in world coordinates or about the origin | offset (0.00, 0.00) | PASS |
 | basket-far-clamp | one solid | 1 | PASS |
 | basket-far-clamp | valid B-rep (BRepCheck) | 1 | PASS |
@@ -632,7 +680,7 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | bay-ceiling | one solid | 1 | PASS |
 | bay-ceiling | valid B-rep (BRepCheck) | 1 | PASS |
 | bay-ceiling | closed shells | 1 | PASS |
-| bay-ceiling | volume positive | 685571.7 | PASS |
+| bay-ceiling | volume positive | 685439.8 | PASS |
 | bay-ceiling | in the assembly with the same volume and place | True | PASS |
 | bay-ceiling | section edges all closed | 0 | PASS |
 | bay-ceiling | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 29 loops, 0 unclassified | PASS |
@@ -641,6 +689,18 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | bay-ceiling.dxf | DXF entities join into closed loops | 0 open chains | PASS |
 | bay-ceiling.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 29 matched, 0 only in STEP, 0 only in DXF | PASS |
 | bay-ceiling.dxf | DXF drawn in world coordinates or about the origin | offset (0.00, 0.00) | PASS |
+| blower-plate | one solid | 1 | PASS |
+| blower-plate | valid B-rep (BRepCheck) | 1 | PASS |
+| blower-plate | closed shells | 1 | PASS |
+| blower-plate | volume positive | 70112.8 | PASS |
+| blower-plate | in the assembly with the same volume and place | True | PASS |
+| blower-plate | section edges all closed | 0 | PASS |
+| blower-plate | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 10 loops, 0 unclassified | PASS |
+| blower-plate | every cut lies inside the outline | 9 | PASS |
+| blower-plate | no two cuts overlap | 0 overlapping pairs | PASS |
+| blower-plate.dxf | DXF entities join into closed loops | 0 open chains | PASS |
+| blower-plate.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 10 matched, 0 only in STEP, 0 only in DXF | PASS |
+| blower-plate.dxf | DXF drawn in world coordinates or about the origin | offset (0.00, 0.00) | PASS |
 | console-cap | one solid | 1 | PASS |
 | console-cap | valid B-rep (BRepCheck) | 1 | PASS |
 | console-cap | closed shells | 1 | PASS |
@@ -793,6 +853,18 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | drum-splice | closed shells | 1 | PASS |
 | drum-splice | volume positive | 32383.4 | PASS |
 | drum-splice | in the assembly with the same volume and place | True | PASS |
+| entry-blank | one solid | 1 | PASS |
+| entry-blank | valid B-rep (BRepCheck) | 1 | PASS |
+| entry-blank | closed shells | 1 | PASS |
+| entry-blank | volume positive | 3865.9 | PASS |
+| entry-blank | in the assembly with the same volume and place | True | PASS |
+| entry-blank | section edges all closed | 0 | PASS |
+| entry-blank | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 3 loops, 0 unclassified | PASS |
+| entry-blank | every cut lies inside the outline | 2 | PASS |
+| entry-blank | no two cuts overlap | 0 overlapping pairs | PASS |
+| entry-blank.dxf | DXF entities join into closed loops | 0 open chains | PASS |
+| entry-blank.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 3 matched, 0 only in STEP, 0 only in DXF | PASS |
+| entry-blank.dxf | DXF drawn in world coordinates or about the origin | offset (0.00, 0.00) | PASS |
 | felt-seal-front-long | one solid | 1 | PASS |
 | felt-seal-front-long | valid B-rep (BRepCheck) | 1 | PASS |
 | felt-seal-front-long | closed shells | 1 | PASS |
@@ -832,14 +904,14 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | front-bulkhead | one solid | 1 | PASS |
 | front-bulkhead | valid B-rep (BRepCheck) | 1 | PASS |
 | front-bulkhead | closed shells | 1 | PASS |
-| front-bulkhead | volume positive | 403888.8 | PASS |
+| front-bulkhead | volume positive | 403407.6 | PASS |
 | front-bulkhead | in the assembly with the same volume and place | True | PASS |
 | front-bulkhead | section edges all closed | 0 | PASS |
-| front-bulkhead | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 23 loops, 0 unclassified | PASS |
-| front-bulkhead | every cut lies inside the outline | 22 | PASS |
+| front-bulkhead | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 26 loops, 0 unclassified | PASS |
+| front-bulkhead | every cut lies inside the outline | 25 | PASS |
 | front-bulkhead | no two cuts overlap | 0 overlapping pairs | PASS |
 | front-bulkhead.dxf | DXF entities join into closed loops | 0 open chains | PASS |
-| front-bulkhead.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 23 matched, 0 only in STEP, 0 only in DXF | PASS |
+| front-bulkhead.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 26 matched, 0 only in STEP, 0 only in DXF | PASS |
 | front-bulkhead.dxf | DXF drawn in world coordinates or about the origin | offset (0.00, 0.00) | PASS |
 | front-lower-panel | one solid | 1 | PASS |
 | front-lower-panel | valid B-rep (BRepCheck) | 1 | PASS |
@@ -986,14 +1058,14 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | lint-box-back | one solid | 1 | PASS |
 | lint-box-back | valid B-rep (BRepCheck) | 1 | PASS |
 | lint-box-back | closed shells | 1 | PASS |
-| lint-box-back | volume positive | 80398.2 | PASS |
+| lint-box-back | volume positive | 80050.4 | PASS |
 | lint-box-back | in the assembly with the same volume and place | True | PASS |
 | lint-box-back | section edges all closed | 0 | PASS |
-| lint-box-back | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 20 loops, 0 unclassified | PASS |
-| lint-box-back | every cut lies inside the outline | 19 | PASS |
+| lint-box-back | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 22 loops, 0 unclassified | PASS |
+| lint-box-back | every cut lies inside the outline | 21 | PASS |
 | lint-box-back | no two cuts overlap | 0 overlapping pairs | PASS |
 | lint-box-back.dxf | DXF entities join into closed loops | 0 open chains | PASS |
-| lint-box-back.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 20 matched, 0 only in STEP, 0 only in DXF | PASS |
+| lint-box-back.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 22 matched, 0 only in STEP, 0 only in DXF | PASS |
 | lint-box-back.dxf | DXF drawn in world coordinates or about the origin | offset (0.00, 0.00) | PASS |
 | lint-box-front | one solid | 1 | PASS |
 | lint-box-front | valid B-rep (BRepCheck) | 1 | PASS |
@@ -1153,14 +1225,14 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | rear-lower-panel | one solid | 1 | PASS |
 | rear-lower-panel | valid B-rep (BRepCheck) | 1 | PASS |
 | rear-lower-panel | closed shells | 1 | PASS |
-| rear-lower-panel | volume positive | 240240.9 | PASS |
+| rear-lower-panel | volume positive | 238937.9 | PASS |
 | rear-lower-panel | in the assembly with the same volume and place | True | PASS |
 | rear-lower-panel | section edges all closed | 0 | PASS |
-| rear-lower-panel | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 42 loops, 0 unclassified | PASS |
-| rear-lower-panel | every cut lies inside the outline | 41 | PASS |
+| rear-lower-panel | every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon | 48 loops, 0 unclassified | PASS |
+| rear-lower-panel | every cut lies inside the outline | 47 | PASS |
 | rear-lower-panel | no two cuts overlap | 0 overlapping pairs | PASS |
 | rear-lower-panel.dxf | DXF entities join into closed loops | 0 open chains | PASS |
-| rear-lower-panel.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 42 matched, 0 only in STEP, 0 only in DXF | PASS |
+| rear-lower-panel.dxf | every loop in the DXF matches a loop in the STEP section (type, centre, size, 0.01 mm) | 48 matched, 0 only in STEP, 0 only in DXF | PASS |
 | rear-lower-panel.dxf | DXF drawn in world coordinates or about the origin | offset (0.00, 0.00) | PASS |
 | rear-upper-panel | one solid | 1 | PASS |
 | rear-upper-panel | valid B-rep (BRepCheck) | 1 | PASS |
@@ -1263,7 +1335,7 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | rear-upper-panel | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 18 M6 holes, 0 through-bolted, 0 off a rail | PASS |
 | rear-lower-panel | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 8 M6 holes, 0 through-bolted, 0 off a rail | PASS |
 | top-panel | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 20 M6 holes, 0 through-bolted, 0 off a rail | PASS |
-| base-pan | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 30 M6 holes, 10 through-bolted, 0 off a rail | PASS |
+| base-pan | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 34 M6 holes, 14 through-bolted, 0 off a rail | PASS |
 | bay-ceiling | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 20 M6 holes, 0 through-bolted, 0 off a rail | PASS |
 | front-bulkhead | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 7 M6 holes, 0 through-bolted, 0 off a rail | PASS |
 | rear-bulkhead | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 10 M6 holes, 0 through-bolted, 0 off a rail | PASS |
@@ -1274,9 +1346,9 @@ Document checks: 555, generic checks: 717, Fusion comparisons: 1041. **Failures:
 | console-cheek-right | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 5 M6 holes, 0 through-bolted, 0 off a rail | PASS |
 | power-module-plate | every M6 hole sits on a frame rail centre line (or is a listed through-bolted hole) | 4 M6 holes, 0 through-bolted, 0 off a rail | PASS |
 | console-face | the only M4 holes are the six UCI-D module holes (uci-spec 4.1, draft 5) | 6 M4 holes | PASS |
-| all parts | V-011: every round feature deeper than 0.5 mm has a diameter on the named list (3 M3 tapped (basket plates), 3.4 M3 clearance (liner, basket clamps), 4 4040 corner radius 2 / timer yoke holes, 4.2 2020 centre bore / M4 tapped in the duct bars, drawn at the thread, 4.5 M4 clearance, 5 louver slot ends (60 x 5), 6 corner radius 3 (cheeks, tabs, splice, idler arm ends), 6.5 M6 clearance, 6.6 M6 bonding studs (nutted), 6.8 4040 centre bore (tapped M8 for the feet), 8 door switch plunger, 8.5 M8 clearance (feet studs, roller studs) / door switch plunger hole, 10 inlet holes / D-pull bar, 12 plate corner radius 6 / timer shaft holes / lint box hang spacers / door switch cable grommets (draft 8), 20 faceplate corner radius 10, 22 cord strain relief bushing, cord and console grommets, 22.3 22 mm panel devices, 30 bay harness grommet, 40 lint slot ends (260 x 40), 106 exhaust port (102 duct + 2 each side), 126 collar opening (125 collar + 1), 128 hood collar hole (125 collar + 3), 141 motor cradle saddle (140 motor + 1), 460 door opening, 464 basket lip inside (radius 232), 467.8 basket lip flange inside (radius 233.9), 468 liner splice inside (radius 234), 470 door ring bore, 471 liner inside (radius 235.5), 474 liner outside (radius 237), 474.4 lint box plates and bars follow the liner (radius 237.2), 476 lint slot inner arc (radius 238), 477.8 basket mesh inside (radius 238.9), 479 basket plates inside (radius 239.5), 480 front panel ring opening, 489 basket far flange inside (radius 244.5), 521 basket far flange outside (radius 260.5), 531 basket plates outside (radius 265.5), 532.2 basket mesh outside (radius 266.1), 534 lint slot outer arc (radius 267, draft 8), 537 basket lip outside (radius 268.5), 540 door disc / drum ring bore, 546 felt seal inside (radius 273), 560 door ring, 582 felt seal outside (radius 291), 616.4 splice inside, 618.4 drum ring / sheet inside, 620 drum outside) | 0 off the list | PASS |
+| all parts | V-011: every round feature deeper than 0.5 mm has a diameter on the named list (3 M3 tapped (basket plates), 3.4 M3 clearance (liner, basket clamps), 4 4040 corner radius 2 / timer yoke holes, 4.2 2020 centre bore / M4 tapped in the duct bars, drawn at the thread, 4.5 M4 clearance, 5 louver slot ends (60 x 5), 6 corner radius 3 (cheeks, tabs, splice, idler arm ends), 6.5 M6 clearance / air-proving tap in the exhaust pipe, 6.6 M6 bonding studs (nutted), 6.8 4040 centre bore (tapped M8 for the feet), 8 door switch plunger, 8.5 M8 clearance (feet studs, roller studs) / door switch plunger hole, 10 inlet holes / D-pull bar, 12 plate corner radius 6 / timer shaft holes / lint box hang spacers, 16 door switch cable and moisture pair grommets (draft 9) / moisture bar terminals, 20 condensate drain (hose grommet) / faceplate corner radius 10, 22 cord strain relief bushing, cord and console grommets, 22.3 22 mm panel devices, 25 gas entry (3/8 NPT bulkhead fitting), 30 bay harness grommet, 40 lint slot ends (260 x 40), 106 exhaust port (102 duct + 2 each side), 126 collar opening (125 collar + 1), 128 hood collar hole (125 collar + 3), 141 motor cradle saddle (140 motor + 1), 460 door opening, 464 basket lip inside (radius 232), 467.8 basket lip flange inside (radius 233.9), 468 liner splice inside (radius 234), 470 door ring bore, 471 liner inside (radius 235.5), 474 liner outside (radius 237), 474.4 lint box plates and bars follow the liner (radius 237.2), 476 lint slot inner arc (radius 238), 477.8 basket mesh inside (radius 238.9), 479 basket plates inside (radius 239.5), 480 front panel ring opening, 489 basket far flange inside (radius 244.5), 521 basket far flange outside (radius 260.5), 531 basket plates outside (radius 265.5), 532.2 basket mesh outside (radius 266.1), 534 lint slot outer arc (radius 267, draft 8), 537 basket lip outside (radius 268.5), 540 door disc / drum ring bore, 546 felt seal inside (radius 273), 560 door ring, 582 felt seal outside (radius 291), 616.4 splice inside, 618.4 drum ring / sheet inside, 620 drum outside) | 0 off the list | PASS |
 | air path | V-013: every opening in the air path is at least the blower outlet (102 round, 8171 mm2) | module_inlet 9000, module_collar 12037, hood 8350, trunk 12200, nozzle 30104, inlet_field 9896, lint_slot 9202, basket_outer_wall 9294, lint_box 9480, spool 16800, exhaust_duct 8171 | PASS |
-| assembly | no two solids overlap by more than 1 mm3 (file re-import) | 198 solids, 0 overlaps | PASS |
+| assembly | no two solids overlap by more than 1 mm3 (file re-import, boolean and point sample) | 213 solids, 0 overlaps | PASS |
 | assembly | every part file is a named solid in the assembly | 0 missing | PASS |
 | drum-sheet.dxf | every hole in the rolled solid unwraps onto a hole in the flat pattern (0.05 mm) | 88 matched, 0 solid-only, 0 DXF-only | PASS |
 | drum-sheet.dxf | flat pattern outline is the sheet's unrolled mid-surface length by its length plus the tabs | rpoly 1945.274 x 582.000, 244 edges; unrolled 1945.274 | PASS |
@@ -1293,9 +1365,9 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 
 | file | body | comparison | values | result |
 |---|---|---|---|---|
-| base-pan | Body1 | volume (mm3) | OCP 770329.313 / Fusion 770329.313 | PASS |
+| base-pan | Body1 | volume (mm3) | OCP 770130.214 / Fusion 770130.214 | PASS |
 | base-pan | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| base-pan | Body1 | face count | OCP 49 / Fusion 49 | PASS |
+| base-pan | Body1 | face count | OCP 53 / Fusion 53 | PASS |
 | base-pan | Body1 | solid body | 1 | PASS |
 | basket-far-clamp | Body1 | volume (mm3) | OCP 12155.524 / Fusion 12155.524 | PASS |
 | basket-far-clamp | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
@@ -1313,10 +1385,14 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | basket-lip-plate | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
 | basket-lip-plate | Body1 | face count | OCP 24 / Fusion 24 | PASS |
 | basket-lip-plate | Body1 | solid body | 1 | PASS |
-| bay-ceiling | Body1 | volume (mm3) | OCP 685571.698 / Fusion 685571.698 | PASS |
+| bay-ceiling | Body1 | volume (mm3) | OCP 685439.751 / Fusion 685439.751 | PASS |
 | bay-ceiling | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
 | bay-ceiling | Body1 | face count | OCP 55 / Fusion 55 | PASS |
 | bay-ceiling | Body1 | solid body | 1 | PASS |
+| blower-plate | Body1 | volume (mm3) | OCP 70112.794 / Fusion 70112.794 | PASS |
+| blower-plate | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
+| blower-plate | Body1 | face count | OCP 22 / Fusion 22 | PASS |
+| blower-plate | Body1 | solid body | 1 | PASS |
 | console-cap | Body1 | volume (mm3) | OCP 146545.150 / Fusion 146545.150 | PASS |
 | console-cap | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
 | console-cap | Body1 | face count | OCP 20 / Fusion 20 | PASS |
@@ -1393,6 +1469,10 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | drum-splice | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
 | drum-splice | Body1 | face count | OCP 26 / Fusion 26 | PASS |
 | drum-splice | Body1 | solid body | 1 | PASS |
+| entry-blank | Body1 | volume (mm3) | OCP 3865.933 / Fusion 3865.933 | PASS |
+| entry-blank | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
+| entry-blank | Body1 | face count | OCP 12 / Fusion 12 | PASS |
+| entry-blank | Body1 | solid body | 1 | PASS |
 | felt-seal-front-long | Body1 | volume (mm3) | OCP 184592.692 / Fusion 184592.692 | PASS |
 | felt-seal-front-long | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
 | felt-seal-front-long | Body1 | face count | OCP 6 / Fusion 6 | PASS |
@@ -1409,9 +1489,9 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | felt-seal-rear-short | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
 | felt-seal-rear-short | Body1 | face count | OCP 6 / Fusion 6 | PASS |
 | felt-seal-rear-short | Body1 | solid body | 1 | PASS |
-| front-bulkhead | Body1 | volume (mm3) | OCP 403888.814 / Fusion 403888.814 | PASS |
+| front-bulkhead | Body1 | volume (mm3) | OCP 403407.561 / Fusion 403407.561 | PASS |
 | front-bulkhead | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| front-bulkhead | Body1 | face count | OCP 35 / Fusion 35 | PASS |
+| front-bulkhead | Body1 | face count | OCP 38 / Fusion 38 | PASS |
 | front-bulkhead | Body1 | solid body | 1 | PASS |
 | front-lower-panel | Body1 | volume (mm3) | OCP 242871.113 / Fusion 242871.113 | PASS |
 | front-lower-panel | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
@@ -1465,9 +1545,9 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | liner | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
 | liner | Body1 | face count | OCP 10 / Fusion 8 | CHECK |
 | liner | Body1 | solid body | 1 | PASS |
-| lint-box-back | Body1 | volume (mm3) | OCP 80398.230 / Fusion 80398.230 | PASS |
+| lint-box-back | Body1 | volume (mm3) | OCP 80050.373 / Fusion 80050.373 | PASS |
 | lint-box-back | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| lint-box-back | Body1 | face count | OCP 32 / Fusion 32 | PASS |
+| lint-box-back | Body1 | face count | OCP 37 / Fusion 37 | PASS |
 | lint-box-back | Body1 | solid body | 1 | PASS |
 | lint-box-front | Body1 | volume (mm3) | OCP 175620.605 / Fusion 175620.605 | PASS |
 | lint-box-front | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
@@ -1545,7 +1625,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | feet (bought, 4 x M8 leveling feet, 50 pad) | volume (mm3) (4 bodies added) | OCP 93105.692 / Fusion 93105.692 | PASS |
 | osa-dryer-assembly | feet (bought, 4 x M8 leveling feet, 50 pad) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | feet (bought, 4 x M8 leveling feet, 50 pad) | solid body | 1 | PASS |
-| osa-dryer-assembly | front-bulkhead | volume (mm3) | OCP 403888.814 / Fusion 403888.814 | PASS |
+| osa-dryer-assembly | front-bulkhead | volume (mm3) | OCP 403407.561 / Fusion 403407.561 | PASS |
 | osa-dryer-assembly | front-bulkhead | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | front-bulkhead | solid body | 1 | PASS |
 | osa-dryer-assembly | hardware-front-bulkhead (bought, 7 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (7 bodies added) | OCP 6009.126 / Fusion 6009.126 | PASS |
@@ -1578,13 +1658,13 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | hardware-drum-glides (bought, 4 x M4 x 8 and 4 x M4 x 10 button head, nuts) | volume (mm3) (16 bodies added) | OCP 2261.560 / Fusion 2261.559 | PASS |
 | osa-dryer-assembly | hardware-drum-glides (bought, 4 x M4 x 8 and 4 x M4 x 10 button head, nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | hardware-drum-glides (bought, 4 x M4 x 8 and 4 x M4 x 10 button head, nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | bay-ceiling | volume (mm3) | OCP 685571.698 / Fusion 685571.698 | PASS |
+| osa-dryer-assembly | bay-ceiling | volume (mm3) | OCP 685439.751 / Fusion 685439.751 | PASS |
 | osa-dryer-assembly | bay-ceiling | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | bay-ceiling | solid body | 1 | PASS |
 | osa-dryer-assembly | hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (20 bodies added) | OCP 17168.933 / Fusion 17168.932 | PASS |
 | osa-dryer-assembly | hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | base-pan | volume (mm3) | OCP 770329.313 / Fusion 770329.313 | PASS |
+| osa-dryer-assembly | base-pan | volume (mm3) | OCP 770130.214 / Fusion 770130.214 | PASS |
 | osa-dryer-assembly | base-pan | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | base-pan | solid body | 1 | PASS |
 | osa-dryer-assembly | hardware-base-pan (bought, 20 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (20 bodies added) | OCP 17168.933 / Fusion 17168.932 | PASS |
@@ -1620,7 +1700,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | hardware-rear-upper-panel (bought, 18 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (18 bodies added) | OCP 15452.040 / Fusion 15452.039 | PASS |
 | osa-dryer-assembly | hardware-rear-upper-panel (bought, 18 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | hardware-rear-upper-panel (bought, 18 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | rear-lower-panel | volume (mm3) | OCP 240240.871 / Fusion 240240.871 | PASS |
+| osa-dryer-assembly | rear-lower-panel | volume (mm3) | OCP 238937.895 / Fusion 238937.895 | PASS |
 | osa-dryer-assembly | rear-lower-panel | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | rear-lower-panel | solid body | 1 | PASS |
 | osa-dryer-assembly | hardware-rear-lower-panel (bought, 8 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (8 bodies added) | OCP 6867.573 / Fusion 6867.573 | PASS |
@@ -1791,7 +1871,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | hardware-drum-baffles (bought, 12 x M6 x 12 button head, nuts) | volume (mm3) (24 bodies added) | OCP 10142.813 / Fusion 10142.807 | PASS |
 | osa-dryer-assembly | hardware-drum-baffles (bought, 12 x M6 x 12 button head, nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | hardware-drum-baffles (bought, 12 x M6 x 12 button head, nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | motor (bought) | volume (mm3) | OCP 3046563.729 / Fusion 3046563.729 | PASS |
+| osa-dryer-assembly | motor (bought) | volume (mm3) | OCP 3046373.714 / Fusion 3046373.714 | PASS |
 | osa-dryer-assembly | motor (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | motor (bought) | solid body | 1 | PASS |
 | osa-dryer-assembly | motor-mount-1 (bought, cradle bracket) | volume (mm3) | OCP 39966.897 / Fusion 39966.897 | PASS |
@@ -1806,12 +1886,9 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | pulley (bought) | volume (mm3) | OCP 6967.148 / Fusion 6967.148 | PASS |
 | osa-dryer-assembly | pulley (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | pulley (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | blower (bought) | volume (mm3) | OCP 4752367.288 / Fusion 4752367.288 | PASS |
+| osa-dryer-assembly | blower (bought) | volume (mm3) | OCP 5340928.083 / Fusion 5340928.083 | PASS |
 | osa-dryer-assembly | blower (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | blower (bought) | solid body | 1 | PASS |
-| osa-dryer-assembly | exhaust-duct (bought) | volume (mm3) | OCP 4575918.196 / Fusion 4575918.196 | PASS |
-| osa-dryer-assembly | exhaust-duct (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | exhaust-duct (bought) | solid body | 1 | PASS |
 | osa-dryer-assembly | heat-module-tray | volume (mm3) | OCP 142392.194 / Fusion 142392.194 | PASS |
 | osa-dryer-assembly | heat-module-tray | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | heat-module-tray | solid body | 1 | PASS |
@@ -1911,9 +1988,9 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | power-module-hardware (bought, 22 x M4 x 8 button head, 14 nuts) | volume (mm3) (36 bodies added) | OCP 5211.159 / Fusion 5211.158 | PASS |
 | osa-dryer-assembly | power-module-hardware (bought, 22 x M4 x 8 button head, 14 nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | power-module-hardware (bought, 22 x M4 x 8 button head, 14 nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2) | volume (mm3) (5 bodies added) | OCP 6157.129 / Fusion 6157.129 | PASS |
-| osa-dryer-assembly | grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2) | solid body | 1 | PASS |
+| osa-dryer-assembly | grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2) | volume (mm3) (5 bodies added) | OCP 6693.713 / Fusion 6693.713 | PASS |
+| osa-dryer-assembly | grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2) | solid body | 1 | PASS |
 | osa-dryer-assembly | cord-bushing (bought, PG16 strain relief) | volume (mm3) | OCP 8877.396 / Fusion 8877.396 | PASS |
 | osa-dryer-assembly | cord-bushing (bought, PG16 strain relief) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | cord-bushing (bought, PG16 strain relief) | solid body | 1 | PASS |
@@ -1935,7 +2012,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | lint-box-front | volume (mm3) | OCP 175620.605 / Fusion 175620.605 | PASS |
 | osa-dryer-assembly | lint-box-front | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | lint-box-front | solid body | 1 | PASS |
-| osa-dryer-assembly | lint-box-back | volume (mm3) | OCP 80398.230 / Fusion 80398.230 | PASS |
+| osa-dryer-assembly | lint-box-back | volume (mm3) | OCP 80050.373 / Fusion 80050.373 | PASS |
 | osa-dryer-assembly | lint-box-back | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | lint-box-back | solid body | 1 | PASS |
 | osa-dryer-assembly | lint-box-foam (bought, 3 mm closed-cell foam tape 8 wide, 2 x 190, compressed to 1.5) | volume (mm3) (2 bodies added) | OCP 4255.258 / Fusion 4255.258 | PASS |
@@ -1944,9 +2021,9 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140) | volume (mm3) (4 bodies added) | OCP 175718.681 / Fusion 175718.681 | PASS |
 | osa-dryer-assembly | spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140) | solid body | 1 | PASS |
-| osa-dryer-assembly | spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower's inlet face) | volume (mm3) (4 bodies added) | OCP 17664.000 / Fusion 17664.000 | PASS |
-| osa-dryer-assembly | spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower's inlet face) | bounding box (mm) | max deviation 0.0000 | PASS |
-| osa-dryer-assembly | spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower's inlet face) | solid body | 1 | PASS |
+| osa-dryer-assembly | spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate) | volume (mm3) (4 bodies added) | OCP 17664.000 / Fusion 17664.000 | PASS |
+| osa-dryer-assembly | spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate) | solid body | 1 | PASS |
 | osa-dryer-assembly | lint-box-hardware (bought, 40 pieces: M4 x 8, M4 x 10 and M4 x 40 button heads, 2 x M6 x 20 button heads with 4 mm spacers and T-nuts) | volume (mm3) (40 bodies added) | OCP 11200.987 / Fusion 11200.986 | PASS |
 | osa-dryer-assembly | lint-box-hardware (bought, 40 pieces: M4 x 8, M4 x 10 and M4 x 40 button heads, 2 x M6 x 20 button heads with 4 mm spacers and T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | lint-box-hardware (bought, 40 pieces: M4 x 8, M4 x 10 and M4 x 40 button heads, 2 x M6 x 20 button heads with 4 mm spacers and T-nuts) | solid body | 1 | PASS |
@@ -2022,6 +2099,54 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | hardware-exhaust-thermostats (bought, 6 x M4 x 8 button head into the housing) | volume (mm3) (6 bodies added) | OCP 1072.020 / Fusion 1072.019 | PASS |
 | osa-dryer-assembly | hardware-exhaust-thermostats (bought, 6 x M4 x 8 button head into the housing) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | hardware-exhaust-thermostats (bought, 6 x M4 x 8 button head into the housing) | solid body | 1 | PASS |
+| osa-dryer-assembly | blower-plate | volume (mm3) | OCP 70112.794 / Fusion 70112.794 | PASS |
+| osa-dryer-assembly | blower-plate | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | blower-plate | solid body | 1 | PASS |
+| osa-dryer-assembly | blower-plate-feet (angle 20x20x2, 2 x 90) | volume (mm3) (2 bodies added) | OCP 13287.301 / Fusion 13287.301 | PASS |
+| osa-dryer-assembly | blower-plate-feet (angle 20x20x2, 2 x 90) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | blower-plate-feet (angle 20x20x2, 2 x 90) | solid body | 1 | PASS |
+| osa-dryer-assembly | hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan) | volume (mm3) (20 bodies added) | OCP 6357.217 / Fusion 6357.217 | PASS |
+| osa-dryer-assembly | hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan) | solid body | 1 | PASS |
+| osa-dryer-assembly | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | volume (mm3) | OCP 193361.673 / Fusion 193361.597 | PASS |
+| osa-dryer-assembly | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | solid body | 1 | PASS |
+| osa-dryer-assembly | exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes) | volume (mm3) (4 bodies added) | OCP 10700.378 / Fusion 10700.378 | PASS |
+| osa-dryer-assembly | exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes) | solid body | 1 | PASS |
+| osa-dryer-assembly | exhaust-tap-barb (bought, 1/8 NPT or M6 brass barb fitting with a locknut, 5 mm barb, envelope) | volume (mm3) | OCP 1215.319 / Fusion 1215.319 | PASS |
+| osa-dryer-assembly | exhaust-tap-barb (bought, 1/8 NPT or M6 brass barb fitting with a locknut, 5 mm barb, envelope) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | exhaust-tap-barb (bought, 1/8 NPT or M6 brass barb fitting with a locknut, 5 mm barb, envelope) | solid body | 1 | PASS |
+| osa-dryer-assembly | ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route) | volume (mm3) | OCP 11236.853 / Fusion 11236.845 | PASS |
+| osa-dryer-assembly | ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route) | solid body | 1 | PASS |
+| osa-dryer-assembly | th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope) | volume (mm3) | OCP 17281.340 / Fusion 17281.340 | PASS |
+| osa-dryer-assembly | th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope) | solid body | 1 | PASS |
+| osa-dryer-assembly | hardware-th1 (bought, 1 x M4 x 20 button head from inside the lint box, nut on the body) | volume (mm3) (2 bodies added) | OCP 420.925 / Fusion 420.925 | PASS |
+| osa-dryer-assembly | hardware-th1 (bought, 1 x M4 x 20 button head from inside the lint box, nut on the body) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | hardware-th1 (bought, 1 x M4 x 20 button head from inside the lint box, nut on the body) | solid body | 1 | PASS |
+| osa-dryer-assembly | moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope) | volume (mm3) | OCP 20769.531 / Fusion 20769.531 | PASS |
+| osa-dryer-assembly | moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope) | solid body | 1 | PASS |
+| osa-dryer-assembly | hardware-moisture-bars (bought, 2 x M4 x 16 button head from the drum side, nuts in the front gap) | volume (mm3) (4 bodies added) | OCP 741.319 / Fusion 741.319 | PASS |
+| osa-dryer-assembly | hardware-moisture-bars (bought, 2 x M4 x 16 button head from the drum side, nuts in the front gap) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | hardware-moisture-bars (bought, 2 x M4 x 16 button head from the drum side, nuts in the front gap) | solid body | 1 | PASS |
+| osa-dryer-assembly | entry-blank | volume (mm3) | OCP 3865.933 / Fusion 3865.933 | PASS |
+| osa-dryer-assembly | entry-blank | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | entry-blank | solid body | 1 | PASS |
+| osa-dryer-assembly | entry-blank-2 (the second entry-blank, cut two to drawings/entry-blank.dxf; on the condensate drain) | volume (mm3) | OCP 3865.933 / Fusion 3865.933 | PASS |
+| osa-dryer-assembly | entry-blank-2 (the second entry-blank, cut two to drawings/entry-blank.dxf; on the condensate drain) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | entry-blank-2 (the second entry-blank, cut two to drawings/entry-blank.dxf; on the condensate drain) | solid body | 1 | PASS |
+| osa-dryer-assembly | hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts) | volume (mm3) (8 bodies added) | OCP 1080.514 / Fusion 1080.514 | PASS |
+| osa-dryer-assembly | hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts) | solid body | 1 | PASS |
+| osa-dryer-assembly | cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes) | volume (mm3) (8 bodies added) | OCP 3409.264 / Fusion 3409.264 | PASS |
+| osa-dryer-assembly | cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes) | solid body | 1 | PASS |
+| osa-dryer-assembly | hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan) | volume (mm3) (8 bodies added) | OCP 1080.514 / Fusion 1080.514 | PASS |
+| osa-dryer-assembly | hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan) | bounding box (mm) | max deviation 0.0000 | PASS |
+| osa-dryer-assembly | hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan) | solid body | 1 | PASS |
 | osa-dryer-assembly | roller-front-1 (bought) | volume (mm3) | OCP 68521.081 / Fusion 68521.081 | PASS |
 | osa-dryer-assembly | roller-front-1 (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | roller-front-1 (bought) | solid body | 1 | PASS |
@@ -2159,9 +2284,9 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | rear-bulkhead | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
 | rear-bulkhead | Body1 | face count | OCP 162 / Fusion 162 | PASS |
 | rear-bulkhead | Body1 | solid body | 1 | PASS |
-| rear-lower-panel | Body1 | volume (mm3) | OCP 240240.871 / Fusion 240240.871 | PASS |
+| rear-lower-panel | Body1 | volume (mm3) | OCP 238937.895 / Fusion 238937.895 | PASS |
 | rear-lower-panel | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
-| rear-lower-panel | Body1 | face count | OCP 147 / Fusion 147 | PASS |
+| rear-lower-panel | Body1 | face count | OCP 153 / Fusion 153 | PASS |
 | rear-lower-panel | Body1 | solid body | 1 | PASS |
 | rear-upper-panel | Body1 | volume (mm3) | OCP 764957.703 / Fusion 764957.703 | PASS |
 | rear-upper-panel | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
@@ -2199,12 +2324,13 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | trunk-rear | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
 | trunk-rear | Body1 | face count | OCP 23 / Fusion 23 | PASS |
 | trunk-rear | Body1 | solid body | 1 | PASS |
-| base-pan |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 43 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
+| base-pan |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 47 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | basket-far-clamp |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 8 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | basket-far-plate |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 8 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | basket-lip-clamp |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 10 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | basket-lip-plate |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 12 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | bay-ceiling |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 25 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
+| blower-plate |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 12 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | console-cap |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 14 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | console-cheek-left |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 9 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | console-cheek-right |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 9 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
@@ -2224,11 +2350,12 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | drum-ring-rear |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 32 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | drum-sheet |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 210 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | drum-splice |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 22 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
+| entry-blank |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 6 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | felt-seal-front-long |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 2 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | felt-seal-front-short |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 2 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | felt-seal-rear-long |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 2 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | felt-seal-rear-short |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 2 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| front-bulkhead |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 27 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
+| front-bulkhead |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 30 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | front-lower-panel |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 124 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | front-upper-panel |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 34 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | heat-module-terminal-plate |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 9 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
@@ -2242,7 +2369,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | hood-top |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 18 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | liner-splice |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 4 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | liner |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 4 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| lint-box-back |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 22 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
+| lint-box-back |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 23 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | lint-box-front |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 18 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | post-1 |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | post-2 |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
@@ -2267,7 +2394,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | rail-top-rearcross |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | rail-top-right |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 5 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | rear-bulkhead |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 156 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
-| rear-lower-panel |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 77 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
+| rear-lower-panel |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 83 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | rear-upper-panel |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 22 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | side-panel-left |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 33 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
 | side-panel-right |  | every cylinder (hole or drum) seen by OCP is seen by Fusion with the same diameter and axis | 33 matched, 0 missing in Fusion, 0 extra in Fusion | PASS |
@@ -2319,10 +2446,13 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | hood-bottom / heat-module-collar (bought, 125 flanged starting collar, cut to 55.5) | minimum distance (mm) | OCP 3.354 / Fusion 3.354 | PASS |
 | osa-dryer-assembly | heat-module-top / bay-ceiling | minimum distance (mm) | OCP 128.500 / Fusion 128.500 | PASS |
 | osa-dryer-assembly | motor (bought) / base-pan | minimum distance (mm) | OCP 50.000 / Fusion 50.000 | PASS |
-| osa-dryer-assembly | blower (bought) / front-bulkhead | minimum distance (mm) | OCP 55.057 / Fusion 55.057 | PASS |
+| osa-dryer-assembly | blower (bought) / front-bulkhead | minimum distance (mm) | OCP 56.223 / Fusion 56.223 | PASS |
 | osa-dryer-assembly | lint-box-back / front-bulkhead | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
 | osa-dryer-assembly | pulley (bought) / bay-ceiling | minimum distance (mm) | OCP 169.000 / Fusion 169.000 | PASS |
-| osa-dryer-assembly | exhaust-duct (bought) / rear-lower-panel | minimum distance (mm) | OCP 2.000 / Fusion 2.000 | PASS |
+| osa-dryer-assembly | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) / rear-lower-panel | minimum distance (mm) | OCP 2.000 / Fusion 2.000 | PASS |
+| osa-dryer-assembly | blower-plate / blower (bought) | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
+| osa-dryer-assembly | blower-plate / tray-rail-2 | minimum distance (mm) | OCP 20.000 / Fusion 20.000 | PASS |
+| osa-dryer-assembly | entry-blank / rear-lower-panel | minimum distance (mm) | OCP 0.000 / Fusion 0.000 | PASS |
 | osa-dryer-assembly | power-module-plate / trunk-front | minimum distance (mm) | OCP 20.000 / Fusion 20.000 | PASS |
 | osa-dryer-assembly | power-module-plate / bay-ceiling | minimum distance (mm) | OCP 1.000 / Fusion 1.000 | PASS |
 | osa-dryer-assembly | drum-sheet / front-upper-panel | minimum distance (mm) | OCP 49.200 / Fusion 49.200 | PASS |
@@ -2405,7 +2535,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | power-module-rail-B1-devices (bought, envelopes: RLY_MOTOR, RLY_HEAT, RLY_HEAT_LO: 3 x 38.51 class, PTC1 to PTC3 in fuse terminals, F2: UK 5-HESI, X4 heat module SELV: 4 x UK 2.5 N, 2 end clamps) | rear-upper-panel | 19.500 |
 | power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps) | power-module-cover | 7.500 |
 | power-cord (bought) | bay-ceiling | 6.500 |
-| power-cord (bought) | grommets (bought, 3 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1) | not measured |
+| power-cord (bought) | grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2) | 3.000 |
 | power-cord (bought) | power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps) | 16.500 |
 | hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts) | lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom) | 6.173 |
 | hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts) | drum-sheet | 22.000 |
@@ -2415,12 +2545,12 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8) | felt-seal-front-long | 0.458 |
 | drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8) | felt-seal-front-short | 0.458 |
 | motor (bought) | base-pan | 50.000 |
-| blower (bought) | front-bulkhead | 55.057 |
+| blower (bought) | front-bulkhead | 56.223 |
 | blower (bought) | spool-bars (40 x 8 aluminium flat bar: 2 x 156, 2 x 140) | not measured |
-| blower (bought) | ps1-air-proving-switch (bought, envelope) | 50.040 |
+| blower (bought) | ps1-air-proving-switch (bought, envelope) | 34.180 |
 | pulley (bought) | bay-ceiling | 169.000 |
-| exhaust-duct (bought) | rear-lower-panel | 2.000 |
-| exhaust-duct (bought) | tray-rail-2 | 57.747 |
+| exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | rear-lower-panel | 2.000 |
+| exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | tray-rail-2 | 57.747 |
 | drum-sheet | front-upper-panel | 49.200 |
 | belt (bought, PJ 5 rib) | drum-sheet | 0.000 |
 | belt (bought, PJ 5 rib) | pulley (bought) | 0.000 |
@@ -2443,7 +2573,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | lint-box-front | hardware-door-ring (bought, 8 x M4 x 8 button head, nuts) | 2.500 |
 | door-switch (bought, two-contact plunger switch, envelope) | lint-box-front | 0.170 |
 | door-switch (bought, two-contact plunger switch, envelope) | door-disc | 0.500 |
-| exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet) | motor (bought) | 75.767 |
+| exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet) | motor (bought) | 83.895 |
 | console-post-1 | top-panel | 0.000 |
 | console-post-1 | console-cheek-left | 0.000 |
 | console-rail-front | console-cap | 0.000 |
@@ -2458,6 +2588,20 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts) | front-bulkhead | 2.500 |
 | idler-pulley (bought, flat idler 40 with bearing) | motor (bought) | 4.500 |
 | hardware-idler-axle (bought, M8 x 30 bolt, nut) | motor (bought) | 7.000 |
+| blower-plate | blower (bought) | 0.000 |
+| blower-plate | spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate) | 0.000 |
+| th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope) | blower-plate | 22.000 |
+| exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | heat-module-tray | 55.922 |
+| moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope) | basket-lip-plate | 40.148 |
+| moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope) | drum-ring-front | 1.306 |
+| ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route) | exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet) | 16.162 |
+| exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes) | rear-lower-panel | 0.000 |
+| entry-blank | rear-lower-panel | 0.000 |
+| cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes) | base-pan | 0.000 |
+| blower-plate-feet (angle 20x20x2, 2 x 90) | base-pan | 0.000 |
+| blower-plate | tray-rail-2 | 20.000 |
+| exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | motor (bought) | 110.948 |
+| exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes) | 0.000 |
 
 ## 5. Inventory
 
@@ -2465,12 +2609,13 @@ Every part: bounding box, volume, faces. The full feature lists are in `measured
 
 | part | solids | X min..max | Y min..max | Z min..max | size | volume mm3 | faces (planar / cylindrical / other) | thickness | section loops |
 |---|---|---|---|---|---|---|---|---|---|
-| base-pan | 1 | -343.50..343.50 | -0.00..750.00 | -1.50..0.00 | 687.00 x 750.00 x 1.50 | 770329.3 | 49 (6 / 43 / 0) | 1.500 | 40 |
+| base-pan | 1 | -343.50..343.50 | -0.00..750.00 | -1.50..0.00 | 687.00 x 750.00 x 1.50 | 770130.2 | 53 (6 / 47 / 0) | 1.500 | 44 |
 | basket-far-clamp | 1 | -154.55..154.55 | 12.60..14.10 | 366.00..436.76 | 309.11 x 1.50 x 70.76 | 12155.5 | 12 (4 / 8 / 0) | 1.500 | 7 |
 | basket-far-plate | 1 | -154.55..154.55 | 9.00..12.00 | 366.00..436.76 | 309.11 x 3.00 x 70.76 | 24347.2 | 12 (4 / 8 / 0) | 3.000 | 7 |
 | basket-lip-clamp | 1 | -163.45..163.45 | 45.10..46.60 | 363.00..447.44 | 326.90 x 1.50 x 84.44 | 5002.1 | 16 (6 / 10 / 0) | 1.500 | 8 |
 | basket-lip-plate | 1 | -163.45..163.45 | 41.50..44.50 | 363.00..447.44 | 326.90 x 3.00 x 84.44 | 14075.0 | 24 (11 / 13 / 0) | 3.000 | 8 |
-| bay-ceiling | 1 | -343.50..343.50 | 42.00..750.00 | 300.00..301.50 | 687.00 x 708.00 x 1.50 | 685571.7 | 55 (30 / 25 / 0) | 1.500 | 29 |
+| bay-ceiling | 1 | -343.50..343.50 | 42.00..750.00 | 300.00..301.50 | 687.00 x 708.00 x 1.50 | 685439.8 | 55 (30 / 25 / 0) | 1.500 | 29 |
+| blower-plate | 1 | -130.00..130.00 | 84.00..85.50 | -0.00..245.00 | 260.00 x 1.50 x 245.00 | 70112.8 | 22 (10 / 12 / 0) | 1.500 | 10 |
 | console-cap | 1 | -346.50..346.50 | 610.00..751.50 | 1201.50..1203.00 | 693.00 x 141.50 x 1.50 | 146545.1 | 20 (6 / 14 / 0) | 1.500 | 11 |
 | console-cheek-left | 1 | -346.50..-345.00 | 610.00..751.50 | 1000.00..1201.50 | 1.50 x 141.50 x 201.50 | 42473.1 | 15 (6 / 9 / 0) | 1.500 | 6 |
 | console-cheek-right | 1 | 345.00..346.50 | 610.00..751.50 | 1000.00..1201.50 | 1.50 x 141.50 x 201.50 | 42473.1 | 15 (6 / 9 / 0) | 1.500 | 6 |
@@ -2490,11 +2635,12 @@ Every part: bounding box, volume, faces. The full feature lists are in `measured
 | drum-ring-rear | 1 | -309.20..309.20 | 598.00..600.00 | 322.30..940.70 | 618.40 x 2.00 x 618.40 | 141703.2 | 34 (2 / 32 / 0) | 2.000 | 32 |
 | drum-sheet | 1 | -310.00..310.00 | 49.20..600.80 | 321.50..941.50 | 620.00 x 551.60 x 620.00 | 873714.1 | 600 (360 / 240 / 0) | | |
 | drum-splice | 1 | -29.96..29.96 | 53.00..597.00 | 938.24..940.70 | 59.92 x 544.00 x 2.46 | 32383.4 | 26 (4 / 22 / 0) | | |
+| entry-blank | 1 | -260.00..-200.00 | 748.50..750.00 | 128.00..172.00 | 60.00 x 1.50 x 44.00 | 3865.9 | 12 (6 / 6 / 0) | 1.500 | 3 |
 | felt-seal-front-long | 1 | -291.00..291.00 | 41.50..49.50 | 340.50..819.43 | 582.00 x 8.00 x 478.93 | 184592.7 | 6 (4 / 2 / 0) | 8.000 | 1 |
 | felt-seal-front-short | 1 | -187.93..187.93 | 41.50..49.50 | 839.94..922.50 | 375.85 x 8.00 x 82.56 | 57018.9 | 6 (4 / 2 / 0) | 8.000 | 1 |
 | felt-seal-rear-long | 1 | -291.00..291.00 | 600.00..610.00 | 340.50..819.43 | 582.00 x 10.00 x 478.93 | 230740.9 | 6 (4 / 2 / 0) | 10.000 | 1 |
 | felt-seal-rear-short | 1 | -187.93..187.93 | 600.00..610.00 | 839.94..922.50 | 375.85 x 10.00 x 82.56 | 71273.6 | 6 (4 / 2 / 0) | 10.000 | 1 |
-| front-bulkhead | 1 | -305.00..305.00 | 40.00..41.50 | 265.00..995.00 | 610.00 x 1.50 x 730.00 | 403888.8 | 35 (8 / 27 / 0) | 1.500 | 23 |
+| front-bulkhead | 1 | -305.00..305.00 | 40.00..41.50 | 265.00..995.00 | 610.00 x 1.50 x 730.00 | 403407.6 | 38 (8 / 30 / 0) | 1.500 | 26 |
 | front-lower-panel | 1 | -345.00..345.00 | -1.50..0.00 | -0.00..259.00 | 690.00 x 1.50 x 259.00 | 242871.1 | 242 (118 / 124 / 0) | 1.500 | 65 |
 | front-upper-panel | 1 | -345.00..345.00 | -1.50..0.00 | 260.00..1000.00 | 690.00 x 1.50 x 740.00 | 493200.4 | 40 (6 / 34 / 0) | 1.500 | 31 |
 | heat-module-terminal-plate | 1 | -145.00..145.00 | 634.00..635.50 | 61.50..161.50 | 290.00 x 1.50 x 100.00 | 43369.1 | 15 (6 / 9 / 0) | 1.500 | 6 |
@@ -2508,7 +2654,7 @@ Every part: bounding box, volume, faces. The full feature lists are in `measured
 | hood-top | 1 | -175.00..175.00 | 448.00..705.50 | 256.50..258.00 | 350.00 x 257.50 x 1.50 | 116507.2 | 28 (10 / 18 / 0) | 1.500 | 16 |
 | liner-splice | 1 | -20.04..20.04 | -0.00..38.30 | 864.65..867.00 | 40.08 x 38.30 x 2.35 | 2270.8 | 8 (4 / 4 / 0) | | |
 | liner | 1 | -237.00..237.00 | -1.50..39.80 | 394.50..868.50 | 474.00 x 41.30 x 474.00 | 91807.6 | 10 (4 / 6 / 0) | | |
-| lint-box-back | 1 | -166.00..166.00 | 38.50..40.00 | 62.00..275.00 | 332.00 x 1.50 x 213.00 | 80398.2 | 32 (10 / 22 / 0) | 1.500 | 20 |
+| lint-box-back | 1 | -166.00..166.00 | 38.50..40.00 | 62.00..275.00 | 332.00 x 1.50 x 213.00 | 80050.4 | 37 (14 / 23 / 0) | 1.500 | 22 |
 | lint-box-front | 1 | -166.00..166.00 | 7.00..8.50 | 62.00..462.07 | 332.00 x 1.50 x 400.07 | 175620.6 | 23 (5 / 18 / 0) | 1.500 | 16 |
 | post-1 | 1 | -345.00..-305.00 | 0.00..40.00 | 0.00..1000.00 | 40.00 x 40.00 x 1000.00 | 1088617.6 | 59 (54 / 5 / 0) | | |
 | post-2 | 1 | 305.00..345.00 | 0.00..40.00 | 0.00..1000.00 | 40.00 x 40.00 x 1000.00 | 1088617.6 | 59 (54 / 5 / 0) | | |
@@ -2533,7 +2679,7 @@ Every part: bounding box, volume, faces. The full feature lists are in `measured
 | rail-top-rearcross | 1 | -305.00..305.00 | 611.50..651.50 | 960.00..1000.00 | 610.00 x 40.00 x 40.00 | 664056.7 | 59 (54 / 5 / 0) | | |
 | rail-top-right | 1 | 305.00..345.00 | 40.00..710.00 | 960.00..1000.00 | 40.00 x 670.00 x 40.00 | 729373.8 | 59 (54 / 5 / 0) | | |
 | rear-bulkhead | 1 | -305.00..305.00 | 610.00..611.50 | 265.00..995.00 | 610.00 x 1.50 x 730.00 | 652057.6 | 162 (6 / 156 / 0) | 1.500 | 153 |
-| rear-lower-panel | 1 | -345.00..345.00 | 750.00..751.50 | -0.00..259.00 | 690.00 x 1.50 x 259.00 | 240240.9 | 147 (70 / 77 / 0) | 1.500 | 42 |
+| rear-lower-panel | 1 | -345.00..345.00 | 750.00..751.50 | -0.00..259.00 | 690.00 x 1.50 x 259.00 | 238937.9 | 153 (70 / 83 / 0) | 1.500 | 48 |
 | rear-upper-panel | 1 | -345.00..345.00 | 750.00..751.50 | 260.00..1000.00 | 690.00 x 1.50 x 740.00 | 764957.7 | 28 (6 / 22 / 0) | 1.500 | 19 |
 | side-panel-left | 1 | -346.50..-345.00 | -0.00..750.00 | -0.00..1000.00 | 1.50 x 750.00 x 1000.00 | 1123510.2 | 39 (6 / 33 / 0) | 1.500 | 30 |
 | side-panel-right | 1 | 345.00..346.50 | -0.00..750.00 | -0.00..1000.00 | 1.50 x 750.00 x 1000.00 | 1123510.2 | 39 (6 / 33 / 0) | 1.500 | 30 |
@@ -2598,13 +2744,12 @@ Bought parts and envelopes in the assembly (no part file):
 | baffle-2 (angle, cut to length) | -20.00..20.00 | 85.00..565.00 | 323.00..363.00 | 110481.8 |
 | baffle-3 (angle, cut to length) | 222.53..277.17 | 85.00..565.00 | 766.93..803.07 | 110481.8 |
 | hardware-drum-baffles (bought, 12 x M6 x 12 button head, nuts) | -272.98..272.98 | 149.75..500.25 | 318.20..791.73 | 10142.8 |
-| motor (bought) | -70.00..70.00 | 184.00..394.00 | 50.00..210.00 | 3046563.7 |
+| motor (bought) | -70.00..70.00 | 185.50..394.00 | 50.00..210.00 | 3046373.7 |
 | motor-mount-1 (bought, cradle bracket) | -35.00..35.00 | 215.00..245.00 | 0.00..58.80 | 39966.9 |
 | motor-mount-2 (bought, cradle bracket) | -35.00..35.00 | 335.00..365.00 | 0.00..58.80 | 39966.9 |
 | hardware-motor-mounts (bought, 4 x M6 x 12 hex, washers, nuts, through the base pan) | -28.00..28.00 | 224.00..356.00 | -7.10..10.50 | 4562.0 |
 | pulley (bought) | -11.00..11.00 | 394.00..416.00 | 109.00..131.00 | 6967.1 |
-| blower (bought) | -110.00..270.00 | 84.00..190.00 | 10.00..230.00 | 4752367.3 |
-| exhaust-duct (bought) | 179.00..281.00 | 190.00..750.00 | 99.00..201.00 | 4575918.2 |
+| blower (bought) | -110.00..291.00 | 85.50..215.00 | 10.00..230.00 | 5340928.1 |
 | heat-module-angles-bottom (20x20x2 aluminium angle, 2 x 205 outside, 2 x 283 inside) | -165.00..165.00 | 422.00..627.00 | 61.50..81.50 | 73539.8 |
 | heat-module-angles-top (20x20x2 aluminium angle, 2 x 165, 2 x 290) | -147.00..147.00 | 420.00..629.00 | 153.50..173.50 | 68523.8 |
 | heat-module-angles-corner (20x20x2 aluminium angle, 4 x 72) | -147.00..147.00 | 420.00..629.00 | 81.50..153.50 | 21633.5 |
@@ -2628,14 +2773,14 @@ Bought parts and envelopes in the assembly (no part file):
 | power-module-standoffs (bought, 4 x M4 x 75 hex standoffs, female both ends) | -294.04..-155.96 | 653.00..728.00 | 316.50..633.50 | 11733.1 |
 | power-module-ground-stud (bought, M6 x 16 hex bolt, 2 nuts, star washers; the cord's PE ring terminal goes between the nuts) | -171.00..-159.00 | 645.90..667.50 | 944.00..956.00 | 1535.7 |
 | power-module-hardware (bought, 22 x M4 x 8 button head, 14 nuts) | -293.80..-156.20 | 649.30..731.70 | 316.20..823.80 | 5211.2 |
-| grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2) | -289.00..299.00 | 38.75..708.00 | 298.75..1002.75 | 6157.1 |
+| grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2) | -289.00..301.00 | 38.75..708.00 | 298.75..1002.75 | 6693.7 |
 | cord-bushing (bought, PG16 strain relief) | -290.01..-259.99 | 677.00..703.00 | -6.50..18.00 | 8877.4 |
 | power-cord (bought) | -279.50..-270.50 | 685.50..820.00 | -16.50..320.00 | 29269.7 |
 | hardware-liner (bought, 2 x M3 x 6 button head, nuts) | -15.70..15.70 | 16.30..22.00 | 863.45..871.23 | 234.8 |
 | lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom) | -166.00..166.00 | 8.50..38.50 | 62.00..462.07 | 261325.7 |
 | lint-box-foam (bought, 3 mm closed-cell foam tape 8 wide, 2 x 190, compressed to 1.5) | -166.00..166.00 | 38.50..40.00 | 275.00..462.07 | 4255.3 |
 | spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140) | -78.00..78.00 | 40.00..80.00 | 62.00..198.00 | 175718.7 |
-| spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower's inlet face) | -78.00..78.00 | 80.00..84.00 | 62.00..198.00 | 17664.0 |
+| spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate) | -78.00..78.00 | 80.00..84.00 | 62.00..198.00 | 17664.0 |
 | lint-box-hardware (bought, 40 pieces: M4 x 8, M4 x 10 and M4 x 40 button heads, 2 x M6 x 20 button heads with 4 mm spacers and T-nuts) | -178.00..178.00 | 4.80..47.00 | 62.20..423.80 | 11201.0 |
 | basket-mesh (bought, stainless 18 x 16 mesh strip, 42 wide, 350 long, wrapped and folded 5 at each edge) | -163.45..163.45 | 12.00..45.10 | 363.00..445.93 | 16043.2 |
 | basket-pull (bought, D-pull, 64 mm centres, 25 projection) | -37.00..37.00 | 16.50..41.50 | 409.00..419.00 | 8057.3 |
@@ -2651,8 +2796,22 @@ Bought parts and envelopes in the assembly (no part file):
 | ps1-bracket (angle 20x20x2, 60) | 220.00..280.00 | 60.00..80.00 | 0.00..20.00 | 4363.7 |
 | ps1-air-proving-switch (bought, envelope) | 220.00..280.00 | 80.00..108.00 | 0.00..60.00 | 100578.3 |
 | hardware-ps1 (bought, 2 x M6 x 12 hex, nuts, through the base pan; 2 x M4 x 8 button head into the switch) | 229.00..271.00 | 64.00..86.00 | -10.00..15.80 | 2638.4 |
-| exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet) | 119.00..241.00 | 123.00..177.00 | 190.00..205.00 | 23221.1 |
-| hardware-exhaust-thermostats (bought, 6 x M4 x 8 button head into the housing) | 126.20..233.80 | 126.20..173.80 | 184.00..194.20 | 1072.0 |
+| exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet) | 119.00..241.00 | 123.00..177.00 | 206.00..221.00 | 23221.1 |
+| hardware-exhaust-thermostats (bought, 6 x M4 x 8 button head into the housing) | 126.20..233.80 | 126.20..173.80 | 200.00..210.20 | 1072.0 |
+| blower-plate-feet (angle 20x20x2, 2 x 90) | -135.00..135.00 | 64.00..84.00 | 0.00..20.00 | 13287.3 |
+| hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan) | -116.00..116.00 | 68.00..92.00 | -7.10..183.80 | 6357.2 |
+| exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | 179.00..281.00 | 192.00..801.50 | 99.00..201.00 | 193361.7 |
+| exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes) | 178.30..281.70 | 198.00..750.00 | 98.30..211.70 | 10700.4 |
+| exhaust-tap-barb (bought, 1/8 NPT or M6 brass barb fitting with a locknut, 5 mm barb, envelope) | 224.23..235.77 | 295.00..305.00 | 192.00..221.00 | 1215.3 |
+| ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route) | 227.00..253.00 | 91.00..303.00 | 60.00..243.00 | 11236.9 |
+| th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope) | 102.00..138.00 | 31.50..62.00 | 145.00..175.00 | 17281.3 |
+| hardware-th1 (bought, 1 x M4 x 20 button head from inside the lint box, nut on the body) | 115.96..124.04 | 36.30..58.50 | 166.20..173.80 | 420.9 |
+| moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope) | 175.44..248.58 | 41.50..49.50 | 452.91..545.13 | 20769.5 |
+| hardware-moisture-bars (bought, 2 x M4 x 16 button head from the drum side, nuts in the front gap) | 189.42..234.60 | 33.50..51.70 | 465.54..532.50 | 741.3 |
+| entry-blank-2 (the second entry-blank, cut two to drawings/entry-blank.dxf; on the condensate drain) | -260.00..-200.00 | 748.50..750.00 | 44.00..88.00 | 3865.9 |
+| hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts) | -255.04..-204.96 | 743.50..753.70 | 62.20..153.80 | 1080.5 |
+| cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes) | -258.00..-227.50 | 115.00..605.00 | 0.00..15.00 | 3409.3 |
+| hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan) | -254.04..-245.96 | 116.20..603.80 | -6.50..3.70 | 1080.5 |
 | roller-front-1 (bought) | -210.17..-150.17 | 50.00..75.00 | 313.16..373.16 | 68521.1 |
 | roller-rear-1 (bought) | -210.17..-150.17 | 576.50..601.50 | 313.16..373.16 | 68521.1 |
 | roller-front-2 (bought) | 150.17..210.17 | 50.00..75.00 | 313.16..373.16 | 68521.1 |
@@ -2673,12 +2832,13 @@ DXF drawings:
 
 | drawing | entities | closed loops | open chains | loops by type |
 |---|---|---|---|---|
-| base-pan | ARC 4, CIRCLE 39, LINE 4 | 40 | 0 | circle 39, rrect 1 |
+| base-pan | ARC 4, CIRCLE 43, LINE 4 | 44 | 0 | circle 43, rrect 1 |
 | basket-far-clamp | ARC 2, CIRCLE 6, LINE 2 | 7 | 0 | circle 6, sector 1 |
 | basket-far-plate | ARC 2, CIRCLE 6, LINE 2 | 7 | 0 | circle 6, sector 1 |
 | basket-lip-clamp | ARC 4, CIRCLE 6, LINE 4 | 8 | 0 | circle 6, sector 2 |
 | basket-lip-plate | ARC 7, CIRCLE 6, LINE 9 | 8 | 0 | circle 6, other 1, sector 1 |
 | bay-ceiling | ARC 2, CIRCLE 23, LINE 28 | 29 | 0 | circle 23, rect 5, rpoly 1 |
+| blower-plate | ARC 4, CIRCLE 8, LINE 8 | 10 | 0 | circle 8, rect 1, rrect 1 |
 | console-cap | ARC 4, CIRCLE 10, LINE 4 | 11 | 0 | circle 10, rrect 1 |
 | console-cheek-left | ARC 4, CIRCLE 5, LINE 4 | 6 | 0 | circle 5, rrect 1 |
 | console-cheek-right | ARC 4, CIRCLE 5, LINE 4 | 6 | 0 | circle 5, rrect 1 |
@@ -2689,9 +2849,10 @@ DXF drawings:
 | drum-ring | CIRCLE 32 | 32 | 0 | circle 32 |
 | drum-sheet | ARC 120, CIRCLE 88, LINE 244 | 89 | 0 | circle 88, rpoly 1 |
 | drum-splice | ARC 4, CIRCLE 16, LINE 4 | 17 | 0 | circle 16, rrect 1 |
+| entry-blank | ARC 4, CIRCLE 2, LINE 4 | 3 | 0 | circle 2, rrect 1 |
 | felt-seal-long | ARC 2, LINE 2 | 1 | 0 | sector 1 |
 | felt-seal-short | ARC 2, LINE 2 | 1 | 0 | sector 1 |
-| front-bulkhead | ARC 6, CIRCLE 21, LINE 6 | 23 | 0 | circle 21, rrect 1, sector 1 |
+| front-bulkhead | ARC 6, CIRCLE 24, LINE 6 | 26 | 0 | circle 24, rrect 1, sector 1 |
 | front-lower-panel | ARC 116, CIRCLE 8, LINE 116 | 65 | 0 | circle 8, rrect 1, slot 56 |
 | front-upper-panel | ARC 4, CIRCLE 30, LINE 4 | 31 | 0 | circle 30, rrect 1 |
 | heat-module-terminal-plate | ARC 4, CIRCLE 5, LINE 4 | 6 | 0 | circle 5, rrect 1 |
@@ -2705,13 +2866,13 @@ DXF drawings:
 | hood-top | ARC 4, CIRCLE 14, LINE 8 | 16 | 0 | circle 14, rect 1, rrect 1 |
 | liner-splice | ARC 4, CIRCLE 2, LINE 4 | 3 | 0 | circle 2, rrect 1 |
 | liner | CIRCLE 2, LINE 4 | 3 | 0 | circle 2, rect 1 |
-| lint-box-back | ARC 4, CIRCLE 18, LINE 8 | 20 | 0 | circle 18, rect 1, rrect 1 |
+| lint-box-back | ARC 4, CIRCLE 19, LINE 12 | 22 | 0 | circle 19, rect 2, rrect 1 |
 | lint-box-front | ARC 3, CIRCLE 15, LINE 3 | 16 | 0 | circle 15, other 1 |
 | power-module-barrier | ARC 4, CIRCLE 2, LINE 4 | 3 | 0 | circle 2, rrect 1 |
 | power-module-cover | ARC 4, CIRCLE 4, LINE 4 | 5 | 0 | circle 4, rrect 1 |
 | power-module-plate | ARC 4, CIRCLE 21, LINE 4 | 22 | 0 | circle 21, rrect 1 |
 | rear-bulkhead | ARC 4, CIRCLE 152, LINE 4 | 153 | 0 | circle 152, rrect 1 |
-| rear-lower-panel | ARC 68, CIRCLE 9, LINE 68 | 42 | 0 | circle 9, rrect 1, slot 32 |
+| rear-lower-panel | ARC 68, CIRCLE 15, LINE 68 | 48 | 0 | circle 15, rrect 1, slot 32 |
 | rear-upper-panel | ARC 4, CIRCLE 18, LINE 4 | 19 | 0 | circle 18, rrect 1 |
 | side-panel-left | ARC 4, CIRCLE 29, LINE 4 | 30 | 0 | circle 29, rrect 1 |
 | side-panel-right | ARC 4, CIRCLE 29, LINE 4 | 30 | 0 | circle 29, rrect 1 |
@@ -2723,7 +2884,6 @@ DXF drawings:
 ## Notes
 
 - clearance pair missing in the assembly: heat-module-collar (bought, 125 flanged starting collar, cut to 55.5) / hood-gasket (bought, 3 mm foam ring 150 x 125, glued under the hood)
-- clearance pair missing in the assembly: power-cord (bought) / grommets (bought, 3 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1)
 - clearance pair missing in the assembly: blower (bought) / spool-bars (40 x 8 aluminium flat bar: 2 x 156, 2 x 140)
 - drum-sheet.dxf offset from the unwrapped solid: (0.000, -0.000)
 - drum-splice.dxf offset from the unwrapped solid: (-0.005, -0.000)

@@ -32,11 +32,12 @@ What moves and how (all as-built joints, so nothing is displaced when the joint 
     heat module tray slider along Y, tray and module envelope together, 250 mm pull-out toward the back
     lint basket      slider along Y, the basket's plates, mesh and pull together, 40 mm back out of the slot into the drum
 Everything else is grounded. The belt is drawn on its path and does not deform.
-Draft 5, 2026-11-06 (draft 1 made its own barebones faceplate, knobs and hinge pin; draft 2 jointed the model's own;
+Draft 6, 2026-11-06 (draft 1 made its own barebones faceplate, knobs and hinge pin; draft 2 jointed the model's own;
 draft 3 follows model draft 6: vertical console face, the tray slides out the back, the rear lower panel is left out
 of the moved poses; draft 4 follows model draft 7: the whole heat module, every "heat-module" part, rides the tray;
 20 pulley; appearances for the new parts; draft 5 follows model draft 8: the lint basket slides, appearances for the
-liner, the bar-frame ducts and their foam).
+liner, the bar-frame ducts and their foam; draft 6 follows model draft 9: appearances for the blower plate and feet,
+the exhaust pipe, clamps, barb and tube, the two sensors, the blanks and the cable clamps).
 Units in the API are cm; the numbers below are written in mm and converted.
 """
 import math
@@ -425,12 +426,12 @@ APPEARANCES = [
     ("Steel - Galvanized (Small)", ("front-bulkhead", "rear-bulkhead", "bay-ceiling", "base-pan", "heat-module-tray", "heat-module-wall-",
                                     "heat-module-top", "heat-module-terminal-plate", "heat-module-collar", "power-module-plate",
                                     "power-module-barrier", "power-module-cover", "lint-box-front", "lint-box-back", "hood-bottom", "hood-top",
-                                    "trunk-front", "trunk-rear", "basket-far-", "basket-lip-", "blower (bought", "motor-mount-")),
+                                    "trunk-front", "trunk-rear", "basket-far-", "basket-lip-", "blower (bought", "motor-mount-", "blower-plate", "entry-blank")),
     ("Stainless Steel - Brushed Linear Long", ("drum-sheet", "drum-ring-front", "drum-ring-rear", "drum-splice")),
     ("Aluminum - Satin", ("baffle-", "exhaust-duct", "idler-arm", "idler-bracket", "spring-bracket", "lint-box-bars", "spool-bars", "hood-bars",
-                          "trunk-bars", "nozzle-bars", "liner", "ps1-bracket")),
+                          "trunk-bars", "nozzle-bars", "liner", "ps1-bracket", "blower-plate-feet")),
     ("Rubber - Hard", ("roller-", "belt (bought", "feet (bought", "cord-bushing", "power-cord", "grommets (bought")),
-    ("Rubber - Soft", ("door-seal", "hood-gasket", "lint-box-foam", "spool-foam", "nozzle-foam")),
+    ("Rubber - Soft", ("door-seal", "hood-gasket", "lint-box-foam", "spool-foam", "nozzle-foam", "ps1-tube")),
     ("Fabric (Grey)", ("felt-seal-",)),
     ("Plastic - Matte (White)", ("drum-glides-",)),
     ("Paint - Metallic (Dark Grey)", ("motor (bought",)),
@@ -439,7 +440,10 @@ APPEARANCES = [
                        "idler-pulley", "idler-spring", "hardware-", "console-brackets", "tray-rail-brackets", "lint-box-hardware", "riser-hardware",
                        "basket-mesh", "basket-pull")),
     ("Plastic - Matte (Black)", ("heat-module-devices", "heat-module-thermostats", "power-module-rail-", "door-switch", "ps1-air-proving",
-                                 "exhaust-thermostats")),
+                                 "exhaust-thermostats", "th1-exhaust-thermistor", "cable-clamps")),
+    ("Plastic - Matte (White)", ("moisture-bars",)),
+    ("Brass - Polished", ("exhaust-tap-barb",)),
+    ("Steel - Satin", ("exhaust-clamps",)),
     ("Stainless Steel - Satin", ("door-hinge-", "door-handle", "door-catch")),
     ("Aluminum - Brushed Linear", ("tier0-faceplate",)),
     ("Plastic - Matte (Black)", ("tier0-knob-", "tier0-selector", "tier0-start-body", "tier0-k1-relay")),
@@ -471,7 +475,10 @@ def dress():
             missing.append(occ.component.name)
             continue
         if appr_name not in cache:
-            cache[appr_name] = lib.appearances.itemByName(appr_name)
+            try:
+                cache[appr_name] = lib.appearances.itemByName(appr_name)
+            except Exception:   # a name the library does not have raises rather than returning None
+                cache[appr_name] = None
         appr = cache[appr_name]
         if appr is None:
             missing.append(f"{occ.component.name} ({appr_name} not in library)")

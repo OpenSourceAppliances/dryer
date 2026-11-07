@@ -65,7 +65,7 @@ power-module-plate,bay-ceiling,1.0
 "power-module-rail-B1-devices (bought, envelopes: RLY_MOTOR, RLY_HEAT, RLY_HEAT_LO: 3 x 38.51 class, PTC1 to PTC3 in fuse terminals, F2: UK 5-HESI, X4 heat module SELV: 4 x UK 2.5 N, 2 end clamps)",rear-upper-panel,19.5
 "power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)",power-module-cover,7.5
 power-cord (bought),bay-ceiling,6.5
-power-cord (bought),"grommets (bought, 3 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1)",
+power-cord (bought),"grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2)",3.0
 power-cord (bought),"power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)",16.5
 "hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)","lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)",6.173
 "hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)",drum-sheet,22.0
@@ -75,12 +75,12 @@ power-cord (bought),"power-module-rail-A1-devices (bought, envelopes: X1 cord: 4
 "drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)",felt-seal-front-long,0.458
 "drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)",felt-seal-front-short,0.458
 motor (bought),base-pan,50.0
-blower (bought),front-bulkhead,55.057
+blower (bought),front-bulkhead,56.223
 blower (bought),"spool-bars (40 x 8 aluminium flat bar: 2 x 156, 2 x 140)",
-blower (bought),"ps1-air-proving-switch (bought, envelope)",50.04
+blower (bought),"ps1-air-proving-switch (bought, envelope)",34.18
 pulley (bought),bay-ceiling,169.0
-exhaust-duct (bought),rear-lower-panel,2.0
-exhaust-duct (bought),tray-rail-2,57.747
+"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)",rear-lower-panel,2.0
+"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)",tray-rail-2,57.747
 drum-sheet,front-upper-panel,49.2
 "belt (bought, PJ 5 rib)",drum-sheet,0.0
 "belt (bought, PJ 5 rib)",pulley (bought),0.0
@@ -103,7 +103,7 @@ hood-bottom,"belt (bought, PJ 5 rib)",40.0
 lint-box-front,"hardware-door-ring (bought, 8 x M4 x 8 button head, nuts)",2.5
 "door-switch (bought, two-contact plunger switch, envelope)",lint-box-front,0.17
 "door-switch (bought, two-contact plunger switch, envelope)",door-disc,0.5
-"exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet)",motor (bought),75.767
+"exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet)",motor (bought),83.895
 console-post-1,top-panel,0.0
 console-post-1,console-cheek-left,0.0
 console-rail-front,console-cap,0.0
@@ -118,3 +118,17 @@ power-cord (bought),base-pan,6.0
 "hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts)",front-bulkhead,2.5
 "idler-pulley (bought, flat idler 40 with bearing)",motor (bought),4.5
 "hardware-idler-axle (bought, M8 x 30 bolt, nut)",motor (bought),7.0
+blower-plate,blower (bought),0.0
+blower-plate,"spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate)",0.0
+"th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope)",blower-plate,22.0
+"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)",heat-module-tray,55.922
+"moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope)",basket-lip-plate,40.148
+"moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope)",drum-ring-front,1.306
+"ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route)","exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet)",16.162
+"exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes)",rear-lower-panel,0.0
+entry-blank,rear-lower-panel,0.0
+"cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes)",base-pan,0.0
+"blower-plate-feet (angle 20x20x2, 2 x 90)",base-pan,0.0
+blower-plate,tray-rail-2,20.0
+"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)",motor (bought),110.948
+"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)","exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes)",0.0

@@ -1,6 +1,6 @@
 # Maintenance and failure-mode guide
 
-Draft 1, 2026-11-05. Status: written from the paper design and from what commonly fails on dryers built from the same parts. The "roughly when" numbers are typical for the appliance market, not measured on this design; the build log and your own notes will correct them.
+Draft 2, 2026-11-06 (draft 1 2026-11-05). Status: draft 2 adds the exhaust pipe and the two chassis sensors of model draft 9. written from the paper design and from what commonly fails on dryers built from the same parts. The "roughly when" numbers are typical for the appliance market, not measured on this design; the build log and your own notes will correct them.
 
 For every wear part and every subassembly: what fails, roughly when, what it looks or sounds like, how to confirm it, what part to order, and how long the repair takes. Names like K_MOTOR, TF2, and X5:5 are the ones in `electrical/wiring/common-power-module.md` and on the labels inside the power module. Part IDs are from `bom/`.
 
@@ -57,9 +57,29 @@ Unplug the dryer before opening any panel. The plug is the disconnect.
 - What fails: lint packs the wheel, the wheel works loose on the shaft, the housing fills with lint behind the wheel.
 - Roughly when: lint build-up every 2 to 5 years depending on the filter habits; a loose wheel is a build error that shows up in the first year.
 - What it looks or sounds like: weak exhaust, long dry times, PS1 failing to prove (STAT_AIRFLOW never comes on) while the motor runs, a rattle at start and stop.
-- How to confirm: rear panel off, duct off, look into the blower outlet with a flashlight. Grab the wheel: no play on the shaft.
-- What to order: nothing for lint; the wheel and its clamp from `bom.csv` if it is damaged.
+- How to confirm: rear lower panel off, the clamp on the housing's collar loosened and the pipe slid back a hand's width, look into the blower outlet with a flashlight. Grab the wheel: no play on the shaft.
+- What to order: nothing for lint; the wheel and its clamp from `bom.csv` if it is damaged. The housing comes off its four screws on the blower plate (model draft 9) with the front lower panel and the spool out of the way; the plate itself stays.
 - How long: 30 min to clean; 45 min to replace the wheel.
+
+### Exhaust pipe and vent (bom: CH-EXHAUST, CH-EXH-CLAMP)
+
+- What fails: lint lines the pipe and the vent hose outside; the spigot's hose clamp loosens; a crushed or sagging vent hose (not ours, but it is the first thing to look at).
+- Roughly when: clean every year; more often with a long vent run. A clamp loosens in the first months if it was not snugged after the pipe settled.
+- What it looks or sounds like: long dry times, T_HI cycling early, a warm laundry room, lint at the outside hood, PS1 slow to prove.
+- How to confirm: outside hood open and a flashlight up the hose; rear lower panel off and the inside clamp loosened, the pipe slid forward off the panel, a flashlight down it.
+- What to order: a 4 in pipe cut to the length in `drawings/frame-cut-list.csv` if it is dented; clamps from `bom.csv`.
+- How long: 20 min to clean the pipe; 10 min to swap a clamp.
+
+### Exhaust thermistor TH1 and moisture bars (bom: CPM-TH1, CPM-MOIST)
+
+Only a Tier 1 or higher control module uses them; Tier 0 does not read them and runs the same without them.
+
+- What fails: the thermistor drifts or goes open; a moisture bar lead corrodes or a bar glazes with softener residue so a wet load reads dry.
+- Roughly when: a decade for the thermistor; the bars glaze in a year of dryer sheets and clean up with vinegar and a cloth.
+- What it looks or sounds like: a module with auto-dry ends cycles early with the clothes still damp (bars) or shows a temperature fault (thermistor). Nothing stops; the hardware thermostats hold the temperature whatever the module reads.
+- How to confirm: at X6 on the power module with the J2 cable unplugged: the thermistor near 10 kilohm at room temperature and falling as it warms; the bars open with nothing across them and a few hundred kilohm with a damp cloth laid across both. Front upper panel off for the bars' nuts and terminals, front lower panel off for the thermistor on the lint box's back plate.
+- What to order: CPM-TH1 or CPM-MOIST. The thermistor is one M4 x 20; the bar set is two M4 x 16 and two spade terminals.
+- How long: 20 min either.
 
 ### Lint basket
 

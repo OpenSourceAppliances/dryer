@@ -1,7 +1,7 @@
 id,part,check,args,expected,tol,source
 # Every row is a value the documents state (or that follows from stated values by plain arithmetic). The audit measures it from the files. Coordinates: X across (left negative), Y front (0) to back, Z up from the floor; plate-local (u;v) is (x;z) for front/rear-facing plates, (x;y) for horizontal plates, (y;z) for side plates.
 # --- whole machine (design-rules 7," ""about 690 wide", 1203 high," 750 deep including the console""; 7a Console ""a 200 tall box on the top panel: 1000 + 1.5 + 200 + 1.5 = 1203"")"
-A-001,assembly,assembly_solids,,198,,"7a: made parts, bought parts and envelopes, and the hardware sets, each one named solid or compound (draft 8 adds the liner, the lint box, spool and basket, the riser hood, trunk and nozzle, the door switch, PS1, the exhaust thermostats and their hardware)"
+A-001,assembly,assembly_solids,,213,,"7a: made parts, bought parts and envelopes, and the hardware sets, each one named solid or compound (draft 9 adds the blower plate and its feet, the exhaust duct set, the tap, barb and tube, the two sensors, the two blanks, the cable clamps and their hardware)"
 A-002,assembly,assembly_size,x,704.2,,7: 690 wide cabinet + two 1.5 side panels + the side panels' bolt heads (1.6 washer + 4 hex) each side
 A-003,assembly,assembly_min,x,-352.1,,7: half width 345 + 1.5 panel + 5.6 bolt head
 A-004,assembly,assembly_max,x,352.1,,7: half width 345 + 1.5 panel + 5.6 bolt head
@@ -105,7 +105,7 @@ B-008,front-bulkhead,loop,sector;0;401.727;313.877;74.454,1,,"7a Bulkheads (draf
 B-009,front-bulkhead,hole_at,8.5;-180.173;343.164,1,,"7b Rollers (draft 7): 8.5 holes for the roller studs' M8 threads, 32 degrees each side of bottom on radius 310 + 30 = 340: 340 sin 32 = 180.173, 631.5 - 340 cos 32 = 343.164 (30 degrees put the studs' nuts into the lint duct's sides)"
 B-010,front-bulkhead,hole_at,8.5;180.173;343.164,1,,7b roller stud holes (draft 7)
 B-011,front-bulkhead,holes,8.5;y,2,,7b two rollers per bulkhead
-B-011b,front-bulkhead,holes,4.5;y,10,,"7b Seals (draft 7): two M4 per drum glide, two glides per bulkhead; draft 8 adds six for the lint box's side bars"
+B-011b,front-bulkhead,holes,4.5;y,12,,"7b Seals (draft 7): two M4 per drum glide, two glides per bulkhead; draft 8 adds six for the lint box's side bars; draft 9 two for the moisture bar set"
 B-011c,front-bulkhead,hole_at,4.5;-207.889;822.419,1,,"7b Seals (draft 7): glide at 45 degrees from straight up on radius 282 (centre -199.404, 830.904), holes 12 each side along the tangent: -199.404 - 12 cos 45, 830.904 - 12 sin 45"
 B-012,front-bulkhead,outline,610;730,1,,7a Bulkheads
 B-013,rear-bulkhead,size,x,610,,7a Bulkheads
@@ -138,8 +138,8 @@ C-011,base-pan,thickness,,1.5,,7a Panels 1.5 steel
 C-012,base-pan,max,z,0,,7a: under the frame
 C-013,base-pan,size,x,687,,7a between the side panels
 C-014,base-pan,size,y,750,,7a
-C-015,base-pan,holes,6.5;z,30,,"7a Panels M6 at 150 pitch: 20 to the rails plus 4 through-bolted for the idler and spring brackets, 4 for the motor cradles and 2 for the PS1 bracket (draft 8)"
-C-016,base-pan,loops,circle,39,,"7a: 30 M6, 4 feet holes, the cord bushing hole and 4 M4 cable clamp holes (draft 8); no other cut-outs in the base pan"
+C-015,base-pan,holes,6.5;z,34,,"7a Panels M6 at 150 pitch: 20 to the rails plus 4 through-bolted for the idler and spring brackets, 4 for the motor cradles and 2 for the PS1 bracket (draft 8), 4 for the blower plate's feet (draft 9)"
+C-016,base-pan,loops,circle,43,,"7a: 34 M6, 4 feet holes, the cord bushing hole and 4 M4 cable clamp holes (draft 8); no other cut-outs in the base pan"
 C-016b,base-pan,holes,8.5;z,4,,7c Feet: M8 studs through the pan into the posts' centre bores
 C-016c,base-pan,hole_at,8.5;-325;20,1,,7c Feet: on the post centres
 C-016d,base-pan,hole_at,8.5;325;730,1,,7c Feet
@@ -176,7 +176,7 @@ P-023,rear-upper-panel,holes,6.5;y,18,,"7a: 5 per post x 2, 4 on the mid rail, 4
 P-024,rear-upper-panel,size,x,690,,7
 P-025,rear-lower-panel,min,y,750,,7a
 P-026,rear-lower-panel,loop,circle;230;150;106;106,1,,"7a Air: 102 exhaust at X 230, port 2 mm larger each side"
-P-027,rear-lower-panel,loops,circle,9,,"7a: the exhaust port and 8 M6; the cord enters through the base pan (draft 6), not this panel"
+P-027,rear-lower-panel,loops,circle,15,,"7a: the exhaust port and 8 M6; the cord enters through the base pan (draft 6), not this panel; draft 9 adds the gas entry (25), the condensate drain (20) and their blanks' four M4"
 P-028,rear-lower-panel,loops,slot,32,,"7a: louvers, 4 columns x 8 rows, clear of the exhaust port"
 P-029,rear-lower-panel,holes,6.5;y,8,,"7a: 2 per post x 2, 4 on the bottom rail"
 P-030,top-panel,min,z,1000,,7a: on the top rails
@@ -280,18 +280,19 @@ R-041c,dxf,dxf_loops,felt-seal-short;sector,1,,7b Seals (draft 7)
 R-041d,cut-list,cut,felt-seal-long,1282,,7b Seals (draft 7): strip length on the glide radius 282: 2 x 2.2729 x 282
 R-041e,cut-list,cut,felt-seal-short,396,,7b Seals (draft 7): 2 x 0.7021 x 282
 # --- drive and bay (7a Drive, Air, Power module): motor axis 120 high, pulley at Y 402, blower inlet facing front, exhaust 102 at X 230, tray Y 420..670, riser 260 x 50 with a 300 x 28 hood under the mid rear cross rail (draft 6), lint duct 336 x 33, power module 170 x 250 x 180 rear left
-M-001,motor (bought),size,y,210,,bom: NEMA 48 frame envelope 200 long (V-106) plus the 6 mm front shaft to the blower and the 4 mm rear shaft to the pulley
-M-002,motor (bought),min,y,184,,"7a: motor behind the blower (frame from 190, shaft stub to the blower's back face at 184)"
+M-001,motor (bought),size,y,208.5,,bom: NEMA 48 frame envelope 200 long (V-106) plus the 4.5 mm front shaft to the blower (draft 9: the housing stands 1.5 further back on the blower plate) and the 4 mm rear shaft to the pulley
+M-002,motor (bought),min,y,185.5,,"7a: motor behind the blower (frame from 190, shaft stub to the blower's back face at 185.5, draft 9)"
 M-003,motor (bought),cyl,"70;y;0,120",1,,"7a Drive: axis at 120 high, 140 envelope"
 M-004,pulley (bought),cyl,"10;y;0,120",5,,"7a Drive (draft 7): PJ pulley, 20 pitch diameter: 1725 x 20 / 620 = 56 drum rpm (V-012); five rib bands between four grooves"
 M-004b,pulley (bought),cyl,"11;y;0,120",1,,"7a Drive (draft 7): the pulley's hub, 22"
 M-003b,motor (bought),cyl,"6.35;y;0,120",2,,bom (draft 7): 1/2 in shafts both ends (V-106)
 M-005,pulley (bought),min,y,394,,"7a Drive: pulley centred at Y 402, 16 wide"
 M-006,blower (bought),cyl,"110;y;0,120",1,,7a Blower envelope 220 on the motor axis
-M-007,blower (bought),min,y,84,,7a Blower on the front shaft
-M-008,exhaust-duct (bought),cyl,"51;y;230,150",1,,"7a Air: 102 exhaust along the bay floor at X 230, 150 high"
-M-009,exhaust-duct (bought),max,y,750,,7a Air: to the rear lower panel
-M-009b,exhaust-duct (bought),min,y,190,,"7a Air: from the back of the blower's outlet box (draft 4), along the bay floor to the port"
+M-007,blower (bought),min,y,85.5,,7a Blower on the front shaft; its inlet face on the back of the 1.5 blower plate at 84 (draft 9)
+M-008,"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)",cyl,"51;y;230,150",1,,"7a Air: 102 exhaust along the bay floor at X 230, 150 high (draft 9: a catalog 4 in pipe, 1 mm wall)"
+M-008b,"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)",cyl,"50;y;230,150",1,,"7a Air (draft 9): the pipe's 100 bore"
+M-009,"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)",max,y,801.5,,"7a Air (draft 9): through the rear lower panel's port, 50 proud of its outer face (751.5) as the vent hose spigot"
+M-009b,"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap)",min,y,192,,"7a Air (draft 9): over the housing's 25 long collar from 2 past the outlet box's rear face (190), along the bay floor to the port"
 M-010,heat-module-tray,min,y,420,,7a Air: tray Y 420 to 670
 M-011,heat-module-tray,max,y,700,,"7a Air (draft 7): tray Y 420 to 700, starting 3 behind the idler spring"
 M-012,heat-module-tray,size,x,340,,"7a (draft 7): tray 340 wide, centred, out to the tray rails' outer faces"
@@ -353,8 +354,8 @@ X-019,clearance,clearance,trunk-front;bay-ceiling,2,,7a: 2 mm all round in the c
 X-020,clearance,clearance,trunk-rear;rail-mid-rear,4.5,,"7a (draft 8): the trunk ends at 705.5, the rear rail starts at 710"
 X-021,clearance,clearance,"heat-module-element (bought, 279838 class open-coil element on its frame, envelope);heat-module-tray",20,,"7a Heat module (draft 7): the element sits on the rails' top legs at 81.5, the tray's top at 61.5"
 X-022,clearance,clearance,motor (bought);base-pan,50,,7a: motor axis 120 high, 140 envelope
-X-023,clearance,clearance,"blower (bought);spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140)",4,,7a (draft 8): the spool's bars end 4 in front of the blower's inlet face; 6 mm foam compressed to 4 fills it
-X-024,clearance,clearance,exhaust-duct (bought);rear-lower-panel,2,,7a: duct through the port with 2 mm
+X-023,clearance,clearance,"blower (bought);spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140)",5.5,,7a (draft 9): the spool's bars end 4 in front of the blower plate (6 mm foam compressed to 4 fills it) and the plate is 1.5 in front of the housing's inlet face
+X-024,clearance,clearance,"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap);rear-lower-panel",2,,7a: duct through the port with 2 mm
 X-025,clearance,clearance,power-module-plate;trunk-front,20,,"7a Power module (draft 8): the plate's right edge at X -150, the trunk's front plate from X -130"
 X-026,clearance,clearance,drum-sheet;top-panel,58.5,,"7a: drum top 941.5, top panel at 1000"
 X-027,clearance,clearance,hood-top;rail-mid-rearcross,2,,7a Air (draft 8): the hood's top plate (258) passes under the mid rear cross rail (260)
@@ -424,9 +425,9 @@ G-010,"hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1
 G-011,clearance,clearance,"hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts);lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)",6.173,,"7b Rollers (draft 8): the front nuts' washers (radius 8) at X 180.173 beside the box's side bars at 166, overlapping them in Y"
 G-012,clearance,clearance,"hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts);drum-sheet",22,,"7b Rollers (draft 7): the heads (radius 8) on radius 340, the sheet at 310"
 G-013,clearance,clearance,"hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts);roller-front-1 (bought)",0,,7b Rollers (draft 7): the shim and the spacer touch the roller's faces; the shoulder has 0.25 in the bore
-G-014,"grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2)",solids,,5,,"7a Panels (draft 8): cord, bay harness and door switch cable grommets in the bay ceiling, console harness grommet in the top panel, door switch cable grommet in the front bulkhead"
+G-014,"grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2)",solids,,5,,"7a Panels (draft 8): cord, bay harness and door switch cable grommets in the bay ceiling, console harness grommet in the top panel, door switch cable grommet in the front bulkhead"
 G-015,clearance,clearance,power-cord (bought);bay-ceiling,6.5,,7a (draft 7): the 9 cord up the middle of the 22 grommet hole
-G-016,clearance,clearance,"power-cord (bought);grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2)",3,,7a (draft 7): the grommet's 15 bore round the 9 cord
+G-016,clearance,clearance,"power-cord (bought);grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2)",3,,7a (draft 7): the grommet's 15 bore round the 9 cord
 G-017,power-cord (bought),max,z,320,,"7a Power module (draft 7): the cord ends under X1 (rail A1 at 360, blocks 47 tall) after its grommet"
 G-018,clearance,clearance,"power-cord (bought);power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)",16.5,,7a Power module (draft 7): the cord's end at 320 under X1's bottom at 336.5
 # --- draft 7: electric heat module (design-rules 7a Heat module, 5.2): a 1.5 mm duct box 290 x 205 x 110 on the tray, 20x20x2 angle at every edge, M4 button heads; the element on two angle rails; a 125 collar on the lid; the terminal plate behind
@@ -534,7 +535,7 @@ W-038,"hardware-power-module-plate (bought, 4 x M6 x 12 hex, washers, T-nuts)",s
 "# --- draft 8: the throat liner, the lint box and basket, the riser's hood, trunk and nozzle, the door switch, PS1, the cradle bolts (design-rules 7a Air, 7a Door, 7 Lint management)"
 N-001,front-bulkhead,hole_at,4.5;162;310,1,,"7a Bulkheads (draft 8): M4 from the drum side into the lint box's side bars, outside the felt; the lowest head clears the bay ceiling's front edge"
 N-002,front-bulkhead,hole_at,4.5;-162;380,1,,7a Bulkheads (draft 8)
-N-003,front-bulkhead,holes,4.5;y,10,,7a Bulkheads (draft 8): four glide holes and six lint box holes
+N-003,front-bulkhead,holes,4.5;y,12,,7a Bulkheads (draft 8): four glide holes and six lint box holes; draft 9 adds the moisture bar set's two
 N-004,rear-bulkhead,hole_at,4.5;110;690,1,,7a Bulkheads (draft 8): M4 from the drum side into the nozzle's side bars
 N-005,rear-bulkhead,hole_at,4.5;-70;812.5,1,,7a Bulkheads (draft 8): into the nozzle's top bar
 N-006,rear-bulkhead,holes,4.5;y,14,,7a Bulkheads (draft 8): four glide holes and ten nozzle holes
@@ -564,11 +565,59 @@ N-029,clearance,clearance,basket-lip-plate;felt-seal-front-long,4.5,,7 Lint mana
 N-030,clearance,clearance,"door-switch (bought, two-contact plunger switch, envelope);door-disc",0.5,,"7a Door (draft 8): the plunger, drawn pressed, 0.5 off the closed disc's back face"
 N-031,clearance,clearance,"nozzle-bars (40 x 8 aluminium flat bar: 2 sides, top, bottom);rear-bulkhead",1,,7a Air (draft 8): 1 of compressed foam between the nozzle's bars and the bulkhead
 N-032,clearance,clearance,"basket-pull (bought, D-pull, 64 mm centres, 25 projection);door-disc",28,,"7 Lint management (draft 8): the pull's bar ends at Y 16.5, the closed disc's back at -11.5"
-N-033,bay-ceiling,hole_at,12;290;60,1,,"7a Panels (draft 8): the door switch cable's grommet at the right front, behind the bulkhead"
-N-034,front-bulkhead,hole_at,12;290;330,1,,"7a Bulkheads (draft 8): the door switch cable's grommet, outside the felt and the drum"
+N-033,bay-ceiling,hole_at,16;290;60,1,,"7a Panels (draft 8): the door switch cable's grommet at the right front, behind the bulkhead; 16 in draft 9 so the moisture pair shares it"
+N-034,front-bulkhead,hole_at,16;290;330,1,,"7a Bulkheads (draft 8): the door switch cable's grommet, outside the felt and the drum; 16 in draft 9 so the moisture pair shares it"
 N-035,base-pan,hole_at,4.5;-250;280,1,,7a Panels (draft 8): one of four M4 cable clamp holes along the left side for the bay harness
 N-036,base-pan,holes,4.5;z,4,,7a Panels (draft 8): the four cable clamp holes
 N-037,cut-list,cut,trunk top bar,244,,7a Air (draft 8): the trunk's top bar between its side bars
 N-038,cut-list,cut,hood end bar,334,,7a Air (draft 8): the hood's front and rear bars between its side bars
 N-039,cut-list,cut,nozzle end bar,212,,7a Air (draft 8)
 N-040,cut-list,cut_qty,lint-box side bar,2,,7a Air (draft 8)
+# --- draft 9: the blower plate, the exhaust set, the sensors, the blanked entries, the clamps (design-rules 7a Drive, 7a Air, 7a Panels, 7a Bulkheads)
+Q-001,blower-plate,thickness,,1.5,,7a Drive (draft 9): 1.5 steel
+Q-002,blower-plate,normal,,"0,1,0",,7a Drive (draft 9): stands across the bay in front of the housing
+Q-003,blower-plate,outline,260;245,1,,"7a Drive (draft 9): 260 wide, from the pan to 245, 15 under the mid rails"
+Q-004,blower-plate,min,y,84,,7a Drive (draft 9): its front face carries the spool's foam
+Q-005,blower-plate,max,y,85.5,,7a Drive (draft 9): the housing's inlet face sits on its back
+Q-006,blower-plate,loop,rect;0;130;140;120,1,,"7a Drive (draft 9): the spool's bore, 140 x 120, cut through it"
+Q-007,blower-plate,holes,4.5;y,8,,"7a Drive (draft 9): four for the housing's screws (nominal pattern, V-107), four into the feet's legs"
+Q-008,blower-plate,hole_at,4.5;88;60,1,,7a Drive (draft 9): housing screw
+Q-009,blower-plate,hole_at,4.5;-88;180,1,,7a Drive (draft 9): housing screw
+Q-010,blower-plate,hole_at,4.5;110;10,1,,7a Drive (draft 9): into the right foot's leg
+Q-011,blower-plate,loops,circle,8,,7a Drive (draft 9)
+Q-012,base-pan,hole_at,6.5;70;74,1,,7a Drive (draft 9): blower plate foot bolt
+Q-013,base-pan,hole_at,6.5;-110;74,1,,7a Drive (draft 9): blower plate foot bolt
+Q-014,entry-blank,thickness,,1.5,,7a Panels (draft 9): 1.5 steel
+Q-015,entry-blank,outline,60;44,1,,"7a Panels (draft 9): 60 x 44, inside the rear lower panel over the gas entry"
+Q-016,entry-blank,holes,4.5;y,2,,7a Panels (draft 9): two M4
+Q-017,entry-blank,hole_at,4.5;-251;150,1,,7a Panels (draft 9): 21 left of the entry
+Q-018,entry-blank,min,y,748.5,,7a Panels (draft 9): on the panel's inside face
+Q-019,entry-blank,max,y,750,,7a Panels (draft 9)
+Q-020,rear-lower-panel,hole_at,25;-230;150,1,,"7a Panels (draft 9): the gas entry, for a 3/8 NPT bulkhead fitting on the gas module; blanked otherwise"
+Q-021,rear-lower-panel,hole_at,20;-230;66,1,,"7a Panels (draft 9): the condensate drain, for a hose grommet on the heat pump module; blanked otherwise"
+Q-022,rear-lower-panel,holes,4.5;y,4,,7a Panels (draft 9): the two blanks' M4
+Q-023,rear-lower-panel,hole_at,4.5;-209;66,1,,7a Panels (draft 9)
+Q-024,front-bulkhead,hole_at,16;212.012;499.02,1,,"7a Bulkheads (draft 9): the moisture bar set's terminals, on radius 250 at 58 degrees right of bottom: 250 sin 58, 631.5 - 250 cos 58"
+Q-025,front-bulkhead,hole_at,4.5;193.465;469.339,1,,"7a Bulkheads (draft 9): the bar set's M4, 35 along the bars from its centre"
+Q-026,front-bulkhead,hole_at,4.5;230.559;528.702,1,,7a Bulkheads (draft 9)
+Q-027,lint-box-back,hole_at,4.5;120;170,1,,"7a Air (draft 9): the exhaust thermistor's M4, right of the spool"
+Q-028,lint-box-back,loop,rect;120;155;12;18,1,,"7a Air (draft 9): the thermistor's nib through the plate into the box, 12 x 18"
+Q-029,lint-box-back,holes,4.5;y,19,,"7a Air (draft 8): 6 side bar, 2 bottom bar, 4 spool side, 3 spool top, 3 spool bottom; draft 9 adds the thermistor's one"
+Q-030,cut-list,cut,exhaust duct (bought),609.5,,"7a Air (draft 9): from Y 192 to 801.5"
+Q-031,cut-list,cut,blower-plate feet,90,,7a Drive (draft 9)
+Q-032,cut-list,cut_qty,blower-plate feet,2,,7a Drive (draft 9)
+Q-033,clearance,clearance,blower-plate;blower (bought),0,,7a Drive (draft 9): the housing's inlet face on the plate's back
+Q-034,clearance,clearance,"blower-plate;spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate)",0,,7a Drive (draft 9): the spool's foam on the plate's front face
+Q-035,clearance,clearance,"th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope);blower-plate",22,,"7a Air (draft 9): the thermistor's terminals end at Y 62, the plate at 84"
+Q-036,clearance,clearance,"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap);tray-rail-2",57.75,,"7a Air (draft 9): the pipe (axis 230, 150, radius 51) beside and above the right tray rail: its top inner corner (168.5, 58.5, rounded 1.5) is 110.25 from the axis"
+Q-037,clearance,clearance,"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap);heat-module-tray",55.92,,"7a Air (draft 9): beside and above the tray: its top right edge (170, 61.5) is 106.92 from the pipe's axis"
+Q-038,clearance,clearance,"moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope);basket-lip-plate",40.15,0.05,"7 Lint management (draft 9): the bar set (47.2 degrees right of bottom at its near end, radius 235 to 265) clear of the lip ring (to 37.5 degrees, radius 232 to 268.5): measured 40.15"
+Q-039,clearance,clearance,"moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope);drum-ring-front",1.3,0.02,"7a Bulkheads (draft 9): the bar set ends at Y 49.5, the ring's front face is at 50, and its corners reach radius 268.8 inside the 270 bore: sqrt(0.5^2 + 1.2^2)"
+Q-040,clearance,clearance,"ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route);exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet)",16.16,0.05,"7a Air (draft 9): the tube (radius 3, on 240) runs over the thermostats (to 221): 16 plus the rounded bend"
+Q-041,clearance,clearance,"exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes);rear-lower-panel",0,,"7a Air (draft 9): the inside clamp bears on the panel"
+Q-042,clearance,clearance,entry-blank;rear-lower-panel,0,,7a Panels (draft 9)
+Q-043,clearance,clearance,"cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes);base-pan",0,,7a Panels (draft 9)
+Q-044,clearance,clearance,"blower-plate-feet (angle 20x20x2, 2 x 90);base-pan",0,,7a Drive (draft 9)
+Q-045,clearance,clearance,blower-plate;tray-rail-2,20,,"7a Drive (draft 9): the plate (to X 130) and the tray rails (from 150)"
+Q-046,clearance,clearance,"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap);motor (bought)",110.95,0.02,"7a Air (draft 9): the pipe's axis (230, 150) is 231.95 from the motor's (0, 120), less the frame's 70 and the pipe's 51"
+Q-047,clearance,clearance,"exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap);exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes)",0,,7a Air (draft 9): the clamps on the pipe

@@ -1,6 +1,6 @@
 # Dryer Universal Control Interface (UCI-D)
 
-Version 1.0, draft 6, 2026-11-06.
+Version 1.0, draft 7, 2026-11-06 (draft 6 2026-11-06). Draft 7 only points sections 7.1 and 7.2 at where the chassis mounts the two sensors (model draft 9) and at their BOM lines; no pin, limit or envelope changes.
 
 Status: draft. No chassis and no module implements it yet. Anything marked "check" in section 13 needs a real-world check before this becomes version 1.0.
 
@@ -283,7 +283,7 @@ A sensor pair is two wires to a passive element. The chassis puts nothing on the
 | --- | --- |
 | Type | NTC thermistor, 10 kilohm at 25 °C, two wires, in a sealed probe or on a bracket in the exhaust air stream between the drum and the blower |
 | Range it must report | minus 20 to 150 °C |
-| Where it is | In the exhaust path on the blower housing, next to the cycling thermostats, so the module and the hardware thermostats see the same air |
+| Where it is | In the exhaust path between the drum and the blower: the chassis mounts it on the bay side of the lint box's back plate, right of the spool, its nib sensing inside the box (`docs/design-rules.md` 7a Air, model draft 9), upstream of the blower and of the cycling thermostats on its outlet, so the module sees the air a moment before the thermostats do; `bom.csv` CPM-TH1 |
 | Exact part | Named in `bom.csv` with its resistance table or B value. Appliance-market dryer thermistors (sold as repair parts for several major brands) and industrial 10 kilohm NTC probes with a stainless sheath are both acceptable. Check: that the two chosen sources share a curve close enough that one table in the module works for both, or ship one table per part. |
 | Module side | The module holds the resistance-to-temperature table in its human-readable configuration file, per the charter's firmware rules, so a replacement thermistor with a different curve is a config edit, not a firmware build. |
 | Fail-safe reading | Below 500 ohm (shorted) or above 200 kilohm (open) at any time, or a jump of more than 30 °C between two samples 1 s apart, is a sensor fault. The module drops the heat request and shows a fault. The chassis's own thermostats and fuses protect the dryer whether or not the module gets this right. |
@@ -295,7 +295,7 @@ A sensor pair is two wires to a passive element. The chassis puts nothing on the
 | Type | Two stainless steel bars, electrically isolated from each other and from the drum, mounted on the front bulkhead or lint filter housing where tumbling clothes brush across both. Wet cloth conducts between them; dry cloth does not. |
 | Reading | The module measures conductance between the bars with 5 V or less and 1 mA or less, by whatever method it likes (a divider and an ADC is enough). Readings are noisy by nature; the module averages over many seconds. |
 | Open | Dry drum, no clothes, or a bar lead off. These look the same. A module uses moisture only to end a cycle early, never to extend it past the time the person set, so a broken bar lead costs nothing but the auto-dry feature. |
-| Exact part | Appliance-market sensor bar sets are sold as repair parts for several brands. Two strips of 304 stainless on an insulating mount with a printable file is the fallback. Named in `bom.csv`. |
+| Exact part | Appliance-market sensor bar sets are sold as repair parts for several brands. Two strips of 304 stainless on an insulating mount with a printable file is the fallback. `bom.csv` CPM-MOIST. The chassis mounts the set on the front bulkhead's drum side, inside the drum ring's bore at 58 degrees right of bottom, where the load brushes it on every turn, with its terminals through the bulkhead to the front gap (`docs/design-rules.md` 7a Bulkheads, model draft 9). |
 
 ### 7.3 SENS2, optional second thermistor (J2 pins 5 and 6)
 

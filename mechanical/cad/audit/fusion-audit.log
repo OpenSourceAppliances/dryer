@@ -1,8 +1,8 @@
-fusion_audit start 2026-11-06 21:20:25  Fusion 2706.1.17
-79 STEP files in mechanical\step (paths in this log are relative to the repo)
+fusion_audit start 2026-11-07 06:33:55  Fusion 2706.1.17
+81 STEP files in mechanical\step (paths in this log are relative to the repo)
 importing base-pan
   1 bodies
-  Body1: solid True, 49 faces (6 planar, 43 cylindrical in 43 cylinders), volume 770329.313 mm3
+  Body1: solid True, 53 faces (6 planar, 47 cylindrical in 47 cylinders), volume 770130.214 mm3
 importing basket-far-clamp
   1 bodies
   Body1: solid True, 12 faces (4 planar, 8 cylindrical in 8 cylinders), volume 12155.524 mm3
@@ -17,7 +17,10 @@ importing basket-lip-plate
   Body1: solid True, 24 faces (11 planar, 13 cylindrical in 12 cylinders), volume 14075.046 mm3
 importing bay-ceiling
   1 bodies
-  Body1: solid True, 55 faces (30 planar, 25 cylindrical in 25 cylinders), volume 685571.698 mm3
+  Body1: solid True, 55 faces (30 planar, 25 cylindrical in 25 cylinders), volume 685439.751 mm3
+importing blower-plate
+  1 bodies
+  Body1: solid True, 22 faces (10 planar, 12 cylindrical in 12 cylinders), volume 70112.794 mm3
 importing console-cap
   1 bodies
   Body1: solid True, 20 faces (6 planar, 14 cylindrical in 14 cylinders), volume 146545.150 mm3
@@ -75,6 +78,9 @@ importing drum-sheet
 importing drum-splice
   1 bodies
   Body1: solid True, 26 faces (4 planar, 22 cylindrical in 22 cylinders), volume 32384.592 mm3
+importing entry-blank
+  1 bodies
+  Body1: solid True, 12 faces (6 planar, 6 cylindrical in 6 cylinders), volume 3865.933 mm3
 importing felt-seal-front-long
   1 bodies
   Body1: solid True, 6 faces (4 planar, 2 cylindrical in 2 cylinders), volume 184592.692 mm3
@@ -89,7 +95,7 @@ importing felt-seal-rear-short
   Body1: solid True, 6 faces (4 planar, 2 cylindrical in 2 cylinders), volume 71273.622 mm3
 importing front-bulkhead
   1 bodies
-  Body1: solid True, 35 faces (8 planar, 27 cylindrical in 27 cylinders), volume 403888.814 mm3
+  Body1: solid True, 38 faces (8 planar, 30 cylindrical in 30 cylinders), volume 403407.561 mm3
 importing front-lower-panel
   1 bodies
   Body1: solid True, 242 faces (118 planar, 124 cylindrical in 124 cylinders), volume 242871.113 mm3
@@ -131,12 +137,12 @@ importing liner
   Body1: solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 91807.543 mm3
 importing lint-box-back
   1 bodies
-  Body1: solid True, 32 faces (10 planar, 22 cylindrical in 22 cylinders), volume 80398.230 mm3
+  Body1: solid True, 37 faces (14 planar, 23 cylindrical in 23 cylinders), volume 80050.373 mm3
 importing lint-box-front
   1 bodies
   Body1: solid True, 23 faces (5 planar, 18 cylindrical in 18 cylinders), volume 175620.605 mm3
 importing osa-dryer-assembly
-  1073 bodies
+  1136 bodies
   post-1: solid True, 59 faces (54 planar, 5 cylindrical in 5 cylinders), volume 1088617.560 mm3
   post-2: solid True, 59 faces (54 planar, 5 cylindrical in 5 cylinders), volume 1088617.560 mm3
   post-3: solid True, 59 faces (54 planar, 5 cylindrical in 5 cylinders), volume 1088617.560 mm3
@@ -174,7 +180,7 @@ importing osa-dryer-assembly
   feet (bought, 4 x M8 leveling feet, 50 pad): solid True, 15 faces (11 planar, 3 cylindrical in 3 cylinders), volume 23276.423 mm3
   feet (bought, 4 x M8 leveling feet, 50 pad): solid True, 15 faces (11 planar, 3 cylindrical in 3 cylinders), volume 23276.423 mm3
   feet (bought, 4 x M8 leveling feet, 50 pad): solid True, 15 faces (11 planar, 3 cylindrical in 3 cylinders), volume 23276.423 mm3
-  front-bulkhead: solid True, 35 faces (8 planar, 27 cylindrical in 27 cylinders), volume 403888.814 mm3
+  front-bulkhead: solid True, 38 faces (8 planar, 30 cylindrical in 30 cylinders), volume 403407.561 mm3
   hardware-front-bulkhead (bought, 7 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-front-bulkhead (bought, 7 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-front-bulkhead (bought, 7 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
@@ -217,7 +223,7 @@ importing osa-dryer-assembly
   hardware-drum-glides (bought, 4 x M4 x 8 and 4 x M4 x 10 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
   hardware-drum-glides (bought, 4 x M4 x 8 and 4 x M4 x 10 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 203.803 mm3
   hardware-drum-glides (bought, 4 x M4 x 8 and 4 x M4 x 10 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
-  bay-ceiling: solid True, 55 faces (30 planar, 25 cylindrical in 25 cylinders), volume 685571.698 mm3
+  bay-ceiling: solid True, 55 faces (30 planar, 25 cylindrical in 25 cylinders), volume 685439.751 mm3
   hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
@@ -238,7 +244,7 @@ importing osa-dryer-assembly
   hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-bay-ceiling (bought, 20 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
-  base-pan: solid True, 49 faces (6 planar, 43 cylindrical in 43 cylinders), volume 770329.313 mm3
+  base-pan: solid True, 53 faces (6 planar, 47 cylindrical in 47 cylinders), volume 770130.214 mm3
   hardware-base-pan (bought, 20 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-base-pan (bought, 20 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-base-pan (bought, 20 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
@@ -364,7 +370,7 @@ importing osa-dryer-assembly
   hardware-rear-upper-panel (bought, 18 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-rear-upper-panel (bought, 18 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-rear-upper-panel (bought, 18 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
-  rear-lower-panel: solid True, 147 faces (70 planar, 77 cylindrical in 77 cylinders), volume 240240.871 mm3
+  rear-lower-panel: solid True, 153 faces (70 planar, 83 cylindrical in 83 cylinders), volume 238937.895 mm3
   hardware-rear-lower-panel (bought, 8 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-rear-lower-panel (bought, 8 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-rear-lower-panel (bought, 8 x M6 x 12 hex, washers, T-nuts): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
@@ -714,7 +720,7 @@ importing osa-dryer-assembly
   hardware-drum-baffles (bought, 12 x M6 x 12 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 282.059 mm3
   hardware-drum-baffles (bought, 12 x M6 x 12 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 563.175 mm3
   hardware-drum-baffles (bought, 12 x M6 x 12 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 282.059 mm3
-  motor (bought): solid True, 16 faces (11 planar, 5 cylindrical in 5 cylinders), volume 3046563.729 mm3
+  motor (bought): solid True, 16 faces (11 planar, 5 cylindrical in 5 cylinders), volume 3046373.714 mm3
   motor-mount-1 (bought, cradle bracket): solid True, 13 faces (10 planar, 3 cylindrical in 3 cylinders), volume 39966.897 mm3
   motor-mount-2 (bought, cradle bracket): solid True, 13 faces (10 planar, 3 cylindrical in 3 cylinders), volume 39966.897 mm3
   hardware-motor-mounts (bought, 4 x M6 x 12 hex, washers, nuts, through the base pan): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
@@ -726,8 +732,7 @@ importing osa-dryer-assembly
   hardware-motor-mounts (bought, 4 x M6 x 12 hex, washers, nuts, through the base pan): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-motor-mounts (bought, 4 x M6 x 12 hex, washers, nuts, through the base pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 282.059 mm3
   pulley (bought): solid True, 21 faces (11 planar, 10 cylindrical in 10 cylinders), volume 6967.148 mm3
-  blower (bought): solid True, 23 faces (15 planar, 8 cylindrical in 8 cylinders), volume 4752367.288 mm3
-  exhaust-duct (bought): solid True, 3 faces (2 planar, 1 cylindrical in 1 cylinders), volume 4575918.196 mm3
+  blower (bought): solid True, 35 faces (21 planar, 14 cylindrical in 14 cylinders), volume 5340928.083 mm3
   heat-module-tray: solid True, 24 faces (6 planar, 18 cylindrical in 18 cylinders), volume 142392.194 mm3
   heat-module-wall-left: solid True, 20 faces (10 planar, 10 cylindrical in 10 cylinders), volume 19709.023 mm3
   heat-module-wall-right: solid True, 20 faces (10 planar, 10 cylindrical in 10 cylinders), volume 31709.023 mm3
@@ -968,11 +973,11 @@ importing osa-dryer-assembly
   power-module-hardware (bought, 22 x M4 x 8 button head, 14 nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
   power-module-hardware (bought, 22 x M4 x 8 button head, 14 nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
   power-module-hardware (bought, 22 x M4 x 8 button head, 14 nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
-  grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2): solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 1392.401 mm3
-  grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2): solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 1928.985 mm3
-  grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2): solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 1392.401 mm3
-  grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2): solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 721.671 mm3
-  grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2): solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 721.671 mm3
+  grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2): solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 1392.401 mm3
+  grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2): solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 1928.985 mm3
+  grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2): solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 1392.401 mm3
+  grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2): solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 989.963 mm3
+  grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2): solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 989.963 mm3
   cord-bushing (bought, PG16 strain relief): solid True, 21 faces (17 planar, 3 cylindrical in 3 cylinders), volume 8877.396 mm3
   power-cord (bought): solid True, 6 faces (4 planar, 2 cylindrical in 2 cylinders), volume 29269.670 mm3
   liner: solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 91807.543 mm3
@@ -985,17 +990,17 @@ importing osa-dryer-assembly
   lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom): solid True, 29 faces (16 planar, 13 cylindrical in 13 cylinders), volume 93638.630 mm3
   lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom): solid True, 17 faces (10 planar, 7 cylindrical in 7 cylinders), volume 74048.397 mm3
   lint-box-front: solid True, 23 faces (5 planar, 18 cylindrical in 18 cylinders), volume 175620.605 mm3
-  lint-box-back: solid True, 32 faces (10 planar, 22 cylindrical in 22 cylinders), volume 80398.230 mm3
+  lint-box-back: solid True, 37 faces (14 planar, 23 cylindrical in 23 cylinders), volume 80050.373 mm3
   lint-box-foam (bought, 3 mm closed-cell foam tape 8 wide, 2 x 190, compressed to 1.5): solid True, 9 faces (5 planar, 4 cylindrical in 4 cylinders), volume 2127.629 mm3
   lint-box-foam (bought, 3 mm closed-cell foam tape 8 wide, 2 x 190, compressed to 1.5): solid True, 9 faces (5 planar, 4 cylindrical in 4 cylinders), volume 2127.629 mm3
   spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140): solid True, 10 faces (8 planar, 2 cylindrical in 2 cylinders), volume 43339.892 mm3
   spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140): solid True, 10 faces (8 planar, 2 cylindrical in 2 cylinders), volume 43339.892 mm3
   spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140): solid True, 12 faces (9 planar, 3 cylindrical in 3 cylinders), volume 44529.839 mm3
   spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140): solid True, 12 faces (9 planar, 3 cylindrical in 3 cylinders), volume 44509.057 mm3
-  spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower's inlet face): solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 4352.000 mm3
-  spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower's inlet face): solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 4352.000 mm3
-  spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower's inlet face): solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 4480.000 mm3
-  spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower's inlet face): solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 4480.000 mm3
+  spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate): solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 4352.000 mm3
+  spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate): solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 4352.000 mm3
+  spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate): solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 4480.000 mm3
+  spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower plate): solid True, 6 faces (6 planar, 0 cylindrical in 0 cylinders), volume 4480.000 mm3
   lint-box-hardware (bought, 40 pieces: M4 x 8, M4 x 10 and M4 x 40 button heads, 2 x M6 x 20 button heads with 4 mm spacers and T-nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
   lint-box-hardware (bought, 40 pieces: M4 x 8, M4 x 10 and M4 x 40 button heads, 2 x M6 x 20 button heads with 4 mm spacers and T-nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
   lint-box-hardware (bought, 40 pieces: M4 x 8, M4 x 10 and M4 x 40 button heads, 2 x M6 x 20 button heads with 4 mm spacers and T-nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
@@ -1168,6 +1173,70 @@ importing osa-dryer-assembly
   hardware-exhaust-thermostats (bought, 6 x M4 x 8 button head into the housing): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
   hardware-exhaust-thermostats (bought, 6 x M4 x 8 button head into the housing): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
   hardware-exhaust-thermostats (bought, 6 x M4 x 8 button head into the housing): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  blower-plate: solid True, 22 faces (10 planar, 12 cylindrical in 12 cylinders), volume 70112.794 mm3
+  blower-plate-feet (angle 20x20x2, 2 x 90): solid True, 12 faces (8 planar, 4 cylindrical in 4 cylinders), volume 6643.650 mm3
+  blower-plate-feet (angle 20x20x2, 2 x 90): solid True, 12 faces (8 planar, 4 cylindrical in 4 cylinders), volume 6643.650 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 282.059 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 282.059 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 282.059 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
+  hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 282.059 mm3
+  exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap): solid True, 5 faces (2 planar, 3 cylindrical in 3 cylinders), volume 193361.597 mm3
+  exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes): solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 2710.189 mm3
+  exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes): solid True, 7 faces (7 planar, 0 cylindrical in 0 cylinders), volume 2640.000 mm3
+  exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes): solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 2710.189 mm3
+  exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes): solid True, 7 faces (7 planar, 0 cylindrical in 0 cylinders), volume 2640.000 mm3
+  exhaust-tap-barb (bought, 1/8 NPT or M6 brass barb fitting with a locknut, 5 mm barb, envelope): solid True, 21 faces (18 planar, 3 cylindrical in 3 cylinders), volume 1215.319 mm3
+  ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route): solid True, 7 faces (2 planar, 3 cylindrical in 3 cylinders), volume 11236.845 mm3
+  th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope): solid True, 17 faces (16 planar, 1 cylindrical in 1 cylinders), volume 17281.340 mm3
+  hardware-th1 (bought, 1 x M4 x 20 button head from inside the lint box, nut on the body): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 329.466 mm3
+  hardware-th1 (bought, 1 x M4 x 20 button head from inside the lint box, nut on the body): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope): solid True, 13 faces (11 planar, 2 cylindrical in 2 cylinders), volume 20769.531 mm3
+  hardware-moisture-bars (bought, 2 x M4 x 16 button head from the drum side, nuts in the front gap): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 279.201 mm3
+  hardware-moisture-bars (bought, 2 x M4 x 16 button head from the drum side, nuts in the front gap): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 279.201 mm3
+  hardware-moisture-bars (bought, 2 x M4 x 16 button head from the drum side, nuts in the front gap): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-moisture-bars (bought, 2 x M4 x 16 button head from the drum side, nuts in the front gap): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  entry-blank: solid True, 12 faces (6 planar, 6 cylindrical in 6 cylinders), volume 3865.933 mm3
+  entry-blank-2 (the second entry-blank, cut two to drawings/entry-blank.dxf; on the condensate drain): solid True, 12 faces (6 planar, 6 cylindrical in 6 cylinders), volume 3865.933 mm3
+  hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-entry-blanks (bought, 4 x M4 x 8 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes): solid True, 7 faces (6 planar, 1 cylindrical in 1 cylinders), volume 216.144 mm3
+  cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes): solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 636.173 mm3
+  cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes): solid True, 7 faces (6 planar, 1 cylindrical in 1 cylinders), volume 216.144 mm3
+  cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes): solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 636.173 mm3
+  cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes): solid True, 7 faces (6 planar, 1 cylindrical in 1 cylinders), volume 216.144 mm3
+  cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes): solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 636.173 mm3
+  cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes): solid True, 7 faces (6 planar, 1 cylindrical in 1 cylinders), volume 216.144 mm3
+  cable-clamps (bought, 4 x nylon P-clip for a 12 mm bundle, envelopes): solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 636.173 mm3
+  hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
+  hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
+  hardware-cable-clamps (bought, 4 x M4 x 8 button head, nuts under the pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
   roller-front-1 (bought): solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 68521.081 mm3
   roller-rear-1 (bought): solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 68521.081 mm3
   roller-front-2 (bought): solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 68521.081 mm3
@@ -1252,10 +1321,13 @@ importing osa-dryer-assembly
   distance hood-bottom / heat-module-collar (bought, 125 flanged starting collar, cut to 55.5): 3.3541 mm
   distance heat-module-top / bay-ceiling: 128.5000 mm
   distance motor (bought) / base-pan: 50.0000 mm
-  distance blower (bought) / front-bulkhead: 55.0568 mm
+  distance blower (bought) / front-bulkhead: 56.2228 mm
   distance lint-box-back / front-bulkhead: 0.0000 mm
   distance pulley (bought) / bay-ceiling: 169.0000 mm
-  distance exhaust-duct (bought) / rear-lower-panel: 2.0000 mm
+  distance exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) / rear-lower-panel: 2.0000 mm
+  distance blower-plate / blower (bought): 0.0000 mm
+  distance blower-plate / tray-rail-2: 20.0000 mm
+  distance entry-blank / rear-lower-panel: 0.0000 mm
   distance power-module-plate / trunk-front: 20.0000 mm
   distance power-module-plate / bay-ceiling: 1.0000 mm
   distance drum-sheet / front-upper-panel: 49.2000 mm
@@ -1338,7 +1410,7 @@ importing rear-bulkhead
   Body1: solid True, 162 faces (6 planar, 156 cylindrical in 156 cylinders), volume 652057.649 mm3
 importing rear-lower-panel
   1 bodies
-  Body1: solid True, 147 faces (70 planar, 77 cylindrical in 77 cylinders), volume 240240.871 mm3
+  Body1: solid True, 153 faces (70 planar, 83 cylindrical in 83 cylinders), volume 238937.895 mm3
 importing rear-upper-panel
   1 bodies
   Body1: solid True, 28 faces (6 planar, 22 cylindrical in 22 cylinders), volume 764957.703 mm3
@@ -1366,5 +1438,5 @@ importing trunk-front
 importing trunk-rear
   1 bodies
   Body1: solid True, 23 faces (6 planar, 17 cylindrical in 17 cylinders), volume 223308.512 mm3
-done: 1151 bodies, 4818 cylinders, 57 distances, 0 errors
+done: 1216 bodies, 4994 cylinders, 60 distances, 0 errors
 wrote mechanical\cad\audit\fusion-measured.csv

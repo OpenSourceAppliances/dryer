@@ -12,6 +12,8 @@ import os
 import sys
 import ezdxf
 
+ezdxf.options.write_fixed_meta_data_for_testing = True   # fixed timestamps and GUIDs, so an unchanged drawing is an unchanged file
+
 # the SVG helper lives with the electrical drawings; run this from anywhere in the repo
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'electrical', 'wiring'))
 from ladder import Drawing  # noqa: E402
