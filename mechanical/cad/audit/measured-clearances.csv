@@ -26,24 +26,38 @@ console-face,top-panel,0.0
 console-face,console-cap,0.0
 front-bulkhead,bay-ceiling,0.5
 rear-bulkhead,bay-ceiling,0.5
-lint-duct,rail-mid-front-left,2.0
-lint-duct,rail-mid-front-right,2.0
-lint-duct,front-bulkhead,2.0
-lint-duct,front-upper-panel,5.0
-riser-duct,rear-bulkhead,7.0
-riser-duct,rail-mid-rear,6.5
-riser-duct,bay-ceiling,2.0
+"lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)",rail-mid-front-left,4.0
+"lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)",rail-mid-front-right,4.0
+"lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)",front-bulkhead,1.5
+lint-box-front,front-upper-panel,7.0
+lint-box-front,liner,0.2
+"lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)",liner,0.2
+liner,door-ring,0.0
+liner,front-bulkhead,0.2
+liner,front-upper-panel,3.0
+"basket-mesh (bought, stainless 18 x 16 mesh strip, 42 wide, 350 long, wrapped and folded 5 at each edge)",front-bulkhead,0.9
+"basket-mesh (bought, stainless 18 x 16 mesh strip, 42 wide, 350 long, wrapped and folded 5 at each edge)",liner,1.9
+basket-far-plate,lint-box-front,0.5
+basket-lip-plate,drum-ring-front,5.701
+basket-lip-plate,felt-seal-front-long,4.5
+"basket-pull (bought, D-pull, 64 mm centres, 25 projection)",door-disc,28.0
+trunk-front,rear-bulkhead,41.0
+trunk-front,rail-mid-rearcross,1.0
+trunk-rear,rail-mid-rear,4.5
+trunk-front,bay-ceiling,2.0
+hood-top,rail-mid-rearcross,2.0
+hood-bottom,"heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)",3.354
 heat-module-top,bay-ceiling,128.5
-"heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)",riser-duct,3.0
-"heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)","hood-gasket (bought, 3 mm foam ring 150 x 125, glued under the hood)",0.0
+"heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)",hood-bottom,3.354
+"heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)","hood-gasket (bought, 3 mm foam ring 150 x 125, glued under the hood)",
 heat-module-wall-front,"idler-spring (bought, extension spring)",5.0
 heat-module-tray,"idler-spring (bought, extension spring)",3.0
 "heat-module-devices (bought, envelopes: 2 end clamps, X_HM mains and SELV strips, partition, K_HEAT, CS1)",rear-lower-panel,21.0
-"heat-module-thermostats (bought, 279816 class high-limit and thermal cut-off, envelopes)",riser-duct,43.5
+"heat-module-thermostats (bought, 279816 class high-limit and thermal cut-off, envelopes)",hood-bottom,43.5
 heat-module-tray,tray-rail-1,0.0
 heat-module-tray,rail-bottom-rear,23.06
 heat-module-terminal-plate,heat-module-wall-rear,7.0
-power-module-plate,riser-duct,12.974
+power-module-plate,trunk-front,20.0
 power-module-plate,rail-mid-rearcross,0.0
 power-module-plate,post-3,57.414
 power-module-cover,rear-upper-panel,20.5
@@ -51,9 +65,9 @@ power-module-plate,bay-ceiling,1.0
 "power-module-rail-B1-devices (bought, envelopes: RLY_MOTOR, RLY_HEAT, RLY_HEAT_LO: 3 x 38.51 class, PTC1 to PTC3 in fuse terminals, F2: UK 5-HESI, X4 heat module SELV: 4 x UK 2.5 N, 2 end clamps)",rear-upper-panel,19.5
 "power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)",power-module-cover,7.5
 power-cord (bought),bay-ceiling,6.5
-power-cord (bought),"grommets (bought, 3 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1)",3.0
+power-cord (bought),"grommets (bought, 3 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1)",
 power-cord (bought),"power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)",16.5
-"hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)",lint-duct,4.192
+"hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)","lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)",6.173
 "hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)",drum-sheet,22.0
 "hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)",roller-front-1 (bought),0.0
 "drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)",drum-ring-front,0.5
@@ -62,7 +76,8 @@ power-cord (bought),"power-module-rail-A1-devices (bought, envelopes: X1 cord: 4
 "drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)",felt-seal-front-short,0.458
 motor (bought),base-pan,50.0
 blower (bought),front-bulkhead,55.057
-blower (bought),lint-duct-transition,0.0
+blower (bought),"spool-bars (40 x 8 aluminium flat bar: 2 x 156, 2 x 140)",
+blower (bought),"ps1-air-proving-switch (bought, envelope)",50.04
 pulley (bought),bay-ceiling,169.0
 exhaust-duct (bought),rear-lower-panel,2.0
 exhaust-duct (bought),tray-rail-2,57.747
@@ -82,10 +97,13 @@ felt-seal-front-long,drum-sheet,2.2
 felt-seal-rear-long,drum-sheet,2.2
 felt-seal-front-short,drum-ring-front,0.5
 tier0-faceplate,console-face,0.0
-riser-duct,rail-mid-rearcross,2.0
-riser-duct,heat-module-tray,168.5
-riser-duct,"belt (bought, PJ 5 rib)",40.0
-lint-duct,"hardware-door-ring (bought, 8 x M4 x 8 button head, nuts)",0.5
+hood-bottom,heat-module-tray,168.5
+hood-bottom,"belt (bought, PJ 5 rib)",40.0
+"nozzle-bars (40 x 8 aluminium flat bar: 2 sides, top, bottom)",rear-bulkhead,1.0
+lint-box-front,"hardware-door-ring (bought, 8 x M4 x 8 button head, nuts)",2.5
+"door-switch (bought, two-contact plunger switch, envelope)",lint-box-front,0.17
+"door-switch (bought, two-contact plunger switch, envelope)",door-disc,0.5
+"exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet)",motor (bought),75.767
 console-post-1,top-panel,0.0
 console-post-1,console-cheek-left,0.0
 console-rail-front,console-cap,0.0

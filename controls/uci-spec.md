@@ -1,8 +1,10 @@
 # Dryer Universal Control Interface (UCI-D)
 
-Version 1.0, draft 5, 2026-11-06.
+Version 1.0, draft 6, 2026-11-06.
 
 Status: draft. No chassis and no module implements it yet. Anything marked "check" in section 13 needs a real-world check before this becomes version 1.0.
+
+Changes in draft 6: the aperture grows again, from 500 x 120 to 560 x 120, the faceplate to 620 x 160 and the hole pattern to 590 x 140 (the two centre-line holes stay), because the dryer's console face had 75 mm of bare panel beside a plate with 37 mm above it; 620 is as wide as the console's posts allow (their bolt heads sit at plus and minus 319, the plate ends at 310, the aperture 15 inside the posts). The module envelope grows with it to 560 x 120 x 120. Sections 4.1 to 4.3 and 10.
 
 Changes in draft 5: the aperture grows from 240 x 120 to 500 x 120, the faceplate to 540 x 160, the hole pattern to 520 x 140 plus two holes on the centre line (six screws, so a 540 mm plate does not bow), and the envelope to 500 x 120 x 120. The Tier 0 module needs 240 of it; the rest is room for what later tiers put on the panel (a display beside the controls, more buttons, a Tier 3 screen) without a new chassis. The dryer's console was sized for it (`DECISIONS.md` 2026-11-06). Sections 4.1 to 4.3 and 10.
 
@@ -81,10 +83,10 @@ The control panel has one rectangular opening for the module.
 
 | Item | Value |
 | --- | --- |
-| Aperture, width x height | 500 x 120 |
+| Aperture, width x height | 560 x 120 |
 | Corner radius | 5 max |
 | Mounting holes | 6 x 4.5 diameter, clearance for M4 |
-| Hole pattern | 520 x 140, centered on the aperture (one hole 10 mm outside each corner), plus one hole at the middle of each long edge (0, plus and minus 70) |
+| Hole pattern | 590 x 140, centered on the aperture (one hole 15 mm outside each corner sideways, 10 above and below), plus one hole at the middle of each long edge (0, plus and minus 70) |
 | Panel material and thickness | Laser-cut steel or aluminum, 1.5 to 3 |
 | Nuts | Clip-on (U-type) sheet metal nuts, or plain M4 nuts with washers behind the panel. Both are catalog parts and need no press tooling. |
 | Panel surface | Flat within 1 mm over the faceplate area, no stiffeners within 20 mm of the aperture edge |
@@ -97,9 +99,9 @@ The module supplies its own faceplate. It covers the aperture and carries the kn
 
 | Item | Value |
 | --- | --- |
-| Faceplate, width x height | 540 x 160 |
+| Faceplate, width x height | 620 x 160 |
 | Corner radius | 10 max |
-| Mounting holes | 6 x 4.5 diameter on the 520 x 140 pattern and the two centre-line holes |
+| Mounting holes | 6 x 4.5 diameter on the 590 x 140 pattern and the two centre-line holes |
 | Thickness | 1.5 to 3 for metal; up to 4 for a printed plastic faceplate |
 | Fasteners | 6 x M4 button head socket screws (ISO 7380, 2.5 mm hex key), 8 to 12 long, with washers under the heads where the faceplate is thinner than 2 mm. The chassis provides the nuts behind its panel (plain nuts, or press nuts if the panel is steel). One head type for every M4 on the appliance; the dryer's service set is the charter's four tools plus 2.5 and 4 mm hex keys. |
 | Material | Laser-cut aluminum or steel preferred. A 3D-printed faceplate is acceptable for a module, since it is non-structural trim, and the print file must be in the repo. |
@@ -109,7 +111,7 @@ The module supplies its own faceplate. It covers the aperture and carries the kn
 
 | Zone | Limit |
 | --- | --- |
-| Behind the panel plane | The module may occupy 500 wide x 120 high x 120 deep, measured from the panel plane: the aperture's own projection. The chassis keeps this volume clear of everything except the harness. Nothing on the module may sit behind the 20 mm overlap band, because the chassis panel is there. |
+| Behind the panel plane | The module may occupy 560 wide x 120 high x 120 deep, measured from the panel plane: the aperture's own projection. The chassis keeps this volume clear of everything except the harness. Nothing on the module may sit behind the overlap band (30 at the sides, 20 above and below), because the chassis panel is there. |
 | In front of the panel plane | Knobs, buttons, and screens may project up to 50 forward of the faceplate, within the faceplate outline. |
 | Faceplate overlap | The faceplate overlaps the panel by 20 on each side. The chassis keeps that 20 mm band flat and free of other hardware. |
 
@@ -446,7 +448,7 @@ Part families, with the generic spec that is their real identity:
 | Tier | Uses | Typical faceplate | Notes |
 | --- | --- | --- | --- |
 | 0 Mechanical | J1 pins 3, 4, 5, 9, 11 | DRY TIME knob, HEAT TIME knob, AIR / LOW / HIGH switch, START button, spread across the plate | Two spring-wound interval timers, one hold relay, no electronics. Uses STAT_DOOR as the hold relay supply so the door and a power loss both end the latch. Timers of 0 to 2 h suit vented builds, 0 to 4 h a heat pump build. The reference build. |
-| 1 Basic | J1 all, J2 pins 1 to 4 | Buttons, LEDs or a character display; the 500 mm plate has room for a 7 inch class display beside a row of buttons | Small microcontroller, 24 V to 5 V or 3.3 V buck module, open-drain outputs, divided inputs. Timed cycles, auto-dry from the moisture bars, fault display. |
+| 1 Basic | J1 all, J2 pins 1 to 4 | Buttons, LEDs or a character display; the 560 mm plate has room for a 7 inch class display beside a row of buttons | Small microcontroller, 24 V to 5 V or 3.3 V buck module, open-drain outputs, divided inputs. Timed cycles, auto-dry from the moisture bars, fault display. |
 | 2 Smart | J1 all, J2 all | Display and buttons, plus a local web page | ESP32 class. Everything Tier 1 does, plus logging and a local web interface. No feature needs the internet. |
 | 3 Open slot | Anything | Anything within the envelope | Whatever follows sections 3 to 8. A screen is a Tier 3 accessory and brings its own mounting spec. |
 

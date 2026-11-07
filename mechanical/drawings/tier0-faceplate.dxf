@@ -489,7 +489,7 @@ $SKPOLY
   9
 $TDCREATE
  40
-2461351.5529166665
+2461351.841111111
   9
 $TDUCREATE
  40
@@ -497,7 +497,7 @@ $TDUCREATE
   9
 $TDUPDATE
  40
-2461351.5529166665
+2461351.841111111
   9
 $TDUUPDATE
  40
@@ -929,11 +929,11 @@ $PSTYLEMODE
   9
 $FINGERPRINTGUID
   2
-{D4B0B7D8-3368-4306-A9D4-346AE252F239}
+{D5267558-D410-4D57-81BC-F159F41F63CA}
   9
 $VERSIONGUID
   2
-{EF6002B2-A73F-47FC-91EF-F73226392D11}
+{6B73212E-B728-4742-9338-F562026E7133}
   9
 $EXTNAMES
 290
@@ -5297,41 +5297,41 @@ AcDbPolyline
  70
 1
  10
--260.0
+-300.0
  20
 -80.0
  10
-260.0
+300.0
  20
 -80.0
  42
 0.41421356237309503
  10
-270.0
+310.0
  20
 -70.0
  10
-270.0
+310.0
  20
 70.0
  42
 0.41421356237309503
  10
-260.0
+300.0
  20
 80.0
  10
--260.0
+-300.0
  20
 80.0
  42
 0.41421356237309503
  10
--270.0
+-310.0
  20
 70.0
  10
--270.0
+-310.0
  20
 -70.0
  42
@@ -5349,7 +5349,7 @@ CUT
 100
 AcDbCircle
  10
--260.0
+-295.0
  20
 -70.0
  30
@@ -5369,7 +5369,7 @@ CUT
 100
 AcDbCircle
  10
-260.0
+295.0
  20
 -70.0
  30
@@ -5389,7 +5389,7 @@ CUT
 100
 AcDbCircle
  10
--260.0
+-295.0
  20
 70.0
  30
@@ -5409,7 +5409,7 @@ CUT
 100
 AcDbCircle
  10
-260.0
+295.0
  20
 70.0
  30
@@ -5911,7 +5911,7 @@ REF
 100
 AcDbText
  10
--270.0
+-310.0
  20
 -88.0
  30
@@ -5919,9 +5919,9 @@ AcDbText
  40
 3.0
   1
-osa-dryer Tier 0 faceplate, draft 3, 2026-11-06 (UCI-D draft 5, 500 wide aperture). 2 mm aluminum. CUT layer only. LABEL layer is optional engraving. REF is not cut.
+osa-dryer Tier 0 faceplate, draft 4, 2026-11-06 (UCI-D draft 6, 560 wide aperture). 2 mm aluminum. CUT layer only. LABEL layer is optional engraving. REF is not cut.
  11
--270.0
+-310.0
  21
 -88.0
  31
@@ -7031,7 +7031,7 @@ DictionaryVariables
 280
 0
   1
-1.4.5 @ 2026-11-06T19:16:12.451735+00:00
+1.4.5 @ 2026-11-07T02:11:12.835903+00:00
   0
 VISUALSTYLE
   5
@@ -7743,7 +7743,7 @@ DictionaryVariables
 280
 0
   1
-1.4.5 @ 2026-11-06T19:16:12.454755+00:00
+1.4.5 @ 2026-11-07T02:11:12.839682+00:00
   0
 ENDSEC
   0

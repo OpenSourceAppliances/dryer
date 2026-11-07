@@ -25,30 +25,40 @@ Every step names the checks from `docs/verification.md` that must be closed befo
 
 ## 2. Bay
 
+Every duct here is 1.5 mm plate on a frame of aluminium flat bar, the plates screwed with M4 button heads into holes tapped in the bars' edges (draft 8). Tapping an 8 mm edge wants the hole square: use the drill press with the bar clamped on its side, and a tap guide. The one rolled part besides the drum sheet is the throat liner (section 5).
+
 1. Base pan under the bottom rails, M6 into the slots. The cord's strain relief bushing into the 22 mm hole at the rear left (X -275, Y 690), locknut under the pan.
-2. Motor mount plate and blower housing at the front (per the drawings that follow V-106 and V-107), motor in, the 20 mm pulley on the rear shaft, wheel on the front shaft. Direction checked at V-204 already.
+2. The two motor cradle brackets on the pan, two M6 x 12 each through the pan's 6.5 holes (heads under the pan, nuts on the brackets' feet; the kit's own pattern governs, V-106), blower housing at the front (V-107), motor in, the 20 mm pulley on the rear shaft, wheel on the front shaft. Direction checked at V-204 already. The thermal fuse and the two cycling thermostats on the blower's outlet box with the kit's screws; PS1 on its 20x20x2 angle bracket at the right front, two M6 through the pan.
 3. Idler bracket and spring bracket on the pan, the arm on its pivot, the idler on the arm; the spring waits for the belt.
 4. Exhaust duct from the blower outlet along the right side to the rear lower panel port position.
-5. Lint duct transition box in front of the blower inlet.
+5. The duct frames are made on the bench first (section 4a): the flat bar cut to the lengths in `drawings/frame-cut-list.csv`, every edge hole drilled 3.3 on the drill press, square to the edge, and tapped M4; the lint box's side bars get their 43 degree top cut and the 8.5 hang hole; the trunk's side bars are tapped in their lower end face as well. The spool is screwed to the lint box's back plate from inside the box, its bottom bar by the three M4 x 40 that pass through the box's bottom bar; 6 mm foam tape on its rear edges.
 
 ## 3. Rear bulkhead and riser
 
 1. Fit the two rear glides (9.5 thick) to the bulkhead's front face with their nuts sunk in the pads, bolt heads behind (V-103). Lay the two felt arcs (10 mm, the long one round the bottom, the short one over the top) round the glides per V-104. Fit the two rear rollers on their studs: shim under the head, roller, spacer, stud through the 8.5 hole from the drum side, washer and nut behind; the nut clamps the shoulder's step to the plate and the roller stays free (V-102). Bond the plate.
 2. Hang the bulkhead on the mid and top rear cross rails, M6 into the slots from the front, rollers down, inlet field up.
-3. Riser duct from the bay up behind the bulkhead to the inlet field, gasketed, bolted; its hood reaches forward under the mid rear cross rail with the foam ring glued round the collar hole.
+3. The riser: the hood's bottom plate, four bars and top plate screwed together (M4 x 8 into the bars' tapped edges, heads under the bottom plate and on top of the top plate, the top heads clear of where the mid rear cross rail sits), the foam ring glued round the collar hole underneath; the trunk's two side bars and top bar between its front and rear plates, then the trunk stood on the hood's top plate over its opening and screwed from inside the hood into the side bars' tapped feet (four M4 x 8). Lift the hood and trunk in from the back under the mid rear cross rail, the trunk up through the bay ceiling's cut, the hood's bottom at 230 over where the collar will be. The nozzle: four bars with 2 mm foam on their front edges, held to the bulkhead's back face round the hole field by ten M4 x 10 from the drum side (through the bulkhead and the foam into the bars' tapped front edges) and to the trunk's front plate by ten M4 x 8 from inside the trunk.
 4. Power module plate on the rear faces of the two rear cross rails, four M6 into their rear slots (T-nuts in first), bonded through its ground stud. Its bottom edge drops through the bay ceiling's slot, so the ceiling plate goes in first if it is not already there (section 4), or the plate goes on after it.
 
 ## 4. Bay ceiling plate
 
 1. Slide the plate in over the mid rails from the front, slot over the rear bulkhead, notches at the rear posts. Its front edge stops 0.5 mm behind where the front bulkhead will stand.
 2. M6 into the mid side rails, the rear cross rail, the rear end rail.
-3. Lint duct up between the front stubs (2 mm to each), bolted to the stubs and to the transition box below.
+3. The lint box (its front plate, two side bars, bottom bar and lower back plate screwed together on the bench, the spool on its back) up between the front stubs, 4 mm spacers between its side bars and the stubs, and the two M8 x 20 button heads through the bars and spacers into the stubs' tapped end bores (tap them M8 like the posts' bores, 6.8 drill is already there). Its bottom bar stands 2 above the tray rails. 3 mm foam tape on the back edges of the side bars above the back plate, where the bulkhead will press on them.
 
 ## 5. Front bulkhead
 
-1. Fit the two front glides (8 thick) to the back face, the two felt arcs, the two front rollers on their studs (heads on the drum side, nuts in front of the plate), the lint slot hardware (V-103, V-104, V-102). Bond the plate.
-2. Hang it on the mid front stubs and the top front rail; its bottom edge stands just in front of the ceiling plate's front edge. The front studs' nuts sit beside the lint duct, 4 mm from its sides.
-3. Lint duct bolted to its face over the slot.
+1. Fit the two front glides (8 thick) to the back face, the two felt arcs, the two front rollers on their studs (heads on the drum side, nuts in front of the plate) (V-103, V-104, V-102). Bond the plate.
+2. Hang it on the mid front stubs and the top front rail; its bottom edge stands just in front of the ceiling plate's front edge, and its face lands on the lint box's foam strips and the top of its lower back plate. The front studs' nuts sit beside the lint box's side bars, 6 mm from them.
+3. From the drum side, six M4 x 10 through the bulkhead's 4.5 holes at X plus and minus 162 (Z 300, 340, 380) into the side bars' tapped back edges, pulling the box onto its foam. The slot is now the box's inlet.
+4. The throat liner: roll the 1.5 mm strip round a 471 plywood disc until it holds the curve (it springs back a little; roll it tighter than the form and check against the ring), fit the splice inside the seam with its two M3 x 6 (heads inside, nuts outside), and set the liner into the lint box's arc with its back edge on the bulkhead. The door ring goes on next (section 7) and traps its front edge.
+5. The lint basket (section 7a) goes in last, through the slot from the drum side.
+
+## 5a. Lint basket, on the bench
+
+1. Tap the six M3 holes in each 3 mm sector plate (2.5 drill is in the DXF). Cut the mesh strip 42 x 350 (or wrap a longer piece and trim), fold one long edge 5 mm inward over the far plate's rim, lay the far clamp plate on it and run in the six M3 x 5. Wrap the strip round the far plate's edge, bending it round the two outer corners, and fold the other long edge 5 mm outward over the lip plate's back; lip clamp on, six M3 x 5. The mesh's ends meet on the inner arc; overlap them 10 mm.
+2. Two M4 x 10 from the back of the lip's tab into the D-pull.
+3. Try it in the slot before the bulkhead goes in: it should slide with a little drag and none of the mesh should catch on the slot's edges (V-018).
 
 ## 6. Drum
 

@@ -1,6 +1,6 @@
 # Tier 0: mechanical control module
 
-Draft 4, 2026-11-06. Status: faceplate drawn, draft 3 (`mechanical/drawings/tier0-faceplate.dxf` and `.svg`: 540 x 160 for the 500 wide aperture of UCI-D draft 5, the controls spread across it, the 22 mm devices 20 above the centre line and the K1 rail 24 below it, so the K1 socket stays inside the aperture's projection; six M4 button head screws), wiring drawn (`tier0-wiring.svg`). Nothing built.
+Draft 4, 2026-11-06. Status: faceplate drawn, draft 4 (`mechanical/drawings/tier0-faceplate.dxf` and `.svg`: 620 x 160 for the 560 wide aperture of UCI-D draft 5, the controls spread across it, the 22 mm devices 20 above the centre line and the K1 rail 24 below it, so the K1 socket stays inside the aperture's projection; six M4 button head screws), wiring drawn (`tier0-wiring.svg`). Nothing built.
 
 The reference control module for the dryer. No microcontroller, no firmware, no printed circuit board. Two knobs, a switch, a button, and one relay. It plugs into J1 only.
 
@@ -65,7 +65,7 @@ Vendor part numbers go in `bom.csv` with two vendors each. These are the part fa
 | START | Momentary push button, normally open, 22 mm panel mount, rated for 24 V DC | Schneider XB4, Eaton M22, IDEC, Omron A22 |
 | K1 | Plug-in relay, 24 V DC coil with suppression diode, 2 changeover contacts, 5 A or more, with a matching socket | Omron MY2, Finder 55.32 or 56.32, Schneider RXM2AB, IDEC RH2B, and their sockets |
 | Plug to J1 | Mini-Fit Jr. 16-circuit plug housing with male crimp terminals | Molex 5559 and 5558, or compatible |
-| Faceplate | Laser-cut 2 mm aluminum, 540 x 160 mm, UCI-D hole pattern (six holes), shaft holes and yoke holes for two timers on the centre line at X -150 and -60, two 22.3 mm holes 20 above it at X 60 and 130, held by six M4 x 10 button heads (2.5 mm hex key) with nuts inside the console | `mechanical/drawings/tier0-faceplate.dxf`; the shaft hole size and knob diameter are to be checked on a timer in hand |
+| Faceplate | Laser-cut 2 mm aluminum, 620 x 160 mm (UCI-D draft 6), UCI-D hole pattern (six holes), shaft holes and yoke holes for two timers on the centre line at X -150 and -60, two 22.3 mm holes 20 above it at X 60 and 130, held by six M4 x 10 button heads (2.5 mm hex key) with nuts inside the console | `mechanical/drawings/tier0-faceplate.dxf`; the shaft hole size and knob diameter are to be checked on a timer in hand |
 | K1 mounting | 100 mm of 35 mm DIN rail on two M4 standoffs, 12 mm long, behind the faceplate on a line 24 below its centre; the socket hangs 36 below that line, to the aperture's bottom edge, and 19 above it, under the 22 mm devices' contact blocks | Any |
 | Timer nuts | 6-32 hex nuts and washers, 4 off, for the screws supplied with the timers | Hardware store |
 | Wire and terminals | 0.5 mm2 stranded, 105 °C, with 6.3 mm insulated quick-disconnects for the timers and switch, crimped with a ratcheting crimper | Any |

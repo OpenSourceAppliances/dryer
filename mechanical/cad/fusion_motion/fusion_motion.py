@@ -30,11 +30,13 @@ What moves and how (all as-built joints, so nothing is displaced when the joint 
     HEAT selector    revolute, three positions AIR / LOW / HIGH at 0, 45 and 90 degrees
     START button     slider along its axis, 3 mm press
     heat module tray slider along Y, tray and module envelope together, 250 mm pull-out toward the back
+    lint basket      slider along Y, the basket's plates, mesh and pull together, 40 mm back out of the slot into the drum
 Everything else is grounded. The belt is drawn on its path and does not deform.
-Draft 4, 2026-11-06 (draft 1 made its own barebones faceplate, knobs and hinge pin; draft 2 jointed the model's own;
+Draft 5, 2026-11-06 (draft 1 made its own barebones faceplate, knobs and hinge pin; draft 2 jointed the model's own;
 draft 3 follows model draft 6: vertical console face, the tray slides out the back, the rear lower panel is left out
 of the moved poses; draft 4 follows model draft 7: the whole heat module, every "heat-module" part, rides the tray;
-20 pulley; appearances for the new parts).
+20 pulley; appearances for the new parts; draft 5 follows model draft 8: the lint basket slides, appearances for the
+liner, the bar-frame ducts and their foam).
 Units in the API are cm; the numbers below are written in mm and converted.
 """
 import math
@@ -64,6 +66,7 @@ DRUM_GROUP = ("drum-sheet", "drum-ring-front", "drum-ring-rear", "drum-splice",
 DOOR_GROUP = ("door-disc", "door-handle", "door-seal", "door-catch-strike", "door-hinge-2-swing",
               "hardware-door-hinge-2", "hardware-door-handle")
 TRAY_GROUP = ("heat-module",)    # every part whose name starts with this slides out with the tray (draft 7: tray, box, element, collar, terminal plate, devices, hardware)
+BASKET_GROUP = ("basket-", "hardware-basket")   # the lint basket slides out of the slot into the drum (draft 8), 40 mm in the demonstration
 ARM_GROUP = ("idler-arm", "hardware-idler-axle")
 SINGLE_MOVERS = ("pulley (bought", "roller-front-1", "roller-front-2", "roller-rear-1", "roller-rear-2",
                  "idler-pulley", "tier0-knob-dry-time", "tier0-knob-heat-time", "tier0-selector (bought", "tier0-start-button")
@@ -203,7 +206,7 @@ def build():
     clean(root)
 
     # --- ground everything that stays put
-    movers = DRUM_GROUP + DOOR_GROUP + TRAY_GROUP + ARM_GROUP + SINGLE_MOVERS
+    movers = DRUM_GROUP + DOOR_GROUP + TRAY_GROUP + BASKET_GROUP + ARM_GROUP + SINGLE_MOVERS
     for o in root.allOccurrences:
         if not any(o.component.name.startswith(m) for m in movers) and not o.isGrounded:
             o.isGrounded = True
@@ -265,6 +268,15 @@ def build():
     slider(root, tray, rail, geo, "tray", positive_dir=(0.0, 1.0, 0.0))    # positive = pulled out toward the back (draft 6: the module leaves by the back)
     log.append("tray slide")
 
+    # --- lint basket: slides back out of the slot into the drum (draft 8); 40 mm clears the slot, then it lifts out through the door
+    rigid_group(root, BASKET_GROUP, "lint basket (plates, mesh, pull, screws)", by_prefix=True)
+    far = occ_by_name(root, "basket-far-plate")
+    faces = [f for f in far.bRepBodies.item(0).faces if f.geometry.surfaceType == adsk.core.SurfaceTypes.PlaneSurfaceType]
+    face = min(faces, key=lambda f: f.centroid.y)       # the far plate's front face: its normal is the slide axis
+    geo = adsk.fusion.JointGeometry.createByPlanarFace(face, None, adsk.fusion.JointKeyPointTypes.CenterKeyPoint)
+    slider(root, far, occ_by_name(root, "front-bulkhead"), geo, "basket", positive_dir=(0.0, 1.0, 0.0))   # positive = pulled back into the drum
+    log.append("basket slide")
+
     app.activeViewport.refresh()
     msg = "fusion_motion build: " + ", ".join(log) + f"; {len(J)} joints"
     try:
@@ -275,7 +287,7 @@ def build():
 
 
 POSITIVE_DIRS = {"door": (0.0, 0.0, -1.0), "knob dry-time": N, "knob heat-time": N, "selector": N,
-                 "start button": (-N[0], -N[1], -N[2]), "tray": (0.0, 1.0, 0.0)}
+                 "start button": (-N[0], -N[1], -N[2]), "tray": (0.0, 1.0, 0.0), "basket": (0.0, 1.0, 0.0)}
 
 
 def reconnect():
@@ -324,6 +336,7 @@ def pose(t):
     _set_rot("selector", math.radians(45) * ((1 if t > 0.33 else 0) + (1 if t > 0.66 else 0)))   # AIR, LOW, HIGH
     _set_slide("start button", 0.3 if 0.08 < t < 0.18 else 0.0)                               # 3 mm press
     _set_slide("tray", 25.0 * (0.5 - 0.5 * math.cos(2 * math.pi * t)))                        # out and back
+    _set_slide("basket", 40.0 * (0.5 - 0.5 * math.cos(2 * math.pi * t)))                      # out of the slot into the drum and back (draft 8)
 
 
 def animate(seconds=10.0, fps=12):
@@ -411,11 +424,13 @@ APPEARANCES = [
                                           "heat-module-element-rails", "heat-module-terminal-angle", "power-module-barrier-angle")),
     ("Steel - Galvanized (Small)", ("front-bulkhead", "rear-bulkhead", "bay-ceiling", "base-pan", "heat-module-tray", "heat-module-wall-",
                                     "heat-module-top", "heat-module-terminal-plate", "heat-module-collar", "power-module-plate",
-                                    "power-module-barrier", "power-module-cover", "lint-duct", "riser-duct", "blower (bought", "motor-mount-")),
+                                    "power-module-barrier", "power-module-cover", "lint-box-front", "lint-box-back", "hood-bottom", "hood-top",
+                                    "trunk-front", "trunk-rear", "basket-far-", "basket-lip-", "blower (bought", "motor-mount-")),
     ("Stainless Steel - Brushed Linear Long", ("drum-sheet", "drum-ring-front", "drum-ring-rear", "drum-splice")),
-    ("Aluminum - Satin", ("baffle-", "exhaust-duct", "idler-arm", "idler-bracket", "spring-bracket")),
+    ("Aluminum - Satin", ("baffle-", "exhaust-duct", "idler-arm", "idler-bracket", "spring-bracket", "lint-box-bars", "spool-bars", "hood-bars",
+                          "trunk-bars", "nozzle-bars", "liner", "ps1-bracket")),
     ("Rubber - Hard", ("roller-", "belt (bought", "feet (bought", "cord-bushing", "power-cord", "grommets (bought")),
-    ("Rubber - Soft", ("door-seal", "hood-gasket")),
+    ("Rubber - Soft", ("door-seal", "hood-gasket", "lint-box-foam", "spool-foam", "nozzle-foam")),
     ("Fabric (Grey)", ("felt-seal-",)),
     ("Plastic - Matte (White)", ("drum-glides-",)),
     ("Paint - Metallic (Dark Grey)", ("motor (bought",)),

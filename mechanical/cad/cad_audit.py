@@ -568,6 +568,16 @@ def loops_overlap(l1, l2):
     for sec, circ in ((l1, l2), (l2, l1)):
         if sec["type"] == "sector" and circ["type"] == "circle" and dist((sec["ccx"], sec["ccy"]), (circ["cx"], circ["cy"])) < 1e-3:
             return sec["r0"] - 1e-6 < circ["w"] / 2 < sec["r1"] + 1e-6
+        if sec["type"] == "sector" and circ["type"] == "circle":
+            # a small hole beside a sector (the basket plates' screw holes round their opening, draft 8): overlap only if
+            # the hole's centre radius from the sector's centre falls inside the sector's ring, hole radius included
+            rc = dist((sec["ccx"], sec["ccy"]), (circ["cx"], circ["cy"]))
+            if rc > circ["w"] / 2 + sec["r1"] + 1e-6 or rc + circ["w"] / 2 < sec["r0"] - 1e-6:
+                return False
+            # inside the ring of radii: overlap unless the hole sits beyond the sector's angular span (measured from straight down)
+            ang = math.degrees(math.atan2(circ["cx"] - sec["ccx"], -(circ["cy"] - sec["ccy"])))
+            half = sec["span_deg"] / 2 + math.degrees(circ["w"] / 2 / max(rc, 1e-6))
+            return abs(ang) < half
     # rectangle test on bounding boxes for everything else (slots and rects are axis-aligned)
     ax0, ax1 = l1["cx"] - l1["w"] / 2, l1["cx"] + l1["w"] / 2
     ay0, ay1 = l1["cy"] - l1["h"] / 2, l1["cy"] + l1["h"] / 2
@@ -733,34 +743,38 @@ CLEAR_PAIRS = [
     ("drum-ring-rear", "rear-bulkhead"), ("door-ring", "front-upper-panel"), ("door-disc", "door-ring"),
     ("console-face", "console-cheek-left"), ("console-face", "console-cheek-right"), ("console-face", "top-panel"),
     ("console-face", "console-cap"), ("front-bulkhead", "bay-ceiling"), ("rear-bulkhead", "bay-ceiling"),
-    ("lint-duct", "rail-mid-front-left"), ("lint-duct", "rail-mid-front-right"), ("lint-duct", "front-bulkhead"),
-    ("lint-duct", "front-upper-panel"), ("riser-duct", "rear-bulkhead"), ("riser-duct", "rail-mid-rear"),
-    ("riser-duct", "bay-ceiling"), ("heat-module-top", "bay-ceiling"), ("heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)", "riser-duct"),
+    ("lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)", "rail-mid-front-left"), ("lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)", "rail-mid-front-right"), ("lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)", "front-bulkhead"), ("lint-box-front", "front-upper-panel"),
+    ("lint-box-front", "liner"), ("lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)", "liner"), ("liner", "door-ring"), ("liner", "front-bulkhead"), ("liner", "front-upper-panel"),
+    ("basket-mesh (bought, stainless 18 x 16 mesh strip, 42 wide, 350 long, wrapped and folded 5 at each edge)", "front-bulkhead"), ("basket-mesh (bought, stainless 18 x 16 mesh strip, 42 wide, 350 long, wrapped and folded 5 at each edge)", "liner"), ("basket-far-plate", "lint-box-front"), ("basket-lip-plate", "drum-ring-front"),
+    ("basket-lip-plate", "felt-seal-front-long"), ("basket-pull (bought, D-pull, 64 mm centres, 25 projection)", "door-disc"),
+    ("trunk-front", "rear-bulkhead"), ("trunk-front", "rail-mid-rearcross"), ("trunk-rear", "rail-mid-rear"), ("trunk-front", "bay-ceiling"),
+    ("hood-top", "rail-mid-rearcross"), ("hood-bottom", "heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)"), ("heat-module-top", "bay-ceiling"), ("heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)", "hood-bottom"),
     ("heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)", "hood-gasket (bought, 3 mm foam ring 150 x 125, glued under the hood)"),
     ("heat-module-wall-front", "idler-spring (bought, extension spring)"), ("heat-module-tray", "idler-spring (bought, extension spring)"),
     ("heat-module-devices (bought, envelopes: 2 end clamps, X_HM mains and SELV strips, partition, K_HEAT, CS1)", "rear-lower-panel"),
-    ("heat-module-thermostats (bought, 279816 class high-limit and thermal cut-off, envelopes)", "riser-duct"),
+    ("heat-module-thermostats (bought, 279816 class high-limit and thermal cut-off, envelopes)", "hood-bottom"),
     ("heat-module-tray", "tray-rail-1"), ("heat-module-tray", "rail-bottom-rear"), ("heat-module-terminal-plate", "heat-module-wall-rear"),
-    ("power-module-plate", "riser-duct"), ("power-module-plate", "rail-mid-rearcross"), ("power-module-plate", "post-3"),
+    ("power-module-plate", "trunk-front"), ("power-module-plate", "rail-mid-rearcross"), ("power-module-plate", "post-3"),
     ("power-module-cover", "rear-upper-panel"), ("power-module-plate", "bay-ceiling"),
     ("power-module-rail-B1-devices (bought, envelopes: RLY_MOTOR, RLY_HEAT, RLY_HEAT_LO: 3 x 38.51 class, PTC1 to PTC3 in fuse terminals, F2: UK 5-HESI, X4 heat module SELV: 4 x UK 2.5 N, 2 end clamps)", "rear-upper-panel"),
     ("power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)", "power-module-cover"),
     ("power-cord (bought)", "bay-ceiling"), ("power-cord (bought)", "grommets (bought, 3 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1)"),
     ("power-cord (bought)", "power-module-rail-A1-devices (bought, envelopes: X1 cord: 4 x UK 6 N (L1, L2, N, PE), CB1: 1P MCB, F1: UK 5-HESI fuse terminal, 2 end clamps)"),
-    ("hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)", "lint-duct"),
+    ("hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)", "lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)"),
     ("hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)", "drum-sheet"),
     ("hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)", "roller-front-1 (bought)"),
     ("drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)", "drum-ring-front"), ("drum-glides-rear (bought, 2 x nylon drum glide pads, 45 x 20 x 9.5)", "drum-ring-rear"),
     ("drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)", "felt-seal-front-long"), ("drum-glides-front (bought, 2 x nylon drum glide pads, 45 x 20 x 8)", "felt-seal-front-short"),
-    ("motor (bought)", "base-pan"), ("blower (bought)", "front-bulkhead"), ("blower (bought)", "lint-duct-transition"),
+    ("motor (bought)", "base-pan"), ("blower (bought)", "front-bulkhead"), ("blower (bought)", "spool-bars (40 x 8 aluminium flat bar: 2 x 156, 2 x 140)"), ("blower (bought)", "ps1-air-proving-switch (bought, envelope)"),
     ("pulley (bought)", "bay-ceiling"), ("exhaust-duct (bought)", "rear-lower-panel"), ("exhaust-duct (bought)", "tray-rail-2"), ("drum-sheet", "front-upper-panel"),
     ("belt (bought, PJ 5 rib)", "drum-sheet"), ("belt (bought, PJ 5 rib)", "pulley (bought)"), ("belt (bought, PJ 5 rib)", "idler-pulley (bought, flat idler 40 with bearing)"),
     ("belt (bought, PJ 5 rib)", "bay-ceiling"), ("belt (bought, PJ 5 rib)", "motor (bought)"), ("belt (bought, PJ 5 rib)", "heat-module-tray"),
     ("door-hinge-1-fixed (bought, flag hinge, pinned half)", "door-disc"), ("door-hinge-2-swing (bought, flag hinge, lift-off half)", "door-ring"),
     ("door-seal (bought, OEM door seal)", "door-ring"), ("felt-seal-rear-long", "drum-ring-rear"), ("felt-seal-front-long", "drum-ring-front"),
     ("felt-seal-front-long", "drum-sheet"), ("felt-seal-rear-long", "drum-sheet"), ("felt-seal-front-short", "drum-ring-front"), ("tier0-faceplate", "console-face"),
-    ("riser-duct", "rail-mid-rearcross"), ("riser-duct", "heat-module-tray"), ("riser-duct", "belt (bought, PJ 5 rib)"),
-    ("lint-duct", "hardware-door-ring (bought, 8 x M4 x 8 button head, nuts)"), ("console-post-1", "top-panel"),
+    ("hood-bottom", "heat-module-tray"), ("hood-bottom", "belt (bought, PJ 5 rib)"), ("nozzle-bars (40 x 8 aluminium flat bar: 2 sides, top, bottom)", "rear-bulkhead"),
+    ("lint-box-front", "hardware-door-ring (bought, 8 x M4 x 8 button head, nuts)"), ("door-switch (bought, two-contact plunger switch, envelope)", "lint-box-front"),
+    ("door-switch (bought, two-contact plunger switch, envelope)", "door-disc"), ("exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet)", "motor (bought)"), ("console-post-1", "top-panel"),
     ("console-post-1", "console-cheek-left"), ("console-rail-front", "console-cap"), ("console-rear", "rear-upper-panel"),
     ("console-cheek-left", "side-panel-left"), ("tier0-k1-relay-on-din-rail (bought)", "console-rail-front"),
     ("tier0-k1-relay-on-din-rail (bought)", "top-panel"), ("power-cord (bought)", "cord-bushing (bought, PG16 strain relief)"),
@@ -794,7 +808,9 @@ for name, m in parts.items():
         gen(name, "section edges all closed", m["open_section_edges"], m["open_section_edges"] == 0)
         loops = m["loops"]
         others = [l for l in loops if l["type"] == "other"]
-        gen(name, "every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon", f"{len(loops)} loops, {len(others)} unclassified", not others)
+        COMPOSITE = ("lint-box-front", "basket-lip-plate")   # draft 8: a rectangle with an arc top; a sector ring with a tab. Their outlines are checked by the rows that name their arcs
+        gen(name, "every section loop is a circle, rectangle, rounded rectangle or polygon, slot or polygon" + (" (composite outline allowed)" if name in COMPOSITE else ""),
+            f"{len(loops)} loops, {len(others)} unclassified", not others or (name in COMPOSITE and len(others) == 1))
         # one outer loop: the one with the largest box; every other loop inside it; no two inner loops overlap
         if loops:
             outer = max(loops, key=lambda l: l["w"] * l["h"])
@@ -824,7 +840,7 @@ for name, m in parts.items():
                 not only_s and not only_d)
             gen(name + ".dxf", "DXF drawn in world coordinates or about the origin", f"offset ({dx:.2f}, {dy:.2f})",
                 (abs(dx) < TOL_POS and abs(dy) < TOL_POS) or (abs(douter["cx"]) < TOL_POS and abs(douter["cy"]) < TOL_POS))
-    elif name in dxfs and name not in ("drum-sheet", "drum-splice"):
+    elif name in dxfs and name not in ("drum-sheet", "drum-splice", "liner", "liner-splice"):   # the rolled parts are checked by unwrapping below
         gen(name + ".dxf", "DXF exists for a flat part", "part not flat", False)
 
 # frame rails: every M6 hole in a panel or plate must sit on a rail centre line, within the rail's length
@@ -866,7 +882,8 @@ PANELS = ("side-panel-left", "side-panel-right", "front-upper-panel", "front-low
 # (design-rules 7a Drive) and the two fixed hinge leaves on the front upper panel (7a Door). Listed, not inferred.
 # The console's four foot bolts through the top panel land on the top rear cross rail and the rear top rail, so the
 # rail check covers them.
-THROUGH_BOLTED = {"base-pan": [(-128.0, 370.0), (-102.0, 370.0), (55.0, 370.0), (75.0, 370.0)],
+THROUGH_BOLTED = {"base-pan": [(-128.0, 370.0), (-102.0, 370.0), (55.0, 370.0), (75.0, 370.0),
+                              (-22.0, 230.0), (22.0, 230.0), (-22.0, 350.0), (22.0, 350.0), (235.0, 70.0), (265.0, 70.0)],   # draft 8: the motor cradles and the PS1 bracket
                   "front-upper-panel": [(-266.0, 581.5), (-252.0, 581.5)]}
 for name in PANELS:
     m = parts[name]
@@ -892,15 +909,23 @@ m4 = [g for g in m["cylinders"] if abs(g["r"] - 2.25) < 1e-3]
 gen("console-face", "the only M4 holes are the six UCI-D module holes (uci-spec 4.1, draft 5)", f"{len(m4)} M4 holes", len(m4) == 6)
 
 # V-011: every round feature has a named diameter
-ALLOWED_D = {4.5: "M4 clearance", 5.0: "louver slot ends (60 x 5)", 6.5: "M6 clearance", 6.6: "M6 bonding studs (nutted)", 8.5: "M8 clearance (feet studs, roller studs)", 10.0: "inlet holes",
+ALLOWED_D = {4.5: "M4 clearance", 5.0: "louver slot ends (60 x 5)", 6.5: "M6 clearance", 6.6: "M6 bonding studs (nutted)", 8.5: "M8 clearance (feet studs, roller studs) / door switch plunger hole", 10.0: "inlet holes",
              40.0: "lint slot ends (260 x 40)", 30.0: "bay harness grommet", 126.0: "collar opening (125 collar + 1)",
              22.0: "cord strain relief bushing, cord and console grommets", 106.0: "exhaust port (102 duct + 2 each side)", 460.0: "door opening",
              470.0: "door ring bore", 480.0: "front panel ring opening", 540.0: "door disc / drum ring bore", 560.0: "door ring",
              616.4: "splice inside", 618.4: "drum ring / sheet inside", 620.0: "drum outside",
-             12.0: "plate corner radius 6 / timer shaft holes", 6.0: "corner radius 3 (cheeks, tabs, splice, idler arm ends)", 20.0: "faceplate corner radius 10",
-             4.0: "4040 corner radius 2 / timer yoke holes", 3.0: "2020 corner radius 1.5", 6.8: "4040 centre bore (tapped M8 for the feet)", 4.2: "2020 centre bore",
+             12.0: "plate corner radius 6 / timer shaft holes / lint box hang spacers / door switch cable grommets (draft 8)", 6.0: "corner radius 3 (cheeks, tabs, splice, idler arm ends)", 20.0: "faceplate corner radius 10",
+             4.0: "4040 corner radius 2 / timer yoke holes", 3.0: "2020 corner radius 1.5", 6.8: "4040 centre bore (tapped M8 for the feet)", 4.2: "2020 centre bore / M4 tapped in the duct bars, drawn at the thread",
              22.3: "22 mm panel devices", 546.0: "felt seal inside (radius 273)", 582.0: "felt seal outside (radius 291)",
-             476.0: "lint slot inner arc (radius 238)", 532.0: "lint slot outer arc (radius 266)"}
+             476.0: "lint slot inner arc (radius 238)", 534.0: "lint slot outer arc (radius 267, draft 8)",
+             # draft 8: the throat liner, the lint box's top edges, the basket's plates and mesh, the ducts' tapped holes
+             3.0: "M3 tapped (basket plates)", 3.4: "M3 clearance (liner, basket clamps)", 8.0: "door switch plunger", 141.0: "motor cradle saddle (140 motor + 1)",
+             471.0: "liner inside (radius 235.5)", 474.0: "liner outside (radius 237)", 468.0: "liner splice inside (radius 234)",
+             474.4: "lint box plates and bars follow the liner (radius 237.2)", 128.0: "hood collar hole (125 collar + 3)",
+             479.0: "basket plates inside (radius 239.5)", 531.0: "basket plates outside (radius 265.5)", 464.0: "basket lip inside (radius 232)",
+             537.0: "basket lip outside (radius 268.5)", 489.0: "basket far flange inside (radius 244.5)", 521.0: "basket far flange outside (radius 260.5)",
+             477.8: "basket mesh inside (radius 238.9)", 532.2: "basket mesh outside (radius 266.1)", 467.8: "basket lip flange inside (radius 233.9)",
+             10.0: "inlet holes / D-pull bar"}
 bad_d = []
 for n, m in parts.items():
     for g in m["cylinders"]:
@@ -916,21 +941,40 @@ for n, d in dxfs.items():
 gen("all parts", "V-011: every round feature deeper than 0.5 mm has a diameter on the named list (" + ", ".join(f"{k:g} {v}" for k, v in sorted(ALLOWED_D.items())) + ")",
     f"{len(bad_d)} off the list" + (f": {bad_d[:5]}" if bad_d else ""), not bad_d)
 
-# V-013: air path areas from the measured features, against the blower outlet (102 round)
+# V-013: air path areas from the measured features, against the blower outlet (102 round). Draft 8: the ducts are
+# plates on flat bar frames, so each section is the gap between the frame's bars (measured from a level or transverse
+# section of the bar compound) times the bars' width; the lint basket's outer wall is its mesh arc times its length
+# inside the box; the slot is the sector in the front bulkhead; the collar and the module inlet as in draft 7.
 try:
     a_outlet = math.pi * 51 ** 2
-    # the riser's vertical part, cut level at Z 400 (above the hood, below the ceiling), and its hood over the heat
-    # module's outlet, cut at Y 630 (the hood runs from Y 560 to the riser); each section is one rectangle (draft 6)
-    def section_area(name, origin, normal, u, v):
-        lps, _ = section_loops(part_shapes[name], origin, normal, u, v)
-        outer = max(lps, key=lambda l: l["w"] * l["h"])
-        assert outer["type"] == "rect", (name, outer)
-        inner = [l for l in lps if l is not outer]
-        return outer["w"] * outer["h"] - sum(l["w"] * l["h"] for l in inner), outer
-    a_riser, riser_sec = section_area("riser-duct", (0, 0, 400), (0, 0, 1), (1, 0, 0), (0, 1, 0))
-    a_hood, hood_sec = section_area("riser-duct", (0, 630, 0), (0, 1, 0), (1, 0, 0), (0, 0, 1))
-    # draft 7: the heat module's collar (a thin round tube, cut level at Z 200: the air is the inner circle) and its inlet
-    # opening (the one rectangle cut in the left wall)
+
+    def bar_gap(name, u, v):
+        """The interior of a bar frame from the bounding boxes of its bars (axis-aligned flat bar): u and v are the two
+        cross axes (0 = X, 1 = Y, 2 = Z), the third is the flow axis. The two side bars give the gap between them along
+        u; a pair of bars that run the same length along the flow axis and close the section in v give the gap along v,
+        otherwise the side bars' v extent is the height. Bars across the flow (a bottom bar, a top bar, the hood's front
+        and rear bars) are not part of the section."""
+        full = [n for n in assembly if n.startswith(name)][0]
+        boxes = [bbox(sol) for sol in solids_of(assembly[full]["shape"])]
+        flow = 3 - u - v
+        def ext(b, k):
+            return b[k + 3] - b[k]
+        run = max(ext(b, flow) for b in boxes)
+        along = [b for b in boxes if abs(ext(b, flow) - run) < 1.0]           # bars that run the duct's length
+        sides = sorted([b for b in along if ext(b, u) < ext(b, v)], key=lambda b: b[u])
+        ends = sorted([b for b in along if ext(b, v) <= ext(b, u)], key=lambda b: b[v])
+        assert len(sides) == 2, (name, len(sides), len(ends))
+        gap_u = sides[1][u] - sides[0][u + 3]
+        if len(ends) == 2:
+            gap_v = ends[1][v] - ends[0][v + 3]
+            return gap_u * gap_v, (gap_u, gap_v)
+        return gap_u * ext(sides[0], v), (gap_u, ext(sides[0], v))
+
+    a_trunk, trunk_sec = bar_gap("trunk-bars", 0, 1)      # X between the side bars, Y across them (the top bar is an end bar)
+    a_hood, hood_sec = bar_gap("hood-bars", 0, 2)         # X between the side bars, Z across them; the front and rear bars are end bars
+    a_nozzle, nozzle_sec = bar_gap("nozzle-bars", 0, 2)
+    a_lint, lint_sec = bar_gap("lint-box-bars", 0, 1)     # the bottom bar is left out: the box's height is the liner's business
+    a_spool, spool_sec = bar_gap("spool-bars", 0, 2)
     collar_name = [n for n in assembly if n.startswith("heat-module-collar")][0]
     c_lps, _ = section_loops(assembly[collar_name]["shape"], (0, 0, 200), (0, 0, 1), (1, 0, 0), (0, 1, 0))
     c_in = min([l for l in c_lps if l["type"] == "circle"], key=lambda l: l["w"])
@@ -938,15 +982,19 @@ try:
     lw_lps = parts["heat-module-wall-left"]["loops"]
     lw_outer = max(lw_lps, key=lambda l: l["w"] * l["h"])
     a_hm_inlet = max(l["w"] * l["h"] for l in lw_lps if l["type"] == "rect" and l is not lw_outer)
-    lint = parts["lint-duct"]
-    a_lint = lint["sx"] * lint["sy"]
     slot = [l for l in parts["front-bulkhead"]["loops"] if l["type"] == "sector"][0]
     a_slot = slot["area"]
+    mesh_name = [n for n in assembly if n.startswith("basket-mesh")][0]
+    m_lps, _ = section_loops(assembly[mesh_name]["shape"], (0, 25, 0), (0, 1, 0), (1, 0, 0), (0, 0, 1))
+    m_out = max([l for l in m_lps if l["type"] == "sector"], key=lambda l: l["r1"])
+    mesh_y0 = assembly[mesh_name]["bbox"][1]
+    a_basket = math.radians(m_out["span_deg"]) * m_out["r1"] * (parts["front-bulkhead"]["ymin"] - mesh_y0)
     inlet = [g for g in parts["rear-bulkhead"]["cylinders"] if abs(2 * g["r"] - 10) < 0.011]
     a_inlet = sum(math.pi * g["r"] ** 2 for g in inlet)
     port = [l for l in parts["rear-lower-panel"]["loops"] if l["type"] == "circle" and abs(l["w"] - 106) < 0.011][0]
     a_exh = a_outlet   # the duct itself, 102 round
-    areas = dict(module_inlet=a_hm_inlet, module_collar=a_collar, riser=a_riser, riser_hood=a_hood, lint_duct=a_lint, lint_slot=a_slot, inlet_field=a_inlet, exhaust_duct=a_exh)
+    areas = dict(module_inlet=a_hm_inlet, module_collar=a_collar, hood=a_hood, trunk=a_trunk, nozzle=a_nozzle, inlet_field=a_inlet,
+                 lint_slot=a_slot, basket_outer_wall=a_basket, lint_box=a_lint, spool=a_spool, exhaust_duct=a_exh)
     gen("air path", "V-013: every opening in the air path is at least the blower outlet (102 round, %.0f mm2)" % a_outlet,
         ", ".join(f"{k} {v:.0f}" for k, v in areas.items()), all(v >= a_outlet - 0.5 for v in areas.values()))
 except Exception as ex:
@@ -1230,6 +1278,29 @@ if "drum-splice" in parts and "drum-splice" in dxfs:
     gen("drum-splice.dxf", "flat strip outline equals the curved strip's arc length by its length",
         f"{outline['w']:.3f} x {outline['h']:.3f}; arc {2 * math.radians(90 - edge_deg) * ro:.3f} x {m['sy']:.3f}",
         abs(outline["w"] - 2 * math.radians(90 - edge_deg) * ro) < 0.05 and abs(outline["h"] - m["sy"]) < TOL_POS)
+
+# Throat liner and its splice (draft 8): rolled 1.5 mm parts; the flat pattern is the mid-surface arc length by the
+# width, and the two M3 holes unwrap onto the strip (the liner's seam gap is at the top, 2 mm)
+for nm, is_full in (("liner", True), ("liner-splice", False)):
+    if nm not in parts or nm not in dxfs:
+        continue
+    m = parts[nm]
+    big = [g for g in m["cylinders"] if g["r"] > 100]
+    ri_, ro_ = min(g["r"] for g in big), max(g["r"] for g in big)
+    rm_ = (ri_ + ro_) / 2
+    d = dxfs[nm]
+    outline = max(d["loops"], key=lambda l: l["w"] * l["h"])
+    if is_full:
+        arc = 2 * math.pi * rm_ - 2.0
+    else:
+        arc = 2 * rm_ * math.asin(m["sx"] / 2 / ro_)   # the splice's chord at its outer radius gives its angle
+    gen(nm + ".dxf", "flat pattern outline is the rolled part's mid-surface arc length by its width",
+        f"{outline['w']:.3f} x {outline['h']:.3f}; arc {arc:.3f} x {m['sy']:.3f}", abs(outline["w"] - arc) < 0.2 and abs(outline["h"] - m["sy"]) < TOL_POS)
+    holes = [g for g in m["cylinders"] if g["r"] < 100 and abs(2 * g["r"] - 3.4) < 0.011]
+    dcirc = [l for l in d["loops"] if l["type"] == "circle"]
+    gen(nm + ".dxf", "two M3 holes in the solid and the flat pattern, 3 degrees each side of the seam at the top",
+        f"{len(holes)} in the solid at " + ", ".join(f"{math.degrees(math.atan2(g['mid'][2] - DRUM_AXIS_Z, g['mid'][0])):.1f} deg" for g in holes) + f"; {len(dcirc)} in the DXF",
+        len(holes) == 2 and len(dcirc) == 2 and all(abs(abs(math.degrees(math.atan2(g["mid"][2] - DRUM_AXIS_Z, g["mid"][0])) - 90.0) - 3.0) < 0.01 for g in holes))
 
 # ---------------------------------------------------------------------------
 # Fusion comparison

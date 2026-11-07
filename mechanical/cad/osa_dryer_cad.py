@@ -10,7 +10,12 @@ One file holds every number. Run it and it writes:
 Coordinate system: X across the cabinet (left negative), Y from front (0) to back, Z up from the floor.
 All dimensions mm. Needs cadquery (pip install cadquery). Also runs in FreeCAD's CadQuery workbench.
 
-Status: draft 7, 2026-11-06. Draft 5 drew what the documents already called for but the model only
+Status: draft 8, 2026-11-06. Draft 8 draws the ducts as parts: 1.5 mm plates screwed into the tapped edges of aluminium
+flat bar frames (the lint box between the front stubs with the bulkhead as its back wall, a spool to the blower, the riser's
+hood, trunk and nozzle), the throat liner the drawing showed was missing (a rolled strip between the door ring and the
+bulkhead; the lint box's top follows it), the lint basket (mesh on laser-cut sector plates through the widened slot, a
+D-pull on its lip), the door switch, PS1, the exhaust thermostats, the motor cradles' bolts, two grommets and four clamp
+holes for the harnesses. Draft 5 drew what the documents already called for but the model only
 implied: T-slot profiles on the extrusions, laser corner radii, every panel bolt, the leveling feet, the belt
 on its real path with the idler, the door hinges, handle, seal and catch, the Tier 0 control module, and
 the detail of the motor, pulley and blower. Draft 6 settled the three things draft 5 found (DECISIONS.md,
@@ -36,7 +41,7 @@ import cadquery as cq
 from cadquery import exporters
 
 OUT = sys.argv[1] if len(sys.argv) > 1 else "."
-DRAFT = 7
+DRAFT = 8
 HERE = os.path.dirname(os.path.abspath(__file__))
 for sub in ("step", "drawings"):
     os.makedirs(os.path.join(OUT, sub), exist_ok=True)
@@ -77,21 +82,37 @@ P = dict(
     glide_w=45.0, glide_h=20.0, glide_r=282.0, glide_angle_deg=45.0, glide_t_front=8.0, glide_t_rear=9.5,   # two nylon drum glides per bulkhead at 10 and 2 o'clock, on the felt's radius; 0.5 end float
     motor_pulley_d=20.0,      # 1725 rpm x 20 / 620 = 56 drum rpm (draft 7: 30 gave 83, outside the 45 to 55 target)
     # lint filter slot in the front bulkhead: a curved slot inside the ring bore, below the door opening (draft 6)
-    lint_slot_r0=238.0, lint_slot_r1=266.0, lint_slot_half_deg=36.0,   # 8 outside the 460 opening, 4 inside the 540 bore; 8865 mm2
+    lint_slot_r0=238.0, lint_slot_r1=267.0, lint_slot_half_deg=36.0,   # 8 outside the 460 opening, 3 inside the 540 bore; 9201 mm2 (draft 8: 267 so the basket passes with 0.9 each side)
+    # throat liner (draft 8): a rolled 1.5 mm strip between the door ring and the front bulkhead that closes the gap round
+    # the opening; the lint box's top follows it. Inner radius 235.5 (the ring's 235 edge covers its front end)
+    liner_ri=235.5, liner_t=1.5, liner_y0=-1.5, liner_len=41.3,   # from the ring's back face to 0.2 short of the bulkhead
+    # lint box (draft 8): 1.5 mm plates on a frame of 30 x 8 aluminium flat bar, in front of the bulkhead between the
+    # mid front stubs; the bulkhead is its back wall above 265, a plate below; a spool of 40 x 8 bar to the blower mouth
+    lb_y0=7.0, bar_w=30.0, bar_t=8.0, lb_x=166.0, lb_z0=62.0, lb_gap=1.5,   # front plate from Y 7 (the ring bolts' tips end at 4.5); 1.5 foam between the bars and the bulkhead
+    lb_hang_z=280.0, lb_hang_y=20.0, lb_rear_plate_z1=275.0, lb_bulk_screw_z=(300.0, 340.0, 380.0),   # M6 into the stubs' inner slots; the lower back plate laps the bulkhead's foot 10; M4 from the drum side into the side bars
+    sp_half=78.0, sp_bar_w=40.0, sp_z0=62.0, sp_z1=198.0, sp_foam=4.0,   # spool: four 40 x 8 bars, 156 wide, 62 to 198 tall (its bottom bar behind the box's), foam 6 compressed to 4 on the blower's inlet face (V-107)
+    # lint basket (draft 8): mesh wrapped round two laser-cut sector plates, clamped by two more; it slides through the slot
+    bk_r0=239.5, bk_r1=265.5, bk_half_deg=35.6, bk_t=3.0, bk_flange=5.0, mesh_t=0.6,   # 3 mm plates, tapped M3
+    bk_far_y0=9.0, bk_lip_y0=41.5, bk_pull_r=214.0, bk_pull_c=64.0,   # the far plate 2 behind the front plate; the lip on the bulkhead's drum side; a 64 mm D-pull on the lip's tab, inside the opening
+    # riser (draft 8): a trunk of two 50 x 8 bars between 1.5 mm plates up the back, standing on a hood of 25 x 8 bars
+    # over the heat module's collar, and a nozzle of 40 x 8 bars from the trunk's front plate to the inlet field
+    riser_z0=230.0, hood_y0=448.0, hood_bar_w=25.0, hood_x=175.0, tr_x=130.0, tr_bar_w=50.0, tr_y0=652.5, tr_over=20.0, nz_x=114.0, nz_bar_w=40.0, nz_z=(658.5, 816.5), nz_foam=1.0,
+    hood_gasket_od=150.0, hood_gasket_t=3.0,   # foam ring glued under the hood; the collar's rim brushes it
+    # door switch (draft 8): plunger through the ring and panel at 45 degrees right of bottom on the ring bolts' radius, the disc presses it
+    ds_angle_deg=45.0, ds_r=258.0, ds_plunger_d=8.0, ds_body=(30.0, 25.0, 45.0),
+    ps1_xy=(250.0, 70.0), tf_x=(130.0, 180.0, 230.0),   # air-proving switch on an angle bracket on the pan; exhaust thermostats on the blower's outlet box
+    ds_grommet_ceil=(290.0, 60.0, 12.0), ds_grommet_bulk=(290.0, 330.0, 12.0),   # the door switch cable: up through the bay ceiling behind the bulkhead, through the bulkhead to the switch (draft 8)
+    clamp_pts=((-250.0, 120.0), (-250.0, 280.0), (-250.0, 440.0), (-250.0, 600.0)),   # M4 cable clamps along the bay's left side for the bay harness (draft 8)
     # rear air inlet zone
     inlet_w=200.0, inlet_h=130.0, inlet_above_axis=50.0, inlet_hole_d=10.0, inlet_pitch=14.0,   # inside the ring opening (R 240)
-    # riser duct: vertical part behind the rear cross rails, and a hood under the mid cross rail over the heat module's outlet
-    riser_w=260.0, riser_depth=50.0, riser_z0=230.0, hood_w=300.0, hood_y0=448.0, hood_h=28.0,   # the hood reaches forward over the module's collar (draft 7)
-    hood_gasket_od=150.0, hood_gasket_t=3.0,   # foam ring glued under the hood; the collar's rim brushes it
     # console: a vertical box at the rear of the top on its own 4040 sub-frame (draft 6), holding the full UCI envelope
     console_h=200.0, uci_ap_z_off=83.0,   # console depth: from the top rear cross rail to the back (set below). Aperture centre above the top panel: the module's nuts under the front rail, the faceplate under its bolts
-    uci_ap_w=500.0, uci_ap_h=120.0, uci_hole_x=520.0, uci_hole_y=140.0, uci_hole_d=4.5,   # UCI-D draft 5: 500 wide, six holes (the corners plus two on the centre line)
+    uci_ap_w=560.0, uci_ap_h=120.0, uci_hole_x=590.0, uci_hole_y=140.0, uci_hole_d=4.5,   # UCI-D draft 6: 560 wide, six holes (the corners plus two on the centre line); 15 to the console posts' inner faces
     # fasteners
     m6_hole=6.5, m4_hole=4.5, panel_pitch=150.0,
     # bay layout (envelopes)
     motor_axis_z=120.0, motor_len=200.0, motor_d=140.0, motor_y0=190.0,   # motor behind the blower, pulley on its rear shaft
     blower_d=220.0, blower_w=100.0, blower_y0=84.0,                       # blower on the front shaft, inlet facing front
-    lint_duct_y0=5.0, lint_duct_depth=33.0, lint_duct_top=445.0,         # between the front panel (behind the ring bolts' nuts and tips) and the front bulkhead
     tray_w=340.0, tray_depth=280.0, tray_y0=420.0, tray_x0=-170.0, t_tray=1.5,   # on the two 2020 tray rails (X +-150..170), draft 7; starts 3 behind the idler spring (409..417)
     # electric heat module (draft 7): a laser-cut 1.5 mm duct box on the tray, joined with 20x20x2 aluminium angle and M4 (no
     # brake, no rivets), the catalog element along X inside it on two angle rails, a round catalog collar on top under the
@@ -140,7 +161,7 @@ P = dict(
     # felt seals (7b Seals): 10 mm polyester felt arcs glued to both bulkheads, drawn compressed to the gap the drum leaves
     felt_ri=273.0, felt_ro=291.0, felt_t=8.0, felt_t_rear=10.0,   # on the ring face between the 540 bore and the tab tips (293.2); front gap 8.5, rear gap 10
     # Tier 0 control module (controls/tier0-mechanical): faceplate numbers from mechanical/drawings/tier0_drawings.py
-    fp_w=540.0, fp_h=160.0, fp_r=10.0, fp_t=2.0,
+    fp_w=620.0, fp_h=160.0, fp_r=10.0, fp_t=2.0,   # 620 wide (UCI-D draft 6): 35 to the console's edges, like the 37 above it
     knob_d=40.0, knob_skirt_h=3.0, knob_body_d=30.0, knob_h=20.0,
 )
 P["drum_rim_r"] = P["drum_d"] / 2
@@ -513,9 +534,12 @@ for ang in GLIDE_ANGLES:
     for k in (-12.0, 12.0):
         glide_holes.append((cx_ + k * tx_, cz_ + k * tz_, P["m4_hole"]))
 
-# front bulkhead: door opening, lint slot, front roller holes; bolt heads on its back face (the rails are in front of it)
+# front bulkhead: door opening, lint slot, front roller holes; bolt heads on its back face (the rails are in front of it).
+# Draft 8: six 4.5 holes for the M4 that pull the lint box's side bars against it from the drum side (outside the felt)
+LB_BAR_X = P["lb_x"] - P["bar_t"] / 2
+lb_bulk_pts = [(sx * LB_BAR_X, z) for sx in (-1, 1) for z in P["lb_bulk_screw_z"]]
 plate_xz("front-bulkhead", bulk_x0, bulk_x1, bulk_z0, bulk_z1, P["front_bulk_y"], tb,
-         holes=bulk_holes(front=True) + rollers + glide_holes,
+         holes=bulk_holes(front=True) + rollers + glide_holes + [(x, z, P["m4_hole"]) for (x, z) in lb_bulk_pts] + [P["ds_grommet_bulk"]],
          circ_cuts=[(0, az, P["door_opening_d"])],
          sectors=[(0, az, P["lint_slot_r0"], P["lint_slot_r1"], P["lint_slot_half_deg"])], bolt_side=+1)
 P["lint_slot_area"] = math.radians(2 * P["lint_slot_half_deg"]) / 2 * (P["lint_slot_r1"] ** 2 - P["lint_slot_r0"] ** 2)
@@ -530,8 +554,15 @@ for i in range(nx):
         x = -P["inlet_w"] / 2 + P["inlet_pitch"] / 2 + i * P["inlet_pitch"]
         z = az + P["inlet_above_axis"] + j * P["inlet_pitch"]
         inlet.append((x, z, P["inlet_hole_d"]))
+# draft 8: ten 4.5 holes round the field for the M4 that hold the riser's nozzle to the bulkhead from the drum side
+NZ_BX = P["nz_x"] - P["bar_t"] / 2                                   # the nozzle's side bars' centre line
+nz_z0, nz_z1 = P["nz_z"]
+nz_bulk_pts = ([(sx * NZ_BX, z) for sx in (-1, 1) for z in (690.0, 785.0)]
+               + [(x, z) for x in (-70.0, 0.0, 70.0) for z in (nz_z0 + P["bar_t"] / 2, nz_z1 - P["bar_t"] / 2)])
 plate_xz("rear-bulkhead", bulk_x0, bulk_x1, bulk_z0, bulk_z1, P["rear_bulk_y"], tb,
-         holes=bulk_holes() + rollers + inlet + glide_holes, bolt_side=-1)
+         holes=bulk_holes() + rollers + inlet + glide_holes + [(x, z, P["m4_hole"]) for (x, z) in nz_bulk_pts], bolt_side=-1)
+for (x, z) in nz_bulk_pts:
+    assert math.hypot(x, z - az) < P["ring_id"] / 2 - 15.0, "the nozzle's screws must sit inside the ring opening, clear of the felt"
 
 
 def about_drum_axis(shape, theta_deg):
@@ -670,13 +701,13 @@ for y in pitch_points(e, D - e, P["panel_pitch"], 40):
     ceil_holes.append((-hw + e / 2, y, P["m6_hole"]))    # into the mid side rails
     ceil_holes.append((hw - e / 2, y, P["m6_hole"]))
 PM_X0, PM_W, PM_Y = P["pm_x0"], P["pm_w"], ry + e   # the power module plate stands on the cross rails' rear faces (draft 7)
-ceil_holes += [(gx, gy, gd) for (gx, gy, gd) in (P["grommet_cord"], P["grommet_harness"])]   # grommets: the cord and the bay harness come up to the power module
+ceil_holes += [(gx, gy, gd) for (gx, gy, gd) in (P["grommet_cord"], P["grommet_harness"], P["ds_grommet_ceil"])]   # grommets: the cord and the bay harness come up to the power module; the door switch cable goes up at the right front (draft 8)
 plate_xy("bay-ceiling", -hw + tp, hw - tp, P["ceil_y0"], D, bt, P["t_base"], holes=ceil_holes,
          rect_cuts=[(round(P["belt_cross_left"], 1), P["belt_y"], P["belt_slot_w"], P["belt_slot_l"]),    # belt slots, one per run
                     (round(P["belt_cross_right"], 1), P["belt_y"], P["belt_slot_w"], P["belt_slot_l"]),
                     (0, P["rear_bulk_y"] + tb / 2, P["inner_w"] + 2, tb + 1),    # rear bulkhead passes through
                     (-hw + e / 2, D - e / 2, e + 1, e + 1), (hw - e / 2, D - e / 2, e + 1, e + 1),   # rear post notches
-                    (0, ry + e + 2 + P["riser_depth"] / 2, P["riser_w"] + 4, P["riser_depth"] + 4),   # riser, 2 mm clearance
+                    (0, P["tr_y0"] + (P["tr_bar_w"] + 2 * tp) / 2, 2 * P["tr_x"] + 4, P["tr_bar_w"] + 2 * tp + 4),   # riser trunk, 2 mm clearance (draft 8)
                     (PM_X0 + PM_W / 2, PM_Y + tp / 2, PM_W + 2, tp + 2)],   # power module plate passes through (draft 7)
          bolt_side=+1)
 
@@ -691,7 +722,12 @@ BRACKET_Y = ARM_Y0 - 20.0                                                       
 bracket_pts = [(-128.0, BRACKET_Y), (-102.0, BRACKET_Y), (55.0, BRACKET_Y), (75.0, BRACKET_Y)]
 base_holes += [(bx, by, P["m6_hole"]) for (bx, by) in bracket_pts]
 base_holes += [(P["cord_x"], P["cord_y"], P["cord_hole_d"])]           # cord strain relief bushing, under the power module (draft 6)
-plate_xy("base-pan", -hw + tp, hw - tp, 0, D, -P["t_base"], P["t_base"], holes=base_holes, bolt_side=-1, bolt_skip=tuple(bracket_pts))   # the exhaust leaves through the rear lower panel
+CRADLE_Y = (P["motor_y0"] + 25.0, P["motor_y0"] + P["motor_len"] - 55.0)   # the motor's two cradle mounts (30 deep, Y from these)
+cradle_pts = [(sx * 22.0, yy + 15.0) for yy in CRADLE_Y for sx in (-1, 1)]   # draft 8: two M6 per cradle through the pan
+ps1_pts = [(P["ps1_xy"][0] + k, P["ps1_xy"][1]) for k in (-15.0, 15.0)]     # draft 8: the air-proving switch's angle bracket
+base_holes += [(x, y, P["m6_hole"]) for (x, y) in cradle_pts + ps1_pts]
+base_holes += [(x, y, P["m4_hole"]) for (x, y) in P["clamp_pts"]]   # cable clamps for the bay harness (draft 8)
+plate_xy("base-pan", -hw + tp, hw - tp, 0, D, -P["t_base"], P["t_base"], holes=base_holes, bolt_side=-1, bolt_skip=tuple(bracket_pts + cradle_pts + ps1_pts))   # the exhaust leaves through the rear lower panel
 
 # ---------------------------------------------------------------------------
 # Outer panels
@@ -735,10 +771,17 @@ handle_pts = [(P["handle_x"], az - P["handle_span"] / 2), (P["handle_x"], az + P
 # the top rail and the posts, and the lower panel to the bottom rail and the posts. The lower panel comes off
 # to reach the bay. The upper panel carries the door ring opening; the lower panels carry the louvers.
 P["panel_split_z"] = bt - e
+# door switch (draft 8): plunger through the ring and the panel on the ring bolts' radius, 45 degrees right of bottom; the
+# body sits behind the panel on two M4 outside the ring, radially outboard of the plunger
+_ds = math.radians(P["ds_angle_deg"])
+DS_U, DS_T = (math.sin(_ds), -math.cos(_ds)), (math.cos(_ds), math.sin(_ds))      # outward along the radius, and along the tangent
+DS_P = (P["ds_r"] * DS_U[0], az + P["ds_r"] * DS_U[1])                              # the plunger
+DS_M = [(288.0 * DS_U[0] + k * DS_T[0], az + 288.0 * DS_U[1] + k * DS_T[1]) for k in (-10.0, 10.0)]   # the mounting holes
 plate_xz("front-upper-panel", -hw, hw, P["panel_split_z"], Hb, -tp, tp,
          holes=end_holes(P["panel_split_z"], Hb, [bt - e / 2, Hb - e / 2], stubs_only_at=bt - e / 2)
-         + [(x, z, P["m4_hole"]) for (x, z) in ring_bolt_pts] + [(x, z, P["m6_hole"]) for (x, z) in hinge_fixed_bolt_pts],
-         circ_cuts=[(0, az, P["door_ring_id"] + 10)], bolt_side=-1, bolt_skip=tuple(hinge_fixed_bolt_pts))
+         + [(x, z, P["m4_hole"]) for (x, z) in ring_bolt_pts] + [(x, z, P["m6_hole"]) for (x, z) in hinge_fixed_bolt_pts]
+         + [(DS_P[0], DS_P[1], P["ds_plunger_d"] + 0.5)] + [(x, z, P["m4_hole"]) for (x, z) in DS_M],
+         circ_cuts=[(0, az, P["door_ring_id"] + 10)], bolt_side=-1, bolt_skip=tuple(hinge_fixed_bolt_pts + DS_M))
 louvers = [(x, z, 60, 5) for x in (-240, -160, -80, 0, 80, 160, 240) for z in range(80, 240, 20)]
 plate_xz("front-lower-panel", -hw, hw, 0, P["panel_split_z"] - 1, -tp, tp,
          holes=end_holes(0, P["panel_split_z"] - 1, [e / 2]), slots=louvers, bolt_side=-1)
@@ -965,12 +1008,14 @@ for (x, z) in ring_bolt_pts:
     ring = ring.cut(cq.Workplane("XZ").center(x, z).circle(P["m4_hole"] / 2).extrude(-P["t_door"] - 2).translate((0, ring_y0 - 1, 0)))
 for (x, z) in hinge_fixed_bolt_pts:
     ring = ring.cut(cq.Workplane("XZ").center(x, z).circle(P["m6_hole"] / 2).extrude(-P["t_door"] - 2).translate((0, ring_y0 - 1, 0)))
+ring = ring.cut(cq.Workplane("XZ").center(*DS_P).circle((P["ds_plunger_d"] + 0.5) / 2).extrude(-P["t_door"] - 2).translate((0, ring_y0 - 1, 0)))   # door switch plunger (draft 8)
 add("door-ring", ring, STEEL, plate=True, t=P["t_door"])
 sk = cq.Workplane("XY").circle(P["door_ring_od"] / 2).extrude(1).cut(cq.Workplane("XY").circle(P["door_ring_id"] / 2).extrude(3).translate((0, 0, -1)))
 for (x, z) in ring_bolt_pts:
     sk = sk.cut(cq.Workplane("XY").center(x, z - az).circle(P["m4_hole"] / 2).extrude(3).translate((0, 0, -1)))
 for (x, z) in hinge_fixed_bolt_pts:
     sk = sk.cut(cq.Workplane("XY").center(x, z - az).circle(P["m6_hole"] / 2).extrude(3).translate((0, 0, -1)))
+sk = sk.cut(cq.Workplane("XY").center(DS_P[0], DS_P[1] - az).circle((P["ds_plunger_d"] + 0.5) / 2).extrude(3).translate((0, 0, -1)))
 export_dxf("door-ring", sk)
 ring_hw = [place(button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 8.0, 2.5), (x, ring_y0, z), (0, -1, 0)) for (x, z) in ring_bolt_pts]
 ring_hw += [place(nut(P["m4_nut_af"], P["m4_nut_h"], 4.2), (x, 0.0, z), (0, 1, 0)) for (x, z) in ring_bolt_pts]
@@ -1031,26 +1076,6 @@ add("door-seal (bought, OEM door seal)", seal, RUBBER)
 add("door-catch (bought, magnetic catch)", box(P["latch_x0"], P["latch_x1"], ring_y0 - 6.5, ring_y0, az - 6, az + 6), HARDWARE)
 add("door-catch-strike (bought)", box(P["latch_x0"], P["latch_x1"], disc_y0 + P["t_door"], disc_y0 + P["t_door"] + 1.0, az - 6, az + 6), HARDWARE)
 
-# ---------------------------------------------------------------------------
-# Ducts: riser (behind the rear bulkhead, from the bay to the inlet zone) and lint duct (front)
-# ---------------------------------------------------------------------------
-riser_top = az + P["inlet_above_axis"] + P["inlet_h"] + 10
-riser_y0 = ry + e + 2
-riser = box(-P["riser_w"] / 2, P["riser_w"] / 2, riser_y0, riser_y0 + P["riser_depth"], P["riser_z0"], riser_top)
-# the hood: from over the heat module's outlet, under the mid rear cross rail, into the riser (draft 6; the module slides out under it)
-hood_z1 = P["riser_z0"] + P["hood_h"]
-riser = riser.union(box(-P["hood_w"] / 2, P["hood_w"] / 2, P["hood_y0"], riser_y0 + P["riser_depth"], P["riser_z0"], hood_z1))
-add("riser-duct", riser, DUCT)
-assert riser_y0 + P["riser_depth"] + 2 <= D - e, "riser must clear the rear end rail"
-assert hood_z1 + 2 <= bt - e, "hood must pass under the mid rear cross rail"
-P["hood_area"] = P["hood_h"] * P["hood_w"]
-# the hood's gasket (draft 7): a foam ring glued under the hood round the collar's hole; the module's collar rim brushes it
-gk = (cq.Workplane("XY").center(0, P["hm_collar_y"]).circle(P["hood_gasket_od"] / 2).circle(P["hm_collar_d"] / 2).extrude(P["hood_gasket_t"])
-      .translate((0, 0, P["riser_z0"] - P["hood_gasket_t"])))
-add("hood-gasket (bought, 3 mm foam ring 150 x 125, glued under the hood)", gk, FELT)
-assert P["hood_y0"] <= P["hm_collar_y"] - P["hood_gasket_od"] / 2, "the hood must cover the gasket ring"
-add("lint-duct", box(-168, 168, P["lint_duct_y0"], P["lint_duct_y0"] + P["lint_duct_depth"], 150, P["lint_duct_top"]), DUCT)   # 2 mm from each front stub, behind the ring bolts' nuts
-add("lint-duct-transition", box(-110, 110, P["lint_duct_y0"] + P["lint_duct_depth"], P["blower_y0"], 50, 190), DUCT)
 
 # ---------------------------------------------------------------------------
 # Drum: wrapped sheet, two rings, splice strip, angle baffles (all made), four rollers (bought)
@@ -1226,9 +1251,17 @@ motor = motor.union(cq.Workplane("XZ").center(0, mz).circle(msr).extrude(-(my0 -
 motor = motor.union(cq.Workplane("XZ").center(0, mz).circle(msr).extrude(-4).translate((0, my0 + ml, 0)))          # rear shaft to the pulley
 motor = motor.union(box(-25, 25, my0 + 70, my0 + 130, mz + md / 2 - 5, mz + md / 2 + 20))                          # terminal box
 add("motor (bought)", motor, BOUGHT)
-for i, yy in enumerate((my0 + 25, my0 + ml - 55)):   # two cradle mounts from the motor mount kit, bolted to the base pan
-    cradle = box(-35, 35, yy, yy + 30, 0, mz - 20).cut(cq.Workplane("XZ").center(0, mz).circle(md / 2 + 0.5).extrude(-40).translate((0, yy - 5, 0)))
-    add(f"motor-mount-{i+1} (bought, cradle)", cradle, BOUGHT)
+cradle_hw = []
+for i, yy in enumerate(CRADLE_Y):   # two cradle brackets from the motor mount kit (3 mm, drawn as a shell), two M6 each through the base pan (draft 8)
+    cradle = box(-35, 35, yy, yy + 30, 0, mz - 20).cut(box(-30, 30, yy + 3, yy + 27, 3, mz - 20 + 1))
+    cradle = cradle.cut(cq.Workplane("XZ").center(0, mz).circle(md / 2 + 0.5).extrude(-40).translate((0, yy - 5, 0)))
+    for (x, y) in cradle_pts:
+        if yy <= y <= yy + 30:
+            cradle = cradle.cut(cq.Workplane("XY").center(x, y).circle(P["m6_hole"] / 2).extrude(6).translate((0, 0, -1)))
+            cradle_hw.append(place(hex_bolt_m6(), (x, y, -P["t_base"]), (0, 0, -1)))                        # head under the pan
+            cradle_hw.append(place(nut(P["m6_nut_af"], P["m6_nut_h"], 6.2), (x, y, 3.0), (0, 0, 1)))        # nut on the bracket's foot
+    add(f"motor-mount-{i+1} (bought, cradle bracket)", cradle, BOUGHT)
+add("hardware-motor-mounts (bought, 4 x M6 x 12 hex, washers, nuts, through the base pan)", compound(cradle_hw), HARDWARE)
 pulley = cq.Workplane("XZ").center(0, mz).circle(P["motor_pulley_d"] / 2).extrude(-16).translate((0, P["belt_y"] - 8, 0))
 for k in range(4):   # four grooves between the five ribs
     gy = P["belt_y"] - 4.5 + 3.0 * k
@@ -1497,7 +1530,7 @@ pm_holes += [(x, z, P["m4_hole"]) for (x, z) in so_pts]                         
 pm_holes += [(x, P["pm_barrier_z"] + A_L / 2, P["m4_hole"]) for x in (pxc - 45.0, pxc + 45.0)]                        # barrier angle
 pm_holes += [(PM_X0 + PM_W - 15.0, pz1 - 40.0, 6.6)]                                                                  # ground stud
 plate_xz("power-module-plate", PM_X0, PM_X0 + PM_W, pz0, pz1, PM_Y, tp, holes=pm_holes, bolt_side=+1)
-assert PM_X0 + PM_W + 10.0 <= -P["riser_w"] / 2, "the power module plate must clear the riser"
+assert PM_X0 + PM_W + 10.0 <= -P["tr_x"], "the power module plate must clear the riser trunk"
 assert pz0 <= bt - e + 10.0 and pz1 >= Hb - e + 10.0, "the plate must reach both cross rails"
 rails_pm, devs_pm = [], []
 PM_DEVICES = {
@@ -1553,13 +1586,20 @@ stud = stud.union(place(nut(P["m6_nut_af"], P["m6_nut_h"], 6.2), (gs[0], pm_face
 add("power-module-ground-stud (bought, M6 x 16 hex bolt, 2 nuts, star washers; the cord's PE ring terminal goes between the nuts)", stud, HARDWARE)
 add(f"power-module-hardware (bought, {len(pm_hw)} x M4 x 8 button head, {len(pm_nuts)} nuts)", compound(pm_hw + pm_nuts), HARDWARE)
 # the grommets: rubber, straddling the 1.5 mm plate
+def grommet(gd):
+    """A rubber grommet for a 1.5 plate, built about the origin along Z with the plate's mid-plane at z 0: a neck in the hole, a flange either side."""
+    g_ = cq.Workplane("XY").circle(gd / 2 - 0.1).circle(gd / 2 - 3.5).extrude(tp).translate((0, 0, -tp / 2))
+    for z_ in (-tp / 2 - 1.25, tp / 2):
+        g_ = g_.union(cq.Workplane("XY").circle(gd / 2 + 3.0).circle(gd / 2 - 3.5).extrude(1.25).translate((0, 0, z_)))
+    return g_
+
+
 grommets = []
-for (gx, gy, gd), gz in ((P["grommet_cord"], bt + tp / 2), (P["grommet_harness"], bt + tp / 2), (P["grommet_console"], Hb + tp / 2)):
-    g_ = cq.Workplane("XY").center(gx, gy).circle(gd / 2 - 0.1).circle(gd / 2 - 3.5).extrude(tp).translate((0, 0, gz - tp / 2))                # the neck, in the hole
-    for z_ in (gz - tp / 2 - 1.25, gz + tp / 2):                                                                                            # a flange either side of the plate
-        g_ = g_.union(cq.Workplane("XY").center(gx, gy).circle(gd / 2 + 3.0).circle(gd / 2 - 3.5).extrude(1.25).translate((0, 0, z_)))
-    grommets.append(g_)
-add("grommets (bought, 3 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1)", compound(grommets), RUBBER)
+for (gx, gy, gd), gz in ((P["grommet_cord"], bt + tp / 2), (P["grommet_harness"], bt + tp / 2), (P["grommet_console"], Hb + tp / 2), (P["ds_grommet_ceil"], bt + tp / 2)):
+    grommets.append(place(grommet(gd), (gx, gy, gz), (0, 0, 1)))
+gx, gz, gd = P["ds_grommet_bulk"]
+grommets.append(place(grommet(gd), (gx, P["front_bulk_y"] + tb / 2, gz), (0, 1, 0)))   # in the front bulkhead, for the door switch cable (draft 8)
+add("grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 12 mm hole x 2)", compound(grommets), RUBBER)
 
 # cord: strain relief bushing through the base pan at the rear left (body inside the bay, locknut under the pan), the cord
 # up through the bay and the ceiling grommet to X1 on the power module, and down under the pan to the back on the height the feet give
@@ -1577,6 +1617,399 @@ add("power-cord (bought)", cord, RUBBER)
 assert cord_z - 4.5 > -(P["foot_height"] + P["t_base"]), "the cord must clear the floor under the pan"
 assert abs(P["grommet_cord"][0] - cx) < 1e-9 and abs(P["grommet_cord"][1] - cyy) < 1e-9, "the cord's grommet sits over its bushing"
 assert P["cord_top_z"] < P["pm_rails_z"][0] - 47.0 / 2, "the cord ends under X1"
+
+# ---------------------------------------------------------------------------
+# Ducts (draft 8): every duct is 1.5 mm laser-cut plate screwed with M4 button heads into the tapped edges of aluminium
+# flat bar frames (30 x 8 lint box, 40 x 8 spool and nozzle, 25 x 8 hood, 50 x 8 riser trunk); no bends, no rivets.
+# Part names start with "lint-box", "spool", "basket", "liner", "hood", "trunk" or "nozzle". Tapped holes are drawn at
+# the thread's outside diameter (4.2), as the hinge leaves are.
+# ---------------------------------------------------------------------------
+BAR_T, BAR_W = P["bar_t"], P["bar_w"]
+m4b10 = button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 10.0, 2.5)
+m4b40 = button_bolt(4.0, P["m4_head_d"], P["m4_head_h"], 40.0, 2.5)
+m3b6 = button_bolt(3.0, 5.7, 1.65, 6.0, 2.0)
+m3n = nut(5.5, 2.4, 3.2)
+
+
+def tapped(solid, p, n, depth=8.0):
+    """A 4.2 hole into a bar from the surface point p along -n (into the bar), depth deep."""
+    return solid.cut(place(cq.Workplane("XY").circle(2.1).extrude(depth + 1).translate((0, 0, -depth)), p, n))
+
+
+def duct_screw(hw, solid, p_head, n, plate_t=1.5, bolt=None):
+    """A button head on the plate's outer face at p_head (outward normal n), tapped into the bar behind the plate."""
+    hw.append(place(bolt if bolt is not None else m4b8, p_head, n))
+    L = 40.0 if bolt is m4b40 else (10.0 if bolt is m4b10 else 8.0)
+    p_bar = tuple(c - plate_t * nc for c, nc in zip(p_head, n))
+    return tapped(solid, p_bar, n, L - plate_t)
+
+
+# --- throat liner: a rolled 1.5 mm strip between the door ring's back face and the front bulkhead, closing the gap round
+# the opening (draft 8 finding: nothing bounded the throat radially, so the drum would have drawn room air through the
+# 40 mm gap behind the panel). Seam at the top under a splice strip with two M3; the ring's 235 edge covers its front.
+LR_I, LR_O = P["liner_ri"], P["liner_ri"] + P["liner_t"]
+ly0, ly1 = P["liner_y0"], P["liner_y0"] + P["liner_len"]
+liner = cq.Workplane("XZ").center(0, az).circle(LR_O).circle(LR_I).extrude(-P["liner_len"]).translate((0, ly0, 0))
+liner = liner.cut(box(-1.0, 1.0, ly0 - 1, ly1 + 1, az + LR_I - 1, az + LR_O + 1))                     # 2 mm seam gap at the top
+spl_half = math.degrees(20.0 / (LR_I - 0.75))
+splice_l = about_drum_axis(sector_xz(0, az, LR_I - 1.5, LR_I, spl_half, P["liner_len"] - 3.0).translate((0, ly0 + 1.5, 0)), 180.0)
+liner_hw = []
+for th in (87.0, 93.0):   # 3 degrees each side of the seam, on the strip's centre line
+    yy = (ly0 + ly1) / 2
+    liner = liner.cut(radial_hole(th, yy, 3.4, LR_I - 3, LR_O + 1))
+    splice_l = splice_l.cut(radial_hole(th, yy, 3.4, LR_I - 3, LR_O + 1))
+    liner_hw.append(place(m3b6, radial_point(th, yy, LR_I - 1.5), radial_dir(th, outward=False)))    # head inside the throat
+    liner_hw.append(place(m3n, radial_point(th, yy, LR_O), radial_dir(th, outward=True)))             # nut outside
+add("liner", liner, ALU, plate=True, t=P["liner_t"])
+add("liner-splice", splice_l, ALU, plate=True, t=P["liner_t"])
+add("hardware-liner (bought, 2 x M3 x 6 button head, nuts)", compound(liner_hw), HARDWARE)
+P["liner_flat_len"] = 2 * math.pi * (LR_I + P["liner_t"] / 2) - 2.0
+lsk = cq.Workplane("XY").center(P["liner_flat_len"] / 2, P["liner_len"] / 2).rect(P["liner_flat_len"], P["liner_len"]).extrude(1)
+hole_off = math.radians(3.0) * (LR_I + P["liner_t"] / 2) - 1.0                             # from each end of the strip to its hole
+for xx in (hole_off, P["liner_flat_len"] - hole_off):
+    lsk = lsk.cut(cq.Workplane("XY").center(xx, P["liner_len"] / 2).circle(1.7).extrude(3).translate((0, 0, -1)))
+export_dxf("liner", lsk)
+ssk = cq.Workplane("XY").center(20.0, (P["liner_len"] - 3.0) / 2).rect(40.0, P["liner_len"] - 3.0).extrude(1).edges("|Z").fillet(P["small_corner_r"])
+for xx in (20.0 - (hole_off + 1.0), 20.0 + (hole_off + 1.0)):   # 3 degrees each side of the seam
+    ssk = ssk.cut(cq.Workplane("XY").center(xx, (P["liner_len"] - 3.0) / 2).circle(1.7).extrude(3).translate((0, 0, -1)))
+export_dxf("liner-splice", ssk)
+cut_list.append(("liner", "1.5 mm 5052 aluminium strip, 41.3 wide", round(P["liner_flat_len"], 1), 1, "or cut to drawings/liner.dxf; roll round a 471 form, seam at the top"))
+assert ly1 <= P["front_bulk_y"] - 0.2 + 1e-9 and LR_O < P["door_ring_od"] / 2 and LR_I >= P["door_ring_id"] / 2 + 0.5, "the liner sits inside the ring's edge and ends 0.2 short of the bulkhead"
+assert LR_O + 0.5 <= P["lint_slot_r0"], "the liner must pass inside the lint slot"
+
+# --- lint box: between the mid front stubs, 2 mm behind the ring bolts' tips, its back the bulkhead above 265 and a
+# plate below; its top follows the liner. Hung on two M6 into the stubs' inner slots through 4 mm spacers and pulled
+# against the bulkhead by six M4 from the drum side (outside the felt). 1.5 mm foam between the side bars and the bulkhead.
+LB_X, LBZ0, LB_Y0 = P["lb_x"], P["lb_z0"], P["lb_y0"]
+LBI = LB_X - BAR_T                                   # the side bars' inner faces (interior half width)
+lb_by0, lb_by1 = LB_Y0 + tp, LB_Y0 + tp + BAR_W      # the bars, between the front plate and the back plate / the foam
+LB_TOP_R = LR_O + 0.2                                # the plates' top edges and the bars' mitres follow the liner, 0.2 clear
+lb_cyl = cq.Workplane("XZ").center(0, az).circle(LB_TOP_R).extrude(-200).translate((0, -50, 0))
+lb_hw, lb_bars = [], []
+side_z = [80.0, 160.0, 240.0, 330.0, 420.0]          # front plate screws down each side bar
+for sx in (-1, 1):
+    bar = box(min(sx * LBI, sx * LB_X), max(sx * LBI, sx * LB_X), lb_by0, lb_by1, LBZ0, 470.0)
+    bar = bar.cut(lb_cyl)                                                         # top end mitred to the liner (cut at 43 degrees)
+    for z in side_z:
+        bar = duct_screw(lb_hw, bar, (sx * LB_BAR_X, LB_Y0, z), (0, -1, 0))        # front plate
+    for z in (80.0, 160.0, 240.0):
+        bar = duct_screw(lb_hw, bar, (sx * LB_BAR_X, lb_by1 + tp, z), (0, 1, 0))  # lower back plate, from behind
+    for z in P["lb_bulk_screw_z"]:
+        bar = duct_screw(lb_hw, bar, (sx * LB_BAR_X, P["front_bulk_y"] + tb, z), (0, 1, 0), plate_t=tb + P["lb_gap"], bolt=m4b10)   # from the drum side, through the foam
+    bar = bar.cut(cq.Workplane("YZ").center(P["lb_hang_y"], P["lb_hang_z"]).circle(4.25).extrude(BAR_T + 2).translate((min(sx * LBI, sx * LB_X) - 1, 0, 0)))
+    lb_bars.append(bar)
+    # the hang bolt: M8 x 20 button head inside the box, through the bar and a 4 mm spacer into the stub's end bore, tapped M8
+    # (the stub's end is a cut face: its slots do not open there, its 6.8 centre bore does). Drawn at the bore, as the feet are.
+    hang = button_bolt(6.7, 13.0, 4.0, 20.0, 5.0)
+    lb_hw.append(place(hang, (sx * LBI, P["lb_hang_y"], P["lb_hang_z"]), (-sx, 0, 0)))
+    lb_hw.append(place(cq.Workplane("XY").circle(8.0).circle(4.25).extrude(170.0 - LB_X), (sx * LB_X, P["lb_hang_y"], P["lb_hang_z"]), (sx, 0, 0)))
+bar = box(-LBI, LBI, lb_by0, lb_by1, LBZ0, LBZ0 + BAR_T)                            # bottom bar
+for x in (-100.0, 100.0):
+    bar = duct_screw(lb_hw, bar, (x, LB_Y0, LBZ0 + BAR_T / 2), (0, -1, 0))
+for x in (-120.0, 120.0):
+    bar = duct_screw(lb_hw, bar, (x, lb_by1 + tp, LBZ0 + BAR_T / 2), (0, 1, 0))
+SP_H, SPZ0, SPZ1, SPW = P["sp_half"], P["sp_z0"], P["sp_z1"], P["sp_bar_w"]
+SPI = SP_H - BAR_T                                                                     # the spool's interior half width (70)
+SPZI0, SPZI1 = SPZ0 + BAR_T, SPZ1 - BAR_T                                              # its interior, 70 to 190, round the 130 mouth
+sp_y0, sp_y1 = lb_by1 + tp, lb_by1 + tp + SPW                                          # the spool's bars, behind the back plate
+spool_bottom_pts = [(-40.0, SPZ0 + BAR_T / 2), (0.0, SPZ0 + BAR_T / 2), (40.0, SPZ0 + BAR_T / 2)]
+for (x, z) in spool_bottom_pts:   # M4 x 40 from the front plate through the bottom bar and the back plate into the spool's bottom bar
+    bar = bar.cut(cq.Workplane("XZ").center(x, z).circle(2.25).extrude(-BAR_W - 2).translate((0, lb_by0 - 1, 0)))
+lb_bars.append(bar)
+add("lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)", compound(lb_bars), ALU)
+cut_list.append(("lint-box side bar", "flat bar 30x8 aluminum", round(462.1 - LBZ0, 1), 2, "lint box sides; top end cut at 43 degrees to meet the liner, tapped M4 on both edges, one 8.5 hole for the hang bolt"))
+cut_list.append(("lint-box bottom bar", "flat bar 30x8 aluminum", round(2 * LBI, 1), 1, "lint box bottom, tapped M4 on both edges, three 4.5 through holes"))
+
+# the box's plates: front (top edge on the liner's radius), and the lower back plate below the bulkhead, lapping its foot
+lb_front_holes = [(sx * LB_BAR_X, z, P["m4_hole"]) for sx in (-1, 1) for z in side_z] + [(x, LBZ0 + BAR_T / 2, P["m4_hole"]) for x in (-100.0, 100.0)]
+lb_front_holes += [(x, z, P["m4_hole"]) for (x, z) in spool_bottom_pts]
+plate_xz("lint-box-front", -LB_X, LB_X, LBZ0, 470.0, LB_Y0, tp, holes=lb_front_holes, circ_cuts=[(0, az, 2 * LB_TOP_R)])
+sp_side_pts = [(sx * (SP_H - BAR_T / 2), z) for sx in (-1, 1) for z in (80.0, 160.0)]
+sp_top_pts = [(x, SPZ1 - BAR_T / 2) for x in (-40.0, 0.0, 40.0)]   # the spool's top bar (190 to 198)
+lb_back_holes = [(sx * LB_BAR_X, z, P["m4_hole"]) for sx in (-1, 1) for z in (80.0, 160.0, 240.0)] + [(x, LBZ0 + BAR_T / 2, P["m4_hole"]) for x in (-120.0, 120.0)]
+lb_back_holes += [(x, z, P["m4_hole"]) for (x, z) in sp_side_pts + sp_top_pts + spool_bottom_pts]
+plate_xz("lint-box-back", -LB_X, LB_X, LBZ0, P["lb_rear_plate_z1"], lb_by1, tp, holes=lb_back_holes,
+         rect_cuts=[(0, (SPZI0 + SPZI1) / 2, 2 * SPI, SPZI1 - SPZI0)])                   # 140 x 120 into the spool
+assert P["lb_rear_plate_z1"] > bulk_z0 and lb_by1 + tp <= P["front_bulk_y"] + 1e-9, "the lower back plate laps the bulkhead's foot and sits in front of it"
+# foam between the side bars and the bulkhead above the back plate (3 mm tape, compressed to the 1.5 gap)
+foam = []
+for sx in (-1, 1):
+    f_ = box(min(sx * LBI, sx * LB_X), max(sx * LBI, sx * LB_X), lb_by1, P["front_bulk_y"], P["lb_rear_plate_z1"], 470.0).cut(lb_cyl)
+    for z in P["lb_bulk_screw_z"]:
+        f_ = hole_y(f_, sx * LB_BAR_X, z)
+    foam.append(f_)
+add("lint-box-foam (bought, 3 mm closed-cell foam tape 8 wide, 2 x 190, compressed to 1.5)", compound(foam), FELT)
+
+# the spool: four 40 x 8 bars as a 156 square tube from the back plate to the blower's inlet face, 6 mm foam on its rear
+# edges compressed to 4 against the housing (its inlet collar's own screws are a V-107 question)
+sp_bars = []
+for sx in (-1, 1):
+    bar = box(min(sx * SPI, sx * SP_H), max(sx * SPI, sx * SP_H), sp_y0, sp_y1, SPZ0, SPZ1)
+    for z in (80.0, 160.0):
+        bar = duct_screw(lb_hw, bar, (sx * (SP_H - BAR_T / 2), lb_by1, z), (0, -1, 0))   # from inside the box
+    sp_bars.append(bar)
+bar = box(-SPI, SPI, sp_y0, sp_y1, SPZI1, SPZ1)                                       # top bar
+for (x, z) in sp_top_pts:
+    bar = duct_screw(lb_hw, bar, (x, lb_by1, z), (0, -1, 0))
+sp_bars.append(bar)
+bar = box(-SPI, SPI, sp_y0, sp_y1, SPZ0, SPZ0 + BAR_T)                                   # bottom bar: M4 x 40 from the front plate
+for (x, z) in spool_bottom_pts:
+    bar = duct_screw(lb_hw, bar, (x, LB_Y0, z), (0, -1, 0), plate_t=sp_y0 - LB_Y0, bolt=m4b40)
+sp_bars.append(bar)
+add("spool-bars (40 x 8 aluminium flat bar: 2 x 136, 2 x 140)", compound(sp_bars), ALU)
+cut_list.append(("spool side bar", "flat bar 40x8 aluminum", round(SPZ1 - SPZ0, 1), 2, "spool sides, tapped M4 on the front edge"))
+cut_list.append(("spool end bar", "flat bar 40x8 aluminum", round(2 * SPI, 1), 2, "spool top and bottom, tapped M4 on the front edge"))
+sp_foam = [box(min(sx * SPI, sx * SP_H), max(sx * SPI, sx * SP_H), sp_y1, P["blower_y0"], SPZ0, SPZ1) for sx in (-1, 1)]
+sp_foam += [box(-SPI, SPI, sp_y1, P["blower_y0"], z0_, z0_ + BAR_T) for z0_ in (SPZ0, SPZI1)]
+add("spool-foam (bought, 6 mm closed-cell foam tape 8 wide, 600, compressed to 4 on the blower's inlet face)", compound(sp_foam), FELT)
+assert abs(P["blower_y0"] - sp_y1 - P["sp_foam"]) < 1e-9, "the spool's foam fills the gap to the blower's inlet face"
+assert SPI > 65.0 + 2.0 and SPZI1 > mz + 65.0 + 2.0, "the spool must clear the blower's 130 inlet mouth sideways and above"
+assert SPZ0 == LBZ0 and LBZ0 >= e + es + 2.0, "the spool's bottom bar sits behind the box's, both 2 above the tray rails"
+P["spool_area"] = 2 * SPI * (SPZI1 - SPZI0)
+P["mouth_blocked"] = SPZI0 - (mz - 65.0)                                              # the spool's bottom bar covers this much of the mouth's bottom
+add(f"lint-box-hardware (bought, {sum(1 for _ in lb_hw)} pieces: M4 x 8, M4 x 10 and M4 x 40 button heads, 2 x M6 x 20 button heads with 4 mm spacers and T-nuts)", compound(lb_hw), HARDWARE)
+
+# --- lint basket: stainless mesh wrapped round two laser-cut 3 mm sector plates (a lip on the drum side of the bulkhead,
+# a closed far end 2 behind the box's front plate) and clamped at each end by a 1.5 mm plate on six M3 into the tapped
+# plates. The mesh's edges fold 5 mm inward at the far end and outward at the lip. It slides through the slot with 0.9
+# each side; a 64 mm D-pull on the lip's tab, inside the door opening, lifts it out.
+BK0, BK1, BKH, BKT = P["bk_r0"], P["bk_r1"], P["bk_half_deg"], P["bk_t"]
+MT, FL = P["mesh_t"], P["bk_flange"]
+EPS = math.degrees(MT / ((BK0 + BK1) / 2))                                      # the mesh's own thickness, in degrees at the mean radius
+fy0 = P["bk_far_y0"]
+far_plate = sector_xz(0, az, BK0, BK1, BKH, BKT).translate((0, fy0, 0))
+far_flange = sector_xz(0, az, BK0, BK1, BKH, MT).cut(sector_xz(0, az, BK0 + FL, BK1 - FL, BKH - math.degrees(FL / BK0), MT + 2).translate((0, -1, 0))).translate((0, fy0 + BKT, 0))
+far_clamp = sector_xz(0, az, BK0, BK1, BKH, tp).translate((0, fy0 + BKT + MT, 0))
+wall_y0 = fy0 + BKT + MT + tp                                                    # the mesh walls run from the far clamp to the lip
+ly_ = P["bk_lip_y0"]
+wall = sector_xz(0, az, BK0 - MT, BK1 + MT, BKH + EPS, ly_ + BKT - wall_y0).cut(sector_xz(0, az, BK0, BK1, BKH, 60.0).translate((0, -1, 0))).translate((0, wall_y0, 0))
+LIP0, LIP1, LIPH = 232.0, 268.5, 37.5
+lip_plate = sector_xz(0, az, LIP0, LIP1, LIPH, BKT).cut(sector_xz(0, az, BK0 - MT, BK1 + MT, BKH + EPS, BKT + 2).translate((0, -1, 0)))   # the opening is the mesh's outside
+lip_plate = lip_plate.union(box(-P["bk_pull_c"] / 2, P["bk_pull_c"] / 2, 0, BKT, az - LIP0 - 2.0, az - P["bk_pull_r"] + 4.0))   # the tab, into the opening
+lip_plate = lip_plate.translate((0, ly_, 0))
+lip_flange = sector_xz(0, az, BK0 - MT - FL, BK1 + MT + 2.4, LIPH, MT).cut(sector_xz(0, az, BK0 - MT, BK1 + MT, BKH + EPS, MT + 2).translate((0, -1, 0))).translate((0, ly_ + BKT, 0))
+lip_clamp = sector_xz(0, az, LIP0, LIP1, LIPH, tp).cut(sector_xz(0, az, BK0 - MT, BK1 + MT, BKH + EPS, tp + 2).translate((0, -1, 0))).translate((0, ly_ + BKT + MT, 0))
+bk_hw = []
+m3b5 = button_bolt(3.0, 5.7, 1.65, 5.0, 2.0)
+
+
+def bk_screws(plate, flange, clamp, y_head, pts):
+    """M3 x 5 through the clamp and the mesh flange into the tapped plate; heads on the clamp's face at y_head, facing +Y."""
+    for (th, r) in pts:
+        a = math.radians(th)
+        x, z = r * math.sin(a), az - r * math.cos(a)
+        plate = plate.cut(cq.Workplane("XZ").center(x, z).circle(1.5).extrude(-BKT - 2).translate((0, y_head - BKT - MT - tp - 1, 0)))
+        flange = flange.cut(cq.Workplane("XZ").center(x, z).circle(1.7).extrude(-MT - 2).translate((0, y_head - MT - tp - 1, 0)))
+        clamp = clamp.cut(cq.Workplane("XZ").center(x, z).circle(1.7).extrude(-tp - 2).translate((0, y_head - tp - 1, 0)))
+        bk_hw.append(place(m3b5, (x, y_head, z), (0, 1, 0)))
+    return plate, flange, clamp
+
+
+far_pts = [(th, BK1 - 3.2) for th in (-28.0, -10.0, 10.0, 28.0)] + [(th, BK0 + 3.3) for th in (-20.0, 20.0)]   # heads (radius 2.85) clear the mesh walls
+lip_pts = [(th, BK0 - MT - 2.5) for th in (-24.0, -8.0, 8.0, 24.0)] + [(th, (BK0 + BK1) / 2) for th in (-36.7, 36.7)]   # the inner band and the two end flanges (the outer band is only 2.4 wide)
+far_plate, far_flange, far_clamp = bk_screws(far_plate, far_flange, far_clamp, wall_y0, far_pts)
+lip_plate, lip_flange, lip_clamp = bk_screws(lip_plate, lip_flange, lip_clamp, ly_ + BKT + MT + tp, lip_pts)
+# the D-pull on the tab: two legs and a bar, M4 x 10 from the tab's back into the tapped legs
+pz = az - P["bk_pull_r"] - 3.5
+pull = None
+for x in (-P["bk_pull_c"] / 2, P["bk_pull_c"] / 2):
+    leg = cq.Workplane("XZ").center(x, pz).circle(5.0).extrude(25.0).translate((0, ly_, 0))               # XZ extrude(+) goes -Y: from the tab forward
+    leg = leg.cut(cq.Workplane("XZ").center(x, pz).circle(2.1).extrude(9.0).translate((0, ly_ + 0.01, 0)))
+    lip_plate = lip_plate.cut(cq.Workplane("XZ").center(x, pz).circle(2.25).extrude(-BKT - 2).translate((0, ly_ - 1, 0)))
+    bk_hw.append(place(m4b10, (x, ly_ + BKT, pz), (0, 1, 0)))
+    pull = leg if pull is None else pull.union(leg)
+pull = pull.union(cq.Workplane("YZ").center(ly_ - 20.0, pz).circle(5.0).extrude(P["bk_pull_c"] + 10.0).translate((-P["bk_pull_c"] / 2 - 5.0, 0, 0)).edges("%CIRCLE").fillet(4.0))
+add("basket-far-plate", far_plate, STEEL, plate=True, t=BKT)
+add("basket-far-clamp", far_clamp, STEEL, plate=True, t=tp)
+add("basket-lip-plate", lip_plate, STEEL, plate=True, t=BKT)
+add("basket-lip-clamp", lip_clamp, STEEL, plate=True, t=tp)
+add("basket-mesh (bought, stainless 18 x 16 mesh strip, 42 wide, 350 long, wrapped and folded 5 at each edge)", far_flange.union(wall).union(lip_flange), HARDWARE)
+add("basket-pull (bought, D-pull, 64 mm centres, 25 projection)", pull, HARDWARE)
+add(f"hardware-basket (bought, {len(bk_hw) - 2} x M3 x 5 button head into the tapped plates, 2 x M4 x 10 button head into the pull)", compound(bk_hw), HARDWARE)
+# flat patterns in world XZ coordinates about the drum axis, as the bulkheads' are
+for nm, sk_ in (("basket-far-plate", sector_xy(0, az, BK0, BK1, BKH, 1)), ("basket-far-clamp", sector_xy(0, az, BK0, BK1, BKH, 1)),
+                ("basket-lip-clamp", sector_xy(0, az, LIP0, LIP1, LIPH, 1).cut(sector_xy(0, az, BK0 - MT, BK1 + MT, BKH + EPS, 3).translate((0, 0, -1))))):
+    pts = far_pts if "far" in nm else lip_pts
+    for (th, r) in pts:
+        a = math.radians(th)
+        sk_ = sk_.cut(cq.Workplane("XY").center(r * math.sin(a), az - r * math.cos(a)).circle(1.5 if nm.endswith("plate") else 1.7).extrude(3).translate((0, 0, -1)))
+    export_dxf(nm, sk_)
+sk_ = sector_xy(0, az, LIP0, LIP1, LIPH, 1).cut(sector_xy(0, az, BK0 - MT, BK1 + MT, BKH + EPS, 3).translate((0, 0, -1)))
+sk_ = sk_.union(cq.Workplane("XY").center(0, az + (-LIP0 - 2.0 - P["bk_pull_r"] + 4.0) / 2).rect(P["bk_pull_c"], LIP0 + 2.0 - P["bk_pull_r"] + 4.0).extrude(1))
+for (th, r) in lip_pts:
+    a = math.radians(th)
+    sk_ = sk_.cut(cq.Workplane("XY").center(r * math.sin(a), az - r * math.cos(a)).circle(1.5).extrude(3).translate((0, 0, -1)))
+for x in (-P["bk_pull_c"] / 2, P["bk_pull_c"] / 2):
+    sk_ = sk_.cut(cq.Workplane("XY").center(x, pz).circle(2.25).extrude(3).translate((0, 0, -1)))
+export_dxf("basket-lip-plate", sk_)
+P["basket_wall_area"] = math.radians(2 * BKH) * (BK1 + MT) * (P["front_bulk_y"] - wall_y0)     # the outer wall inside the box, facing down
+P["lint_slot_area"] = math.radians(2 * P["lint_slot_half_deg"]) / 2 * (P["lint_slot_r1"] ** 2 - P["lint_slot_r0"] ** 2)
+assert BK0 - MT >= P["lint_slot_r0"] + 0.8 and BK1 + MT <= P["lint_slot_r1"] - 0.8, "the basket passes the slot with 0.8 or more each side"
+assert LIP1 + 1.0 <= P["ring_id"] / 2 and LIP0 >= P["door_opening_d"] / 2 + 1.0, "the lip rides inside the ring's bore and outside the opening when it is pulled"
+assert fy0 >= LB_Y0 + tp + 0.5 and ly_ >= P["front_bulk_y"] + tb - 1e-9, "the basket's far end clears the box's front plate; its lip sits on the bulkhead's drum side"
+assert BK0 - MT > LB_TOP_R + 1.0, "the basket's inner wall clears the liner"
+
+# --- riser: a hood over the heat module's collar (25 x 8 bars between two plates, under the mid rear cross rail), a trunk
+# of two 50 x 8 bars between two plates standing on the hood's top plate behind the rear bulkhead, and a nozzle of 40 x 8
+# bars from the trunk's front plate to the bulkhead's inlet field. The module slides out under the hood (nothing of the
+# riser reaches below 230). Hood heads on top sit clear of the cross rail's footprint.
+HX, HBW, RZ0 = P["hood_x"], P["hood_bar_w"], P["riser_z0"]
+HY0, HY1 = P["hood_y0"], P["tr_y0"] + tp + P["tr_bar_w"] + tp                 # the hood runs back to the trunk's rear face
+hz0, hz1 = RZ0 + tp, RZ0 + tp + HBW                                            # the hood's bars (231.5 to 256.5)
+HXI = HX - BAR_T                                                               # interior half width (167)
+TX, TBW, TY0 = P["tr_x"], P["tr_bar_w"], P["tr_y0"]
+TXI = TX - BAR_T                                                               # 122
+ty0b, ty1b = TY0 + tp, TY0 + tp + TBW                                          # the trunk's bars (654 to 704)
+TZ1 = az + P["inlet_above_axis"] + P["inlet_h"] + P["tr_over"]                 # 831.5: the top bar above the nozzle's top bar (816.5)
+rs_hw, hood_bars, trunk_bars, nz_bars = [], [], [], []
+hood_side_pts = [(sx * (HX - BAR_T / 2), y) for sx in (-1, 1) for y in (500.0, 580.0, 690.0)]
+hood_end_pts = [(x, HY0 + BAR_T / 2) for x in (-120.0, 120.0)] + [(x, HY1 - BAR_T / 2) for x in (-150.0, 150.0)]   # rear ones outside the trunk's plates
+for sx in (-1, 1):
+    bar = box(min(sx * HXI, sx * HX), max(sx * HXI, sx * HX), HY0, HY1, hz0, hz1)
+    for (x, y) in hood_side_pts:
+        if (x > 0) == (sx > 0):
+            bar = duct_screw(rs_hw, bar, (x, y, RZ0), (0, 0, -1))                # bottom plate, from below
+            bar = duct_screw(rs_hw, bar, (x, y, hz1 + tp), (0, 0, 1))            # top plate, from above
+    hood_bars.append(bar)
+for (y0_, y1_) in ((HY0, HY0 + BAR_T), (HY1 - BAR_T, HY1)):
+    bar = box(-HXI, HXI, y0_, y1_, hz0, hz1)
+    for (x, y) in hood_end_pts:
+        if y0_ <= y <= y1_:
+            bar = duct_screw(rs_hw, bar, (x, y, RZ0), (0, 0, -1))
+            bar = duct_screw(rs_hw, bar, (x, y, hz1 + tp), (0, 0, 1))
+    hood_bars.append(bar)
+add("hood-bars (25 x 8 aluminium flat bar: 2 sides, front, rear)", compound(hood_bars), ALU)
+cut_list.append(("hood side bar", "flat bar 25x8 aluminum", round(HY1 - HY0, 1), 2, "hood sides, tapped M4 on both edges"))
+cut_list.append(("hood end bar", "flat bar 25x8 aluminum", round(2 * HXI, 1), 2, "hood front and rear, tapped M4 on both edges"))
+hood_holes = [(x, y, P["m4_hole"]) for (x, y) in hood_side_pts + hood_end_pts]
+trunk_foot_pts = [(sx * (TX - BAR_T / 2), y) for sx in (-1, 1) for y in (665.0, 688.0)]   # the trunk's side bars stand on the hood's top plate
+plate_xy("hood-bottom", -HX, HX, HY0, HY1, RZ0, tp, holes=hood_holes, circ_cuts=[(0, P["hm_collar_y"], P["hm_collar_d"] + 3.0)])
+plate_xy("hood-top", -HX, HX, HY0, HY1, hz1, tp, holes=hood_holes + [(x, y, P["m4_hole"]) for (x, y) in trunk_foot_pts],
+         rect_cuts=[(0, (ty0b + ty1b) / 2, 2 * TXI, TBW)])
+P["hood_area"] = 2 * HXI * HBW
+assert hz1 + tp <= bt - e - 2.0 + 1e-9, "the hood passes 2 under the mid rear cross rail"
+for (x, y) in hood_side_pts + hood_end_pts:   # the heads on top must miss the cross rail
+    assert not (ry - 4.0 <= y <= ry + e + 4.0), f"hood screw at Y {y} under the mid rear cross rail"
+assert HY1 + 2.2 + 2.0 <= D - e, "the hood and the trunk's rear heads must clear the rear end rail"
+assert HXI * 2 >= 2 * P["hm_collar_flange_d"] / 2 + 20.0, "the hood covers the collar's flange with margin"
+# the hood's gasket: a foam ring glued under the bottom plate round the collar's hole; the module's collar rim brushes it
+gk = (cq.Workplane("XY").center(0, P["hm_collar_y"]).circle(P["hood_gasket_od"] / 2).circle(P["hm_collar_d"] / 2).extrude(P["hood_gasket_t"])
+      .translate((0, 0, RZ0 - P["hood_gasket_t"])))
+add("hood-gasket (bought, 3 mm foam ring 150 x 125, glued under the hood's bottom plate)", gk, FELT)
+assert HY0 <= P["hm_collar_y"] - P["hood_gasket_od"] / 2, "the hood must cover the gasket ring"
+# the trunk
+trunk_side_z = (320.0, 440.0, 560.0, 680.0, 800.0)
+NZ0, NZ1 = P["nz_z"]
+NX, NBW = P["nz_x"], P["nz_bar_w"]
+NXI = NX - BAR_T                                                               # 106
+nz_in_z0, nz_in_z1 = NZ0 + BAR_T, NZ1 - BAR_T                                  # 666.5 to 808.5
+for sx in (-1, 1):
+    bar = box(min(sx * TXI, sx * TX), max(sx * TXI, sx * TX), ty0b, ty1b, hz1 + tp, TZ1)
+    for z in trunk_side_z:
+        bar = duct_screw(rs_hw, bar, (sx * (TX - BAR_T / 2), TY0, z), (0, -1, 0))        # front plate
+        bar = duct_screw(rs_hw, bar, (sx * (TX - BAR_T / 2), ty1b + tp, z), (0, 1, 0))   # rear plate
+    for y in (665.0, 688.0):
+        bar = duct_screw(rs_hw, bar, (sx * (TX - BAR_T / 2), y, hz1), (0, 0, -1))         # into the bar's foot, from inside the hood
+    trunk_bars.append(bar)
+bar = box(-TXI, TXI, ty0b, ty1b, TZ1 - BAR_T, TZ1)                                       # top bar
+for x in (-80.0, 0.0, 80.0):
+    bar = duct_screw(rs_hw, bar, (x, TY0, TZ1 - BAR_T / 2), (0, -1, 0))
+    bar = duct_screw(rs_hw, bar, (x, ty1b + tp, TZ1 - BAR_T / 2), (0, 1, 0))
+trunk_bars.append(bar)
+add("trunk-bars (50 x 8 aluminium flat bar: 2 sides, 1 top)", compound(trunk_bars), ALU)
+cut_list.append(("trunk side bar", "flat bar 50x8 aluminum", round(TZ1 - hz1 - tp, 1), 2, "riser trunk sides, tapped M4 on both edges and the foot"))
+cut_list.append(("trunk top bar", "flat bar 50x8 aluminum", round(2 * TXI, 1), 1, "riser trunk top, tapped M4 on both edges"))
+trunk_holes = [(sx * (TX - BAR_T / 2), z, P["m4_hole"]) for sx in (-1, 1) for z in trunk_side_z] + [(x, TZ1 - BAR_T / 2, P["m4_hole"]) for x in (-80.0, 0.0, 80.0)]
+nz_trunk_pts = [(sx * (NX - BAR_T / 2), z) for sx in (-1, 1) for z in (700.0, 775.0)] + [(x, z) for x in (-60.0, 0.0, 60.0) for z in (NZ0 + BAR_T / 2, NZ1 - BAR_T / 2)]
+plate_xz("trunk-front", -TX, TX, hz1 + tp, TZ1, TY0, tp, holes=trunk_holes + [(x, z, P["m4_hole"]) for (x, z) in nz_trunk_pts],
+         rect_cuts=[(0, (nz_in_z0 + nz_in_z1) / 2, 2 * NXI, nz_in_z1 - nz_in_z0)])
+plate_xz("trunk-rear", -TX, TX, hz1 + tp, TZ1, ty1b, tp, holes=trunk_holes)
+P["riser_area"] = 2 * TXI * TBW
+assert TY0 >= ry + e + 1.0 - 1e-9, "the trunk's front plate stands 1 behind the mid rear cross rail"
+assert TZ1 + 2.0 <= Hb - e, "the trunk ends under the top rear cross rail"
+# the nozzle: 40 x 8 bars from the bulkhead's back face (1 mm foam) to the trunk's front plate; M4 from the drum side
+# through the bulkhead and from inside the trunk through its front plate
+nz_y0, nz_y1 = P["rear_bulk_y"] + tb + P["nz_foam"], TY0
+assert abs(nz_y1 - nz_y0 - NBW) < 1e-9, "the nozzle's bars span the bulkhead to the trunk exactly"
+for sx in (-1, 1):
+    bar = box(min(sx * NXI, sx * NX), max(sx * NXI, sx * NX), nz_y0, nz_y1, NZ0, NZ1)
+    for (x, z) in nz_trunk_pts:
+        if abs(x) > NXI and (x > 0) == (sx > 0):
+            bar = duct_screw(rs_hw, bar, (x, TY0 + tp, z), (0, 1, 0))                                    # from inside the trunk
+    for (x, z) in nz_bulk_pts:
+        if abs(x) > NXI and (x > 0) == (sx > 0):
+            bar = duct_screw(rs_hw, bar, (x, P["rear_bulk_y"], z), (0, -1, 0), plate_t=tb + P["nz_foam"], bolt=m4b10)   # from the drum side
+    nz_bars.append(bar)
+for (z0_, z1_) in ((NZ0, NZ0 + BAR_T), (NZ1 - BAR_T, NZ1)):
+    bar = box(-NXI, NXI, nz_y0, nz_y1, z0_, z1_)
+    for (x, z) in nz_trunk_pts:
+        if z0_ <= z <= z1_:
+            bar = duct_screw(rs_hw, bar, (x, TY0 + tp, z), (0, 1, 0))
+    for (x, z) in nz_bulk_pts:
+        if z0_ <= z <= z1_:
+            bar = duct_screw(rs_hw, bar, (x, P["rear_bulk_y"], z), (0, -1, 0), plate_t=tb + P["nz_foam"], bolt=m4b10)
+    nz_bars.append(bar)
+add("nozzle-bars (40 x 8 aluminium flat bar: 2 sides, top, bottom)", compound(nz_bars), ALU)
+cut_list.append(("nozzle side bar", "flat bar 40x8 aluminum", round(NZ1 - NZ0, 1), 2, "inlet nozzle sides, tapped M4 on both edges"))
+cut_list.append(("nozzle end bar", "flat bar 40x8 aluminum", round(2 * NXI, 1), 2, "inlet nozzle top and bottom, tapped M4 on both edges"))
+nz_foam = [box(min(sx * NXI, sx * NX), max(sx * NXI, sx * NX), P["rear_bulk_y"] + tb, nz_y0, NZ0, NZ1) for sx in (-1, 1)]
+nz_foam += [box(-NXI, NXI, P["rear_bulk_y"] + tb, nz_y0, z0_, z0_ + BAR_T) for z0_ in (NZ0, NZ1 - BAR_T)]
+nz_foam = [f_ for f_ in nz_foam]
+for (x, z) in nz_bulk_pts:
+    nz_foam = [hole_y(f_, x, z) for f_ in nz_foam]
+add("nozzle-foam (bought, 2 mm closed-cell foam tape 8 wide, 900, compressed to 1 on the bulkhead)", compound(nz_foam), FELT)
+P["nozzle_area"] = 2 * NXI * (nz_in_z1 - nz_in_z0)
+assert -NXI < -P["inlet_w"] / 2 - 4.0 and nz_in_z0 < az + P["inlet_above_axis"] - P["inlet_hole_d"] / 2 - 4.0 and nz_in_z1 > az + P["inlet_above_axis"] + 8 * P["inlet_pitch"] + P["inlet_hole_d"] / 2 + 4.0, "the nozzle surrounds the hole field with 4 mm to spare"
+add(f"riser-hardware (bought, {len(rs_hw)} x M4 x 8 and M4 x 10 button heads)", compound(rs_hw), HARDWARE)
+
+# --- door switch (draft 8): a plunger switch behind the front upper panel, 45 degrees right of bottom on the ring bolts'
+# radius; the closed door's disc presses the plunger (drawn pressed, 3 mm travel). Two M4 into its tapped ears outside the
+# ring. Envelope: the listed two-contact dryer door switch of uci-spec section 13 is measured at V-115.
+bw_, bd_, bh_ = P["ds_body"]
+ds_body = box(-bw_ / 2, bw_ / 2, 0, bd_, -bh_ / 2, bh_ / 2).rotate((0, 0, 0), (0, 1, 0), 90.0 + P["ds_angle_deg"]).translate((272.5 * DS_U[0], 0, az + 272.5 * DS_U[1]))
+ds_body = ds_body.union(cq.Workplane("XZ").center(*DS_P).circle(P["ds_plunger_d"] / 2).extrude(12.0).translate((0, 1.0, 0)))   # plunger to Y -11, on the disc's back face
+for (x, z) in DS_M:
+    ds_body = ds_body.cut(cq.Workplane("XZ").center(x, z).circle(2.1).extrude(-9.0).translate((0, -1.0, 0)))
+add("door-switch (bought, two-contact plunger switch, envelope)", ds_body, BOUGHT)
+add("hardware-door-switch (bought, 2 x M4 x 8 button head into the switch's tapped ears)",
+    compound([place(m4b8, (x, -tp, z), (0, -1, 0)) for (x, z) in DS_M]), HARDWARE)
+assert P["ds_r"] > P["door_ring_id"] / 2 + 10 and P["ds_r"] < P["door_disc_d"] / 2 - 8 and all(math.hypot(x, z - az) > P["door_ring_od"] / 2 + 5 for (x, z) in DS_M), "plunger under the disc, inside the ring; ears outside the ring"
+assert DS_P[0] > LB_X + 10.0, "the switch sits clear of the lint box"
+
+# --- air-proving switch PS1 (draft 8): on a 20x20x2 angle bracket on the base pan at the right front, in front of the
+# blower's outlet box; its tube to the blower outlet is a V-205 question. Envelope only.
+px_, py_ = P["ps1_xy"]
+ps_brk = angle_x(px_ - 30.0, px_ + 30.0, py_ + 10.0, -1, 0.0, +1)                        # vertical leg at Y 78 to 80, foot forward on the pan
+for (x, y) in ps1_pts:
+    ps_brk = ps_brk.cut(cq.Workplane("XY").center(x, y).circle(P["m6_hole"] / 2).extrude(A_T + 2).translate((0, 0, -1)))
+ps_hw = [place(hex_bolt_m6(), (x, y, A_T), (0, 0, 1)) for (x, y) in ps1_pts] + [place(nut(P["m6_nut_af"], P["m6_nut_h"], 6.2), (x, y, -P["t_base"]), (0, 0, -1)) for (x, y) in ps1_pts]
+ps_body = box(px_ - 30.0, px_ + 30.0, py_ + 10.0, py_ + 38.0, 0.0, 60.0)
+for x in (px_ - 15.0, px_ + 15.0):
+    ps_brk = hole_y(ps_brk, x, 12.0)
+    ps_body = ps_body.cut(cq.Workplane("XZ").center(x, 12.0).circle(2.1).extrude(-9.0).translate((0, py_ + 10.0 - 1.0, 0)))
+    ps_hw.append(place(m4b8, (x, py_ + 10.0 - A_T, 12.0), (0, -1, 0)))
+add("ps1-bracket (angle 20x20x2, 60)", ps_brk, ALU)
+cut_list.append(("ps1-bracket", "angle 20x20x2 aluminum", 60, 1, "air-proving switch bracket, on the base pan"))
+add("ps1-air-proving-switch (bought, envelope)", ps_body, BOUGHT)
+add("hardware-ps1 (bought, 2 x M6 x 12 hex, nuts, through the base pan; 2 x M4 x 8 button head into the switch)", compound(ps_hw), HARDWARE)
+
+# --- exhaust thermostats (draft 8): TF2 (thermal fuse), T_HI and T_LO (cycling) on the blower's outlet box, disc type on
+# 54 x 14 brackets, each with two screws into the housing (the kit's screws; the housing is measured at V-107)
+tf_hw = []
+tf_sols = []
+oz = mz + 70.0                                                                          # the outlet box's top face
+for x in P["tf_x"]:
+    br_ = box(x - 7.0, x + 7.0, 123.0, 177.0, oz, oz + 2.0)
+    bd2 = box(x - 11.0, x + 11.0, 139.0, 161.0, oz + 2.0, oz + 15.0)
+    t_ = br_.union(bd2)
+    for yy in (130.0, 170.0):
+        t_ = t_.cut(cq.Workplane("XY").center(x, yy).circle(2.25).extrude(5).translate((0, 0, oz - 1)))
+        blower = blower.cut(cq.Workplane("XY").center(x, yy).circle(2.1).extrude(9).translate((0, 0, oz - 8)))
+        tf_hw.append(place(m4b8, (x, yy, oz + 2.0), (0, 0, 1)))
+    tf_sols.append(t_)
+add("exhaust-thermostats (bought, TF2 thermal fuse, T_HI and T_LO cycling thermostats, envelopes on the blower outlet)", compound(tf_sols), BOUGHT)
+add("hardware-exhaust-thermostats (bought, 6 x M4 x 8 button head into the housing)", compound(tf_hw), HARDWARE)
+parts[[n for n, *_ in parts].index("blower (bought)")] = ("blower (bought)", blower, BOUGHT, False, None)
 
 # rollers: four catalog drum rollers on ISO 7379 shoulder screws through the bulkheads (7b). The shoulder bears on the
 # bulkhead and the nut clamps it there; the roller turns on the shoulder between a 1.0 shim under the head and a spacer
@@ -1789,11 +2222,14 @@ if "--bbox" in sys.argv:   # every part's bounding box, for a quick look at wher
         for n, s_, _, _, _ in parts:
             bb = (s_.val() if hasattr(s_, "val") else s_).BoundingBox()
             w.writerow([n] + [round(q, 2) for q in (bb.xmin, bb.xmax, bb.ymin, bb.ymax, bb.zmin, bb.zmax)])
-if "--check" in sys.argv:
+if "--check" in sys.argv or "--check-new" in sys.argv:
     import itertools
     solids = [(n, s.val() if hasattr(s, "val") else s) for n, s, _, _, _ in parts]
+    NEW = ("lint-box", "spool", "basket", "liner", "hood", "trunk", "nozzle", "riser-hardware", "door-switch", "ps1", "exhaust-thermostats", "motor-mount", "hardware-motor", "hardware-door-switch", "hardware-basket", "hardware-liner", "hardware-ps1", "hardware-exhaust")
     bad = []
     for (na, a), (nb, b) in itertools.combinations(solids, 2):
+        if "--check-new" in sys.argv and not (na.startswith(NEW) or nb.startswith(NEW)):
+            continue
         try:
             bba, bbb = a.BoundingBox(), b.BoundingBox()
             if (bba.xmax < bbb.xmin or bbb.xmax < bba.xmin or bba.ymax < bbb.ymin or bbb.ymax < bba.ymin
@@ -1807,6 +2243,18 @@ if "--check" in sys.argv:
         if v > 1.0:   # mm3; touching faces give 0
             cb = common.BoundingBox()
             bad.append((na, nb, round(v, 1), " at " + " ".join(f"{q:.1f}" for q in (cb.xmin, cb.xmax, cb.ymin, cb.ymax, cb.zmin, cb.zmax))))
+            if "--check-new" in sys.argv:   # name the pieces of a compound that overlap, one line each
+                for (nx_, x_), (ny_, y_) in ((na, a), (nb, b)), ((nb, b), (na, a)):
+                    pieces = x_.Solids() if hasattr(x_, "Solids") else [x_]
+                    if len(pieces) > 1:
+                        for k, pc in enumerate(pieces):
+                            try:
+                                cv = pc.intersect(y_).Volume()
+                            except Exception:
+                                continue
+                            if cv > 1.0:
+                                pb = pc.BoundingBox()
+                                bad.append((f"  piece {k} of {nx_[:40]}", ny_[:40], round(cv, 1), " piece at " + " ".join(f"{q:.1f}" for q in (pb.xmin, pb.xmax, pb.ymin, pb.ymax, pb.zmin, pb.zmax))))
     if bad:
         print("INTERFERENCE:")
         for na, nb, v, where in bad:
@@ -1814,7 +2262,8 @@ if "--check" in sys.argv:
     else:
         print("interference check: no overlaps")
 print("drum axis Z", P["drum_axis_z"], " H_body", P["H_body"], " H_total", round(P["H_total"], 1), " rear bulkhead Y", P["rear_bulk_y"],
-      " lint slot area", round(P["lint_slot_area"]), " hood section", round(P["hood_area"]))
+      " lint slot area", round(P["lint_slot_area"]), " hood section", round(P["hood_area"]), " trunk", round(P["riser_area"]),
+      " nozzle", round(P["nozzle_area"]), " basket outer wall in the box", round(P["basket_wall_area"]), " liner strip", round(P["liner_flat_len"], 1))
 print("drum sheet flat", round(P["drum_flat_w"], 1), "x", P["drum_l"], " belt drawn length", round(P["belt_len_est"], 1),
       " belt crosses the ceiling at X", round(P["belt_cross_left"], 2), "and", round(P["belt_cross_right"], 2), " feet", P["foot_height"])
 print("drum", round(P["drum_rpm"], 1), "rpm", " heat module top", round(P["hm_zmax"], 1), " collar area", round(P["hm_collar_area"]),

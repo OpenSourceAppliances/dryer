@@ -154,6 +154,17 @@ All mains terminations are crimped ferrules (into screw or spring blocks) or cri
 - Every terminal block is numbered as in section 2 with a printed marker strip. Every wire carries its number from section 3 on a heat-shrink or wrap-around label at both ends. The ladder drawing and this document are fixed to the inside of the lid in a plastic sleeve.
 - A label on the cover: "Unplug the dryer before opening. 240 V inside. Rails A1 to A3 under this cover are mains. Rails B1 and B2 above are 24 V."
 
+## 4a. Harness routes (draft 8)
+
+Three harnesses leave the plate. Every one passes through a rubber grommet in a 1.5 mm plate and is clamped so it cannot touch the belt, the drum, or anything that gets hot.
+
+- Cord: up from its strain relief bushing in the base pan (X -275, Y 690), straight up the back of the bay, through the 22 mm grommet in the bay ceiling at the same X and Y, to X1 on rail A1. One cable clamp on the base pan beside the bushing.
+- Bay harness (motor M1 L and N, PS1, TF2, T_HI, T_LO, the heat module's X2 and X4 leads, the door switch S1): down through the 30 mm grommet in the bay ceiling at X -200, Y 690, then forward along the base pan's left side on four M4 cable clamps at X -250, Y 600, 440, 280 and 120 (4.5 holes in the pan), clear of the belt's left run (which crosses the ceiling at X -138) and the idler bracket (X -140 to -90, Y 366 to 390). Branches: to the motor's terminal box on its top (X 0, Y 260 to 320, by the clamp at Y 280); to TF2, T_HI and T_LO on the blower's outlet box (X 130 to 230, Y 150, Z 190) and PS1 on its bracket (X 250, Y 70) from the clamp at Y 120, crossing the bay in front of the motor and under the blower's outlet; to the heat module's terminal plate (X2 mains and X4 SELV, DIN rail at Y 635.5) from the clamp at Y 600, which is the harness that is unplugged to take the tray out. The mains and SELV conductors run as two bundles in the same clamps, and the thermistor pair (wire 55) runs apart from the mains bundle as its row says.
+- Door switch S1: its two cables leave the bay harness at the clamp at Y 120, run along the pan to the right front, up through the 12 mm grommet in the bay ceiling at X 290, Y 60 (behind the front bulkhead, in the drum compartment outside the drum), 30 mm up the bulkhead's back face, through the 12 mm grommet in the bulkhead at X 290, Z 330 (outside the felt and the front roller's nut), and across the front of the bulkhead to the switch at X 182, Z 449 behind the front upper panel. Nothing of this run is inside the drum's sweep or in the air path; the drum compartment leg is 30 mm long and is where a sleeve of split loom goes.
+- Console harness (the UCI-D cable, J1): up through the 22 mm grommet in the top panel at X -225, Y 690, to the console's module.
+
+The door switch's motor-rated contact is in the motor's 120 V line (wire 57, S1 COM and NO to X3:4 and X3:5) and its second contact gates the 24 V bus (wire 58, S2 to X5:1 and X5:2); both pairs run in the bay harness, the mains pair with the mains bundle and the 24 V pair with the SELV bundle, and they separate only at the switch.
+
 ## 5. Cord variants
 
 | Build | Cord | X1:2 (L2) | CB1 | Note |

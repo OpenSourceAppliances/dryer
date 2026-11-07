@@ -48,11 +48,13 @@ CLEAR_PAIRS = [
     ("drum-ring-rear", "rear-bulkhead"), ("door-ring", "front-upper-panel"), ("door-disc", "door-ring"),
     ("console-face", "console-cheek-left"), ("console-face", "console-cheek-right"), ("console-face", "top-panel"),
     ("console-face", "console-cap"), ("front-bulkhead", "bay-ceiling"), ("rear-bulkhead", "bay-ceiling"),
-    ("lint-duct", "rail-mid-front-left"), ("lint-duct", "rail-mid-front-right"), ("lint-duct", "front-bulkhead"),
-    ("lint-duct", "front-upper-panel"), ("riser-duct", "rear-bulkhead"), ("riser-duct", "rail-mid-rear"),
-    ("riser-duct", "bay-ceiling"), ("heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)", "riser-duct"), ("heat-module-top", "bay-ceiling"),
-    ("motor (bought)", "base-pan"), ("blower (bought)", "front-bulkhead"), ("blower (bought)", "lint-duct-transition"),
-    ("pulley (bought)", "bay-ceiling"), ("exhaust-duct (bought)", "rear-lower-panel"), ("power-module-plate", "riser-duct"),
+    # draft 8: the bar-frame ducts (single-body plates only; the bar compounds are left to cad_audit.py)
+    ("lint-box-front", "front-upper-panel"), ("lint-box-front", "liner"), ("liner", "door-ring"), ("liner", "front-bulkhead"),
+    ("basket-far-plate", "lint-box-front"), ("basket-lip-plate", "drum-ring-front"), ("basket-lip-plate", "felt-seal-front-long"),
+    ("trunk-front", "rear-bulkhead"), ("trunk-front", "rail-mid-rearcross"), ("trunk-rear", "rail-mid-rear"), ("trunk-front", "bay-ceiling"),
+    ("hood-top", "rail-mid-rearcross"), ("hood-bottom", "heat-module-collar (bought, 125 flanged starting collar, cut to 55.5)"), ("heat-module-top", "bay-ceiling"),
+    ("motor (bought)", "base-pan"), ("blower (bought)", "front-bulkhead"), ("lint-box-back", "front-bulkhead"),
+    ("pulley (bought)", "bay-ceiling"), ("exhaust-duct (bought)", "rear-lower-panel"), ("power-module-plate", "trunk-front"),
     ("power-module-plate", "bay-ceiling"), ("drum-sheet", "front-upper-panel"),
     # draft 7: single-body parts only (a compound's distance would be taken from its first body)
     ("heat-module-wall-front", "idler-spring (bought, extension spring)"), ("heat-module-tray", "idler-spring (bought, extension spring)"),

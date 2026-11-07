@@ -61,14 +61,16 @@ Unplug the dryer before opening any panel. The plug is the disconnect.
 - What to order: nothing for lint; the wheel and its clamp from `bom.csv` if it is damaged.
 - How long: 30 min to clean; 45 min to replace the wheel.
 
-### Lint filter
+### Lint basket
 
-- What fails: the mesh tears, the frame cracks, fabric softener residue glazes the mesh so air will not pass even when it looks clean.
+A mesh basket on two laser-cut plates that slides through the curved slot at the bottom of the door opening; the D-pull sits at the bottom of the throat. Pull it 40 mm toward you and lift it out through the door. Push it back in until the lip sits on the bulkhead.
+
+- What fails: the mesh tears or pulls out of its clamps, the pull works loose, fabric softener residue glazes the mesh so air will not pass even when it looks clean.
 - Roughly when: 5 to 10 years for the mesh. Glazing shows up in months if dryer sheets are used.
 - What it looks or sounds like: longer dry times, T_HI cycling too often, lint getting past the filter into the blower.
 - How to confirm: hold the filter under a tap. If water beads on the mesh instead of running through, it is glazed; scrub it with a brush and warm soapy water. Hold it up to the light for tears.
-- What to order: the filter from `bom.csv`.
-- How long: 1 min. No tools.
+- What to order: a new mesh strip, or the plates from `bom.csv` (CH-LINT); re-clamping the mesh is twelve M3 screws.
+- How long: 1 min to clean. No tools. 30 min to re-mesh.
 
 ### Drum support rollers and glides (bom: CH-ROLLERS, CH-ROLLER-STUDS, CH-GLIDES)
 

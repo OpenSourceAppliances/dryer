@@ -21,8 +21,8 @@ OUT = sys.argv[1] if len(sys.argv) > 1 else "."
 # ---------------------------------------------------------------------------
 # Faceplate geometry (one source of truth for DXF and SVG)
 # ---------------------------------------------------------------------------
-FP_W, FP_H, FP_R = 540.0, 160.0, 10.0          # faceplate outline (UCI-D draft 5: 500 wide aperture)
-MOUNT = [(-260, -70), (260, -70), (-260, 70), (260, 70), (0, -70), (0, 70)]   # 520 x 140 pattern plus two on the centre line, dia 4.5
+FP_W, FP_H, FP_R = 620.0, 160.0, 10.0          # faceplate outline (UCI-D draft 6: 560 wide aperture, draft 4 of this drawing)
+MOUNT = [(-295, -70), (295, -70), (-295, 70), (295, 70), (0, -70), (0, 70)]   # 590 x 140 pattern plus two on the centre line, dia 4.5
 MOUNT_D = 4.5
 AP_W, AP_H = 500.0, 120.0                      # aperture, drawn as a reference only
 
@@ -84,7 +84,7 @@ def faceplate_dxf(path):
         msp.add_text(text, height=5, dxfattribs={"layer": "LABEL"}).set_placement((x, y), align=ezdxf.enums.TextEntityAlignment.MIDDLE_CENTER)
     # reference only: the chassis aperture, so the cutter and the builder see the clear zone
     msp.add_lwpolyline([(-AP_W/2, -AP_H/2), (AP_W/2, -AP_H/2), (AP_W/2, AP_H/2), (-AP_W/2, AP_H/2)], close=True, dxfattribs={"layer": "REF"})
-    msp.add_text("osa-dryer Tier 0 faceplate, draft 3, 2026-11-06 (UCI-D draft 5, 500 wide aperture). 2 mm aluminum. CUT layer only. LABEL layer is optional engraving. REF is not cut.",
+    msp.add_text("osa-dryer Tier 0 faceplate, draft 4, 2026-11-06 (UCI-D draft 6, 560 wide aperture). 2 mm aluminum. CUT layer only. LABEL layer is optional engraving. REF is not cut.",
                  height=3, dxfattribs={"layer": "REF"}).set_placement((-FP_W/2, -FP_H/2 - 8))
     doc.saveas(path)
 
@@ -105,7 +105,7 @@ def faceplate_svg(path):
     # aperture reference
     ax, ay = P(-AP_W/2, AP_H/2)
     d.items.append(f'<rect x="{ax}" y="{ay}" width="{AP_W*S}" height="{AP_H*S}" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="8,6"/>')
-    d.text(ax + 6, ay + 16, "chassis aperture 500 x 120 (reference, not cut)", size=11, color="#555", italic=True)
+    d.text(ax + 6, ay + 16, "chassis aperture 560 x 120 (reference, not cut)", size=11, color="#555", italic=True)
     # timer bodies and yokes (reference, dashed)
     for name, x in TIMERS.items():
         bx, by = P(x - 20.3, 35.5)
@@ -142,7 +142,7 @@ def faceplate_svg(path):
         d.line(x - 5, y1, x + 5, y1, width=1); d.line(x - 5, y2, x + 5, y2, width=1)
         d.items.append(f'<text x="{x+6}" y="{(y1+y2)/2+4}" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#111">{label}</text>')
     dim_h(-hh - 14, -hw, hw, f"{FP_W:g}")
-    dim_h(-hh - 34, -260, 260, "520 (M4 mounting holes, 4.5 dia; two more on the centre line)")
+    dim_h(-hh - 34, -295, 295, "590 (M4 mounting holes, 4.5 dia; two more on the centre line)")
     dim_v(hw + 14, -hh, hh, f"{FP_H:g}")
     dim_v(hw + 44, -70, 70, "140 (mounting holes)")
     dim_h(hh + 14, -hw, -150, "120")
@@ -160,7 +160,7 @@ def faceplate_svg(path):
         "Holes: 6 x 4.5 mount; timers: 12 shaft (check against the part) and 2 x 4.0 yoke holes at 83.3; 2 x 22.3 for the 22 mm selector and button;",
         "2 x 4.5 for the K1 DIN rail standoffs; 2 x 4.5 cable tie anchors. Dashed boxes: timer body 40.6 x 70.9 and yoke 106.4 long, both behind the plate.",
         "The 22 mm devices sit 20 above the centre line and the K1 rail 24 below it, so the K1 socket (36 below the rail line) stays inside the aperture.",
-        "Everything mounted on the back stays inside the 500 x 120 aperture; the 20 mm band outside it sits against the chassis panel.",
+        "Everything mounted on the back stays inside the 560 x 120 aperture; the 30 mm band outside it sits against the chassis panel.",
         "Labels: engrave if the cutter offers it, otherwise a printed strip. Knob diameter is not on the timer's sheet: check it before cutting.",
     ]
     for i, n in enumerate(notes):
@@ -344,7 +344,7 @@ def layout_concept(path):
     # UCI aperture in the console
     ax, ay = F(WIDTH/2 - 250, BODY_H + CONSOLE_H/2 + 60 - 10)
     d.items.append(f'<rect x="{ax}" y="{ay}" width="{500*S}" height="{120*S}" fill="#fff" stroke="#111" stroke-width="1.2"/>')
-    d.text(ax + 4, ay + 14, "UCI-D aperture 500 x 120", size=10)
+    d.text(ax + 4, ay + 14, "UCI-D aperture 560 x 120", size=10)
     # door opening
     cx, cy = F(WIDTH/2, BAY_H + 25 + DRUM_D/2)
     d.items.append(f'<circle cx="{cx}" cy="{cy}" r="{230*S}" fill="#eef" stroke="#111" stroke-width="1.6"/>')
