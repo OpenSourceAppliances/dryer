@@ -1772,7 +1772,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | hardware-console-cheek-right (bought, 5 x M6 x 12 hex, washers, T-nuts) | volume (mm3) (5 bodies added) | OCP 4292.233 / Fusion 4292.233 | PASS |
 | osa-dryer-assembly | hardware-console-cheek-right (bought, 5 x M6 x 12 hex, washers, T-nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | hardware-console-cheek-right (bought, 5 x M6 x 12 hex, washers, T-nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | tier0-faceplate | volume (mm3) | OCP 195756.562 / Fusion 195756.562 | PASS |
+| osa-dryer-assembly | tier0-faceplate | volume (mm3) (allowed 0.05 percent: the labels are engraved with Fusion's own font) | OCP 195756.562 / Fusion 195756.562 | PASS |
 | osa-dryer-assembly | tier0-faceplate | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | tier0-faceplate | solid body | 1 | PASS |
 | osa-dryer-assembly | hardware-tier0-faceplate (bought, 6 x M4 x 10 button head, nuts) | volume (mm3) (12 bodies added) | OCP 1771.568 / Fusion 1771.568 | PASS |
@@ -1994,7 +1994,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | cord-bushing (bought, PG16 strain relief) | volume (mm3) | OCP 8877.396 / Fusion 8877.396 | PASS |
 | osa-dryer-assembly | cord-bushing (bought, PG16 strain relief) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | cord-bushing (bought, PG16 strain relief) | solid body | 1 | PASS |
-| osa-dryer-assembly | power-cord (bought) | volume (mm3) | OCP 29269.670 / Fusion 29269.670 | PASS |
+| osa-dryer-assembly | power-cord (bought) | volume (mm3) | OCP 29365.096 / Fusion 29365.096 | PASS |
 | osa-dryer-assembly | power-cord (bought) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | power-cord (bought) | solid body | 1 | PASS |
 | osa-dryer-assembly | liner | volume (mm3) | OCP 91807.599 / Fusion 91807.543 | PASS |
@@ -2775,7 +2775,7 @@ Bought parts and envelopes in the assembly (no part file):
 | power-module-hardware (bought, 22 x M4 x 8 button head, 14 nuts) | -293.80..-156.20 | 649.30..731.70 | 316.20..823.80 | 5211.2 |
 | grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2) | -289.00..301.00 | 38.75..708.00 | 298.75..1002.75 | 6693.7 |
 | cord-bushing (bought, PG16 strain relief) | -290.01..-259.99 | 677.00..703.00 | -6.50..18.00 | 8877.4 |
-| power-cord (bought) | -279.50..-270.50 | 685.50..820.00 | -16.50..320.00 | 29269.7 |
+| power-cord (bought) | -279.50..-270.50 | 685.50..820.00 | -16.50..320.00 | 29365.1 |
 | hardware-liner (bought, 2 x M3 x 6 button head, nuts) | -15.70..15.70 | 16.30..22.00 | 863.45..871.23 | 234.8 |
 | lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom) | -166.00..166.00 | 8.50..38.50 | 62.00..462.07 | 261325.7 |
 | lint-box-foam (bought, 3 mm closed-cell foam tape 8 wide, 2 x 190, compressed to 1.5) | -166.00..166.00 | 38.50..40.00 | 275.00..462.07 | 4255.3 |

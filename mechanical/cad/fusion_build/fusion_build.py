@@ -12,7 +12,10 @@ change moves the part. Numbers come from the P table in osa_dryer_cad.py.
 
 Draft 1, 2026-11-07: stages A (parameters, frame, tray rails), B (the flat plates from plates.json), C (the drum set),
 D (the ducts, blower plate feet and exhaust set), E (the door, the Tier 0 module, the drive, the two modules, sensors,
-blanks, clamps, feet and brackets, from numbers.json) and F (the hardware from hardware.json, as fixed bodies).
+blanks, clamps, feet and brackets, from numbers.json), F (the hardware from hardware.json, as fixed bodies) and G (the
+joints, rigid groups and appearances of ../fusion_motion/fusion_motion.py, its interference check at three poses, the
+archive mechanical/fusion/osa-dryer-parametric.f3d). All 213 parts built and checked against the script's files
+(README.md, ../audit/fusion-build-report.md).
 """
 import math
 import os
@@ -2474,7 +2477,12 @@ def t_button(d, head_d, head_h, length, socket_af):
     rh, f = head_d / 2, head_h * 0.8
     b = t_cyl(rh - f, 0.0, head_h)
     t_union(b, t_cyl(rh, 0.0, head_h - f))
-    t_union(b, tmp().createTorus(t_pt(0, 0, head_h - f), t_vec(0, 0, 1), (rh - f) * CM, f * CM))
+    tor = tmp().createTorus(t_pt(0, 0, 0), t_vec(0, 0, 1), (rh - f) * CM, f * CM)
+    m = adsk.core.Matrix3D.create()      # createTorus leaves its centre point unused (the torus comes out about the origin), so move it
+    m.translation = adsk.core.Vector3D.create(0.0, 0.0, (head_h - f) * CM)
+    tmp().transform(tor, m)
+    tmp().booleanOperation(tor, t_cyl(rh + 1.0, head_h - f, head_h), adsk.fusion.BooleanTypes.IntersectionBooleanType)   # only the round's own band of the torus
+    t_union(b, tor)
     t_cut(b, t_hex(socket_af, head_h - 1.2, head_h + 0.8))
     t_union(b, t_cyl(d / 2, -length + 0.4, 0.5))
     t_union(b, t_cyl(d / 2 - 0.4, -length, -length + 0.4, d / 2))
@@ -2554,13 +2562,18 @@ def add_fixed_bodies(comp, bodies):
 HW_BUILT_ELSEWHERE = ("hardware-roller-studs",)   # drawn with the drive in stage E
 
 
-def stage_f():
+def stage_f(redo=False, only=None):
+    """Build every hardware set; with redo, drop the built sets first; with only (name prefixes), just those sets."""
     app, design, root = app_design()
     HW = json.load(open(os.path.join(REPO, "mechanical", "cad", "hardware.json"), encoding="utf-8"))["hardware"]
     done, skipped, n_pieces = [], [], 0
     for name, pieces in HW.items():
         if any(name.startswith(h) for h in HW_BUILT_ELSEWHERE):
             continue
+        if only is not None and not any(name.startswith(o) for o in only):
+            continue
+        if redo:
+            drop(name)
         if any(pc is None for pc in pieces):
             skipped.append(name)
         bodies = []
@@ -2578,7 +2591,24 @@ def stage_f():
     return "stage F: %d hardware parts, %d pieces" % (len(done), n_pieces) + ("; pieces not stock in %s" % skipped if skipped else "")
 
 
+# ---------------------------------------------------------------------------
+# Stage G: joints, rigid groups and appearances from ../fusion_motion/fusion_motion.py (run in its own namespace: it
+# names its point helper P), Fusion's interference analysis at the three poses, and the archive of record.
+# ---------------------------------------------------------------------------
+def stage_g(archive="osa-dryer-parametric.f3d", poses=True):
+    app, design, root = app_design()
+    ns = {"REPO": REPO, "__name__": "fusion_motion"}
+    exec(open(os.path.join(REPO, "mechanical", "cad", "fusion_motion", "fusion_motion.py"), encoding="utf-8").read(), ns)
+    out = [ns["build"](), ns["dress"]()]
+    if poses:
+        found = ns["check_poses"]()
+        out.append("%d interferences over 3 poses" % len(found) + (": %s" % found[:5] if found else ""))
+    path = os.path.join(REPO, "mechanical", "fusion", archive)
+    out.append("archive " + ns["export_archive"](path))
+    return "stage G: " + "; ".join(out)
+
+
 def build_all():
     new_design()
-    out = [stage_a(), stage_b(), stage_c(), stage_d(), stage_e(), stage_f()]
+    out = [stage_a(), stage_b(), stage_c(), stage_d(), stage_e(), stage_f(), stage_g()]
     return "\n".join(out)

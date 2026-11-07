@@ -1,4 +1,4 @@
-fusion_audit start 2026-11-07 09:01:02  Fusion 2706.1.17
+fusion_audit start 2026-11-07 12:52:40  Fusion 2706.1.17
 81 STEP files in mechanical\step (paths in this log are relative to the repo)
 importing base-pan
   1 bodies
@@ -979,7 +979,7 @@ importing osa-dryer-assembly
   grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2): solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 989.963 mm3
   grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2): solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 989.963 mm3
   cord-bushing (bought, PG16 strain relief): solid True, 21 faces (17 planar, 3 cylindrical in 3 cylinders), volume 8877.396 mm3
-  power-cord (bought): solid True, 6 faces (4 planar, 2 cylindrical in 2 cylinders), volume 29269.670 mm3
+  power-cord (bought): solid True, 5 faces (2 planar, 2 cylindrical in 2 cylinders), volume 29365.096 mm3
   liner: solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 91807.543 mm3
   liner-splice: solid True, 8 faces (4 planar, 4 cylindrical in 4 cylinders), volume 2270.749 mm3
   hardware-liner (bought, 2 x M3 x 6 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 73.842 mm3

@@ -4475,7 +4475,7 @@ body,osa-dryer-assembly,"cord-bushing (bought, PG16 strain relief)",,1,8877.3956
 cylinder,osa-dryer-assembly,"cord-bushing (bought, PG16 strain relief)",,,,,,,,,,,,,,,,10.9,0.0,-0.0,1.0,-275.0,690.0,0.0,-1.5,0.0,1.5,1,,
 cylinder,osa-dryer-assembly,"cord-bushing (bought, PG16 strain relief)",,,,,,,,,,,,,,,,10.0,0.0,-0.0,1.0,-275.0,690.0,0.0,8.0,15.0,7.0,1,,
 cylinder,osa-dryer-assembly,"cord-bushing (bought, PG16 strain relief)",,,,,,,,,,,,,,,,4.6,0.0,-0.0,1.0,-275.0,690.0,0.0,-6.5,18.0,24.5,1,,
-body,osa-dryer-assembly,power-cord (bought),,1,29269.6701,13172.594,6,4,2,6,4,-279.5,685.5,-16.5,-270.5,820.0,320.0,,,,,,,,,,,,,
+body,osa-dryer-assembly,power-cord (bought),,1,29365.0959,13172.594,5,2,2,5,4,-279.5,685.5,-16.5,-270.5,820.0,320.0,,,,,,,,,,,,,
 cylinder,osa-dryer-assembly,power-cord (bought),,,,,,,,,,,,,,,,4.5,0.0,-0.0,1.0,-275.0,690.0,0.0,-12.0,320.0,332.0,1,,
 cylinder,osa-dryer-assembly,power-cord (bought),,,,,,,,,,,,,,,,4.5,-0.0,1.0,-0.0,-275.0,0.0,-12.0,690.0,820.0,130.0,1,,
 body,osa-dryer-assembly,liner,,1,91807.5428,127013.2708,8,4,4,16,12,-237.0,-1.5,394.5,237.0,39.8,868.49789,,,,,,,,,,,,,

@@ -27,7 +27,10 @@ With --fusion, a CSV written by fusion_audit.py (the same measurements taken ins
 with its own kernel) is compared body by body and feature by feature.
 
 Exit code 1 on any FAIL. Draft 4, 2026-11-06: rounded-rectangle outlines (laser corner radii), the T-slot
-profiles' bores and corner radii, engraving excluded from the diameter list, the pan's bracket holes.
+profiles' bores and corner radii, engraving excluded from the diameter list, the pan's bracket holes. 2026-11-07:
+--fusion-partial for a CSV that holds only some of the parts (the parametric build as it grows), and FUSION_VOL_ALLOW,
+a wider volume tolerance for a part whose difference is intended and recorded (the Tier 0 faceplate's engraved text
+in Fusion's own font), named in the report row with its reason.
 """
 import csv
 import glob
@@ -74,6 +77,8 @@ OUT = sys.argv[1] if len(sys.argv) > 1 else "."
 FUSION_CSV = None
 if "--fusion" in sys.argv:
     FUSION_CSV = sys.argv[sys.argv.index("--fusion") + 1]
+FUSION_VOL_ALLOW = {"tier0-faceplate": 5e-4}   # the parametric build's intended differences (fusion_build/README.md): a wider volume tolerance, with the reason
+FUSION_VOL_WHY = {"tier0-faceplate": "the labels are engraved with Fusion's own font"}
 FUSION_PARTIAL = "--fusion-partial" in sys.argv   # the CSV holds only some of the parts (the parametric build, part way through): compare those, do not miss the rest
 HERE = os.path.dirname(os.path.abspath(__file__))
 AUD = os.path.join(HERE, "audit")      # next to this script, whatever <outdir> is
@@ -1421,7 +1426,9 @@ if FUSION_CSV:
             nf = ref["faces"]
         fv = float(r["volume_mm3"])
         nb = r.get("n_bodies", 1)
-        fusion_rows.append((src, nm, "volume (mm3)" + (f" ({nb} bodies added)" if nb > 1 else ""), f"OCP {vol:.3f} / Fusion {fv:.3f}", "PASS" if abs(fv - vol) <= 1e-4 * max(vol, 1) + 0.05 else "FAIL"))
+        tol = FUSION_VOL_ALLOW.get(nm, 1e-4)
+        fusion_rows.append((src, nm, "volume (mm3)" + (f" ({nb} bodies added)" if nb > 1 else "") + (f" (allowed {tol * 100:g} percent: {FUSION_VOL_WHY[nm]})" if nm in FUSION_VOL_ALLOW else ""),
+                            f"OCP {vol:.3f} / Fusion {fv:.3f}", "PASS" if abs(fv - vol) <= tol * max(vol, 1) + 0.05 else "FAIL"))
         fb = tuple(float(r[k]) for k in ("xmin", "ymin", "zmin", "xmax", "ymax", "zmax"))
         dev = max(abs(a - b2) for a, b2 in zip(fb, bb))
         fusion_rows.append((src, nm, "bounding box (mm)", f"max deviation {dev:.4f}", "PASS" if dev <= 0.02 else "FAIL"))
