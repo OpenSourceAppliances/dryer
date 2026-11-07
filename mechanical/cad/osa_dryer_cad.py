@@ -89,7 +89,7 @@ P = dict(
     # lint box (draft 8): 1.5 mm plates on a frame of 30 x 8 aluminium flat bar, in front of the bulkhead between the
     # mid front stubs; the bulkhead is its back wall above 265, a plate below; a spool of 40 x 8 bar to the blower mouth
     lb_y0=7.0, bar_w=30.0, bar_t=8.0, lb_x=166.0, lb_z0=62.0, lb_gap=1.5,   # front plate from Y 7 (the ring bolts' tips end at 4.5); 1.5 foam between the bars and the bulkhead
-    lb_hang_z=280.0, lb_hang_y=20.0, lb_rear_plate_z1=275.0, lb_bulk_screw_z=(300.0, 340.0, 380.0),   # M6 into the stubs' inner slots; the lower back plate laps the bulkhead's foot 10; M4 from the drum side into the side bars
+    lb_hang_z=280.0, lb_hang_y=20.0, lb_rear_plate_z1=275.0, lb_bulk_screw_z=(310.0, 345.0, 380.0),   # the lowest head clears the bay ceiling's front edge (Fusion found 300 in it, draft 8)   # M6 into the stubs' inner slots; the lower back plate laps the bulkhead's foot 10; M4 from the drum side into the side bars
     sp_half=78.0, sp_bar_w=40.0, sp_z0=62.0, sp_z1=198.0, sp_foam=4.0,   # spool: four 40 x 8 bars, 156 wide, 62 to 198 tall (its bottom bar behind the box's), foam 6 compressed to 4 on the blower's inlet face (V-107)
     # lint basket (draft 8): mesh wrapped round two laser-cut sector plates, clamped by two more; it slides through the slot
     bk_r0=239.5, bk_r1=265.5, bk_half_deg=35.6, bk_t=3.0, bk_flange=5.0, mesh_t=0.6,   # 3 mm plates, tapped M3
@@ -2235,7 +2235,17 @@ if "--check" in sys.argv or "--check-new" in sys.argv:
             if (bba.xmax < bbb.xmin or bbb.xmax < bba.xmin or bba.ymax < bbb.ymin or bbb.ymax < bba.ymin
                     or bba.zmax < bbb.zmin or bbb.zmax < bba.zmin):
                 continue
-            common = a.intersect(b)
+            ox0, ox1 = max(bba.xmin, bbb.xmin) - 1, min(bba.xmax, bbb.xmax) + 1
+            oy0, oy1 = max(bba.ymin, bbb.ymin) - 1, min(bba.ymax, bbb.ymax) + 1
+            oz0, oz1 = max(bba.zmin, bbb.zmin) - 1, min(bba.zmax, bbb.zmax) + 1
+            clip = cq.Workplane("XY").box(ox1 - ox0, oy1 - oy0, oz1 - oz0, centered=False).translate((ox0, oy0, oz0)).val()
+            a_c, b_c = a.intersect(clip), b.intersect(clip)       # the pieces inside the boxes' overlap: small shapes boolean reliably
+            try:
+                if a_c.Volume() < 1e-6 or b_c.Volume() < 1e-6:       # one of them has nothing in the overlap region (a compound's pieces are spread out)
+                    continue
+            except Exception:
+                continue
+            common = a_c.intersect(b_c)
             v = common.Volume()
         except Exception as ex:  # a failed boolean is reported, not hidden
             bad.append((na, nb, f"boolean failed: {ex}", ""))

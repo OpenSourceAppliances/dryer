@@ -1,3 +1,2 @@
-draft 7, 2026-11-06, poses t=0, 0.25, 0.5 (door, tray), rear lower panel hidden when moved
-
-0 interferences over 3 poses
+draft 8 model, 2026-11-06: 198 components, 15 joints (drum, pulley, idler, 4 rollers, door, 2 knobs, selector, START, tray slide, basket slide); Fusion interference analysis at t = 0, 0.25 and 0.5: []
+0 interferences over 3 poses (the first import of draft 8 found 13.5 mm3 between the lowest lint box M4 heads and the bay ceiling's front edge; the screws moved from Z 300 to 310)

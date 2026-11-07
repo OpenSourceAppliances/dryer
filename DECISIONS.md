@@ -15,6 +15,20 @@ Affects: which files or subsystems this changes.
 
 ---
 
+## 2026-11-06  No door window; a glazed door is a later upgrade
+
+Decision: The door is a plain 2 mm steel disc. A window is not part of the design; a glazed door can come later as an upgrade with its own ring and seal, on the same hinges and catch.
+Why: A window adds a glass panel, its retaining ring and a second seal for no drying benefit, and the disc is the simplest door a builder can make. Keeping the hinge and catch pattern lets a glazed disc replace it later without touching the panel.
+Charter: follows (simplest reference build; upgrades stay compatible).
+Affects: `docs/design-rules.md` 7a Door, 7 Door.
+
+## 2026-11-06  Two-tone paint in the Fusion model; the interference check clips to the overlap
+
+Decision: The Fusion appearances show the dryer as a builder would paint it: a warm white body (side, upper front and rear, and top panels) with a charcoal console, door and skirt (the lower front and rear panels). The paint is a presentation choice in `fusion_motion.py`, not a specification; the build guide leaves the colours to the builder. Separately, the script's own interference check now clips each pair of parts to their bounding-box overlap before intersecting them, because OCC's boolean of a small bolt against a large plate with many holes returned no overlap where Fusion found 13.5 mm3 (the lint box's lowest drum-side M4 heads in the bay ceiling's front edge, draft 8); the clipped pieces agree with Fusion and the screws moved from Z 300 to 310.
+Why: A real colour scheme makes the Fusion views read as a machine rather than a diagram, and the two tones mark what comes off for service (the dark panels). The check change is a correctness fix: a silent zero from a failed boolean is worse than a slow check.
+Charter: follows.
+Affects: `mechanical/cad/fusion_motion/fusion_motion.py`, `mechanical/cad/osa_dryer_cad.py` (`--check`), `mechanical/cad/cad_audit.py`, `docs/verification.md` V-010, V-021.
+
 ## 2026-11-06  UCI-D aperture 560 wide, faceplate 620
 
 Decision: The UCI-D aperture grows from 500 x 120 to 560 x 120 (`controls/uci-spec.md` draft 6), the faceplate to 620 x 160, the hole pattern to 590 x 140 with the two centre-line holes kept, and the module envelope to 560 x 120 x 120. The Tier 0 layout on the plate does not move.

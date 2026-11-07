@@ -50,7 +50,7 @@ Every duct here is 1.5 mm plate on a frame of aluminium flat bar, the plates scr
 
 1. Fit the two front glides (8 thick) to the back face, the two felt arcs, the two front rollers on their studs (heads on the drum side, nuts in front of the plate) (V-103, V-104, V-102). Bond the plate.
 2. Hang it on the mid front stubs and the top front rail; its bottom edge stands just in front of the ceiling plate's front edge, and its face lands on the lint box's foam strips and the top of its lower back plate. The front studs' nuts sit beside the lint box's side bars, 6 mm from them.
-3. From the drum side, six M4 x 10 through the bulkhead's 4.5 holes at X plus and minus 162 (Z 300, 340, 380) into the side bars' tapped back edges, pulling the box onto its foam. The slot is now the box's inlet.
+3. From the drum side, six M4 x 10 through the bulkhead's 4.5 holes at X plus and minus 162 (Z 310, 345, 380) into the side bars' tapped back edges, pulling the box onto its foam. The slot is now the box's inlet.
 4. The throat liner: roll the 1.5 mm strip round a 471 plywood disc until it holds the curve (it springs back a little; roll it tighter than the form and check against the ring), fit the splice inside the seam with its two M3 x 6 (heads inside, nuts outside), and set the liner into the lint box's arc with its back edge on the bulkhead. The door ring goes on next (section 7) and traps its front edge.
 5. The lint basket (section 7a) goes in last, through the slot from the drum side.
 

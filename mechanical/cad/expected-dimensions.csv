@@ -532,7 +532,7 @@ W-036,clearance,clearance,"power-module-rail-A1-devices (bought, envelopes: X1 c
 W-037,"power-module-hardware (bought, 22 x M4 x 8 button head, 14 nuts)",solids,,36,,"7a (draft 7): 10 rail bolts with nuts in the rails' channels, 8 standoff bolts, 4 barrier bolts with nuts"
 W-038,"hardware-power-module-plate (bought, 4 x M6 x 12 hex, washers, T-nuts)",solids,,4,,7a (draft 7)
 "# --- draft 8: the throat liner, the lint box and basket, the riser's hood, trunk and nozzle, the door switch, PS1, the cradle bolts (design-rules 7a Air, 7a Door, 7 Lint management)"
-N-001,front-bulkhead,hole_at,4.5;162;300,1,,"7a Bulkheads (draft 8): M4 from the drum side into the lint box's side bars, outside the felt"
+N-001,front-bulkhead,hole_at,4.5;162;310,1,,"7a Bulkheads (draft 8): M4 from the drum side into the lint box's side bars, outside the felt; the lowest head clears the bay ceiling's front edge"
 N-002,front-bulkhead,hole_at,4.5;-162;380,1,,7a Bulkheads (draft 8)
 N-003,front-bulkhead,holes,4.5;y,10,,7a Bulkheads (draft 8): four glide holes and six lint box holes
 N-004,rear-bulkhead,hole_at,4.5;110;690,1,,7a Bulkheads (draft 8): M4 from the drum side into the nozzle's side bars

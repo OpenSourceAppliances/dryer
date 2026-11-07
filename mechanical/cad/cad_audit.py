@@ -39,6 +39,7 @@ import sys
 from OCP.Bnd import Bnd_Box
 from OCP.BRep import BRep_Tool
 from OCP.BRepAdaptor import BRepAdaptor_Curve, BRepAdaptor_Surface
+from OCP.BRepPrimAPI import BRepPrimAPI_MakeBox
 from OCP.BRepAlgoAPI import BRepAlgoAPI_Common, BRepAlgoAPI_Section
 from OCP.BRepBndLib import BRepBndLib
 from OCP.BRepCheck import BRepCheck_Analyzer
@@ -1008,7 +1009,14 @@ for a, b in itertools.combinations(names, 2):
     if ba[3] < bb[0] or bb[3] < ba[0] or ba[4] < bb[1] or bb[4] < ba[1] or ba[5] < bb[2] or bb[5] < ba[2]:
         continue
     try:
-        com = BRepAlgoAPI_Common(assembly[a]["shape"], assembly[b]["shape"])
+        # clip both to their boxes' overlap first: a bolt against a large plate with many holes gave 0 from the full boolean
+        # while Fusion found 13.5 mm3 (draft 8); the clipped pieces agree with Fusion
+        ox0, ox1 = max(ba[0], bb[0]) - 1, min(ba[3], bb[3]) + 1
+        oy0, oy1 = max(ba[1], bb[1]) - 1, min(ba[4], bb[4]) + 1
+        oz0, oz1 = max(ba[2], bb[2]) - 1, min(ba[5], bb[5]) + 1
+        clip = BRepPrimAPI_MakeBox(gp_Pnt(ox0, oy0, oz0), gp_Pnt(ox1, oy1, oz1)).Shape()
+        ca = BRepAlgoAPI_Common(assembly[a]["shape"], clip); cb = BRepAlgoAPI_Common(assembly[b]["shape"], clip)
+        com = BRepAlgoAPI_Common(ca.Shape(), cb.Shape())
         v = volume(com.Shape()) if com.IsDone() else -1
     except Exception as ex:
         v = -1

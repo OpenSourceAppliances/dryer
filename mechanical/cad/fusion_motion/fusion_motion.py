@@ -416,10 +416,10 @@ def check_poses(ts=(0.0, 0.25, 0.5), min_mm3=1.0):
 
 # Appearances from the Fusion Appearance Library (exact library names), by component name or name prefix
 APPEARANCES = [
-    ("Paint - Enamel Glossy (White)", ("side-panel-left", "side-panel-right", "front-upper-panel", "front-lower-panel",
-                                       "rear-upper-panel", "rear-lower-panel", "top-panel", "console-face", "console-cap",
-                                       "console-cheek-left", "console-cheek-right", "console-rear", "door-disc")),
-    ("Paint - Enamel Glossy (Dark Grey)", ("door-ring",)),
+    # two-tone paint (draft 5 of this script): warm white body, charcoal console, door and skirt
+    ("Paint - Enamel Glossy (White)", ("side-panel-left", "side-panel-right", "front-upper-panel", "rear-upper-panel", "top-panel")),
+    ("Paint - Enamel Glossy (Dark Grey)", ("door-ring", "door-disc", "front-lower-panel", "rear-lower-panel", "console-face", "console-cap",
+                                           "console-cheek-left", "console-cheek-right", "console-rear")),
     ("Aluminum - Anodized Rough (Grey)", ("post-", "rail-", "tray-rail-", "console-post", "console-rail", "heat-module-angles-",
                                           "heat-module-element-rails", "heat-module-terminal-angle", "power-module-barrier-angle")),
     ("Steel - Galvanized (Small)", ("front-bulkhead", "rear-bulkhead", "bay-ceiling", "base-pan", "heat-module-tray", "heat-module-wall-",
@@ -436,8 +436,10 @@ APPEARANCES = [
     ("Paint - Metallic (Dark Grey)", ("motor (bought",)),
     ("Steel - Satin", ("pulley (bought", "heat-module-element", "heat-module-din-rail", "heat-module-bonding-stud", "heat-module-hardware",
                        "power-module-din-rails", "power-module-standoffs", "power-module-ground-stud", "power-module-hardware",
-                       "idler-pulley", "idler-spring", "hardware-", "console-brackets", "tray-rail-brackets")),
-    ("Plastic - Matte (Black)", ("heat-module-devices", "heat-module-thermostats", "power-module-rail-")),
+                       "idler-pulley", "idler-spring", "hardware-", "console-brackets", "tray-rail-brackets", "lint-box-hardware", "riser-hardware",
+                       "basket-mesh", "basket-pull")),
+    ("Plastic - Matte (Black)", ("heat-module-devices", "heat-module-thermostats", "power-module-rail-", "door-switch", "ps1-air-proving",
+                                 "exhaust-thermostats")),
     ("Stainless Steel - Satin", ("door-hinge-", "door-handle", "door-catch")),
     ("Aluminum - Brushed Linear", ("tier0-faceplate",)),
     ("Plastic - Matte (Black)", ("tier0-knob-", "tier0-selector", "tier0-start-body", "tier0-k1-relay")),
