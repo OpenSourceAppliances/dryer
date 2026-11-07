@@ -1947,7 +1947,11 @@ def build_drive(N):
     oz = N["oz"]
     tapped(comp, b, "z", oz, [(x, yy) for x in P["tf_x"] for yy in (130.0, 170.0)], 8.0, -1)                      # the thermostats' screws
     tapped(comp, b, "y", P["blower_y0"], [tuple(p) for p in P["bp_screws"]], 8.0, +1)                              # the blower plate's screws
-    # the belt: the drawn path offset to the belt's thickness, extruded to its width
+
+
+def build_belt(N):
+    """The belt: the drawn path offset to the belt's thickness, extruded to its width."""
+    by = P["belt_y"]
     BT, BW = N["BT"], N["BW"]
     comp = new_comp("belt (bought, PJ 5 rib)")
     y0 = by - BW / 2
@@ -1978,7 +1982,11 @@ def build_drive(N):
         curves.item(i).isConstruction = True                                                                      # only the band is a profile
     prof = profile_at(sk, sk_pt(sk, pa[0], y0, pa[1]))                                                             # the band holds the path
     extrude(comp, prof, BW, "new", along=plane_normal_sign(comp, "y"))
-    # idler pulley, arm, axle, brackets, pivot, spring posts, spring
+
+
+def build_idler(N):
+    """The idler pulley, arm, axle, brackets, pivot, spring posts and spring."""
+    by = P["belt_y"]
     ix, iz, iw, idd = N["ix"], N["iz"], P["idler_w"], P["idler_d"]
     comp = new_comp("idler-pulley (bought, flat idler 40 with bearing)")
     b = tube_body(comp, "y", (ix, iz), idd, 0.0, by - iw / 2, iw)
@@ -2025,7 +2033,10 @@ def build_drive(N):
     point_along_xz(comp, b, u_sp, sp_free)
     start = (a_mid[0] + u_sp[0] * post_r, sp_y, a_mid[1] + u_sp[2] * post_r)
     move(comp, [b], start[0], start[1], start[2])
-    # the roller studs: shoulder screw, shim, spacer, washer and nut at each of the four rollers
+
+
+def build_studs(N):
+    """The roller studs: shoulder screw, shim, spacer, washer and nut at each of the four rollers."""
     SH, THR, SP, rw = N["SH"], N["THR"], N["SP"], N["roller_w"]
     comp = new_comp("hardware-roller-studs (bought, 4 x ISO 7379 shoulder screws 10 x 35 M8, 1.0 shims, spacers 16 x 10.5 x 8.5, M8 washers and nuts)")
     for (x, z, d) in N["rollers"]:
@@ -2330,12 +2341,23 @@ def build_feet_brackets(N):
         corner_bracket_v(xi, -sx, D - e, -1, con_z1 - e / 2)
 
 
+def drop(*prefixes):
+    """Delete every top-level component whose name starts with one of the prefixes (to rebuild a group)."""
+    n = 0
+    for o in list(_root.occurrences):
+        if any(o.component.name.startswith(p_) for p_ in prefixes):
+            o.deleteMe()
+            n += 1
+    return n
+
+
 def stage_e():
     app, design, root = app_design()
     N = numbers()
     done = []
-    for nm, fn in (("door", build_door), ("tier0", build_tier0), ("drive", build_drive), ("heat module", build_heat_module),
-                   ("power module", build_power_module), ("sensors", build_sensors), ("feet and brackets", build_feet_brackets)):
+    for nm, fn in (("door", build_door), ("tier0", build_tier0), ("drive", build_drive), ("belt", build_belt), ("idler", build_idler),
+                   ("roller studs", build_studs), ("heat module", build_heat_module), ("power module", build_power_module),
+                   ("sensors", build_sensors), ("feet and brackets", build_feet_brackets)):
         try:
             fn(N)
             done.append(nm)
