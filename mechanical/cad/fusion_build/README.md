@@ -27,7 +27,13 @@ pitch, console height, aperture); everything else is drawn from `P` as dimension
 Draft 1 (2026-11-07): the user parameters drive the frame's lengths and positions and the plates' outlines, hole rows
 and big cuts; features that do not follow from them are drawn at their numbers, undimensioned (a builder adds a
 dimension in the sketch to drive one). Slots and sectors are drawn, not dimensioned. The number of holes in a row is
-fixed when the build runs; their spacing follows the parameters.
+fixed when the build runs; their spacing follows the parameters. The parts after the plates are drawn from the same
+`P` and from two more files the script writes: `../numbers.json`, the derived numbers of the script's own globals
+(the door's bolt points, the hinge heights, the heat module's angle rows, the belt path, the idler's geometry, the
+Tier 0 drawing's numbers, and so on, 145 of them), and `../hardware.json`, every bolt, nut, washer and spacer the
+script places, by part: what it is, its bearing point and its normal. The ducts' bar frames, the modules' angles and
+the envelopes of bought parts are drawn in place at those numbers; the drum and door parts about the drum axis are
+drawn about the component's Y axis and moved up by `drum_axis_z`, the Tier 0 module by its aperture centre.
 
 ## Stages
 
@@ -35,10 +41,10 @@ Each stage is run, checked and pushed before the next.
 
 | Stage | What | Status |
 | --- | --- | --- |
-| A | Parameters; the frame (four posts, the rails of three levels, the tray rails) with the T-slot profile | done 2026-11-07: 23 bars, every one at the script's volume and place; a change of `cab_w` or `cab_h` moves and stretches them |
+| A | Parameters; the frame (four posts, the rails of three levels, the tray rails) with the T-slot profile | done 2026-11-07: 21 bars (4 posts, 15 rails, 2 tray rails), every one at the script's volume and place; a change of `cab_w` or `cab_h` moves and stretches them |
 | B | The plates: panels, bulkheads, bay ceiling, base pan, console plates, module and duct plates, with every hole, slot and cut | done 2026-11-07: the 34 plates the script draws with `plate_xz/xy/yz`, from `../plates.json`; each one is an outline sketch (dimensioned where the numbers carry expressions), its thickness extruded, its holes and slots as patterned cuts (627 holes in 133 cuts, 88 slots in 2), then a Move by its position; 55 of 55 bodies at the script's volume and place |
 | C | The drum: sheet with its tabs, rings, splice, baffles; rollers, studs, glides, felts | done 2026-11-07: 17 components, 19 bodies; the sheet is a tube (diameters `drum_d` and `drum_d - 1.6 mm`, length `drum_l`) with one tab joined at each end and patterned 30 times round the axis, its seam and baffle holes cut inward from tangent planes; the rings, splice, baffles, felts and glides are drawn about the drum axis at the origin and moved by `drum_front_y` and `drum_axis_z`, the rollers by expressions in `drum_d`; 74 of 74 bodies of stages A to C at the script's volume and place |
-| D | The ducts: lint box, spool, riser hood, trunk, nozzle, liner, basket; blower plate; exhaust set | pending |
+| D | The ducts: lint box, spool, riser hood, trunk, nozzle, liner, basket; blower plate; exhaust set | done 2026-11-07: the console sub-frame (8 bars), the liner and its splice, the lint box and spool bars and foams, the basket's plates, clamps, mesh and pull, the hood, trunk and nozzle bars, the hood gasket and nozzle foam, the blower plate's feet, the exhaust pipe, clamps, tap barb and the PS1 tube: 30 components, 56 bodies; every bar is the script's box with its tapped holes (4.2, the screw's length less the plate it passes through) cut from the bar's face; 130 of 130 bodies of stages A to D at the script's volume and place (`../audit/fusion-screens/73-parametric-stages-a-to-d-ducts-from-the-front-right.jpg`) |
 | E | The modules: electric heat module, power module, Tier 0 module; the door; the drive (motor, blower, pulley, belt, idler); sensors, blanks, clamps | pending |
 | F | Hardware: every bolt, nut, washer, stud as patterned bodies | pending |
 | G | Joints and appearances (from `../fusion_motion/`), the archive `../../fusion/osa-dryer-parametric.f3d`, the comparison record | pending |

@@ -1,4 +1,4 @@
-fusion_audit start 2026-11-07 06:33:55  Fusion 2706.1.17
+fusion_audit start 2026-11-07 09:01:02  Fusion 2706.1.17
 81 STEP files in mechanical\step (paths in this log are relative to the repo)
 importing base-pan
   1 bodies
@@ -77,7 +77,7 @@ importing drum-sheet
   Body1: solid True, 570 faces (360 planar, 210 cylindrical in 210 cylinders), volume 873712.681 mm3
 importing drum-splice
   1 bodies
-  Body1: solid True, 26 faces (4 planar, 22 cylindrical in 22 cylinders), volume 32384.592 mm3
+  Body1: solid True, 26 faces (4 planar, 22 cylindrical in 22 cylinders), volume 32383.369 mm3
 importing entry-blank
   1 bodies
   Body1: solid True, 12 faces (6 planar, 6 cylindrical in 6 cylinders), volume 3865.933 mm3
@@ -660,7 +660,7 @@ importing osa-dryer-assembly
   hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
   hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
   hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
-  drum-splice: solid True, 26 faces (4 planar, 22 cylindrical in 22 cylinders), volume 32384.592 mm3
+  drum-splice: solid True, 26 faces (4 planar, 22 cylindrical in 22 cylinders), volume 32383.369 mm3
   hardware-drum-seam (bought, 16 x M4 x 8 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
   hardware-drum-seam (bought, 16 x M4 x 8 button head, nuts): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3
   hardware-drum-seam (bought, 16 x M4 x 8 button head, nuts): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 178.670 mm3
@@ -1196,13 +1196,13 @@ importing osa-dryer-assembly
   hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 282.059 mm3
   hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 19 faces (16 planar, 2 cylindrical in 2 cylinders), volume 858.447 mm3
   hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 282.059 mm3
-  exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap): solid True, 5 faces (2 planar, 3 cylindrical in 3 cylinders), volume 193361.597 mm3
+  exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap): solid True, 5 faces (2 planar, 3 cylindrical in 3 cylinders), volume 193361.656 mm3
   exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes): solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 2710.189 mm3
   exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes): solid True, 7 faces (7 planar, 0 cylindrical in 0 cylinders), volume 2640.000 mm3
   exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes): solid True, 4 faces (2 planar, 2 cylindrical in 2 cylinders), volume 2710.189 mm3
   exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes): solid True, 7 faces (7 planar, 0 cylindrical in 0 cylinders), volume 2640.000 mm3
   exhaust-tap-barb (bought, 1/8 NPT or M6 brass barb fitting with a locknut, 5 mm barb, envelope): solid True, 21 faces (18 planar, 3 cylindrical in 3 cylinders), volume 1215.319 mm3
-  ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route): solid True, 7 faces (2 planar, 3 cylindrical in 3 cylinders), volume 11236.845 mm3
+  ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route): solid True, 7 faces (2 planar, 3 cylindrical in 3 cylinders), volume 11463.040 mm3
   th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope): solid True, 17 faces (16 planar, 1 cylindrical in 1 cylinders), volume 17281.340 mm3
   hardware-th1 (bought, 1 x M4 x 20 button head from inside the lint box, nut on the body): solid True, 14 faces (10 planar, 2 cylindrical in 2 cylinders), volume 329.466 mm3
   hardware-th1 (bought, 1 x M4 x 20 button head from inside the lint box, nut on the body): solid True, 9 faces (8 planar, 1 cylindrical in 1 cylinders), volume 91.459 mm3

@@ -290,8 +290,16 @@ FELT = cq.Color(0.55, 0.52, 0.48)
 COS30 = math.cos(math.radians(30))
 
 
+hardware_log = {}   # part name -> the (kind, point, normal) of every placed bolt, nut, washer or spacer in it, for the Fusion build
+
+
 def add(name, solid, color=STEEL, plate=False, t=None):
     parts.append((name, solid, color, plate, t))
+    hw = getattr(solid, "osa_hw_list", None)
+    if hw is None and getattr(solid, "osa_hw", None) is not None:
+        hw = [solid.osa_hw]
+    if hw is not None:
+        hardware_log[name] = hw
     return solid
 
 
@@ -314,7 +322,17 @@ def orient(shape, n):
 
 
 def place(shape, p, n):
-    return orient(shape, n).translate(p)
+    out = orient(shape, n).translate(p)
+    kind = getattr(shape, "osa_kind", None)
+    if kind is not None:   # a tagged stock piece: remember what it is and where, for the Fusion build's hardware
+        out.osa_hw = (kind, tuple(float(c) for c in p), tuple(float(c) for c in n))
+    return out
+
+
+def stock(shape, *kind):
+    """Tag a bolt, nut, washer or spacer built along +Z with what it is, so place() can log it."""
+    shape.osa_kind = kind
+    return shape
 
 
 def hexagon(af, h):
@@ -359,14 +377,14 @@ def hex_bolt_m6(length=None):
     shank = cq.Workplane("XY").circle(3.0).extrude(L + wt + 1).translate((0, 0, -L)).faces("<Z").chamfer(0.5)
     washer = cq.Workplane("XY").circle(P["m6_washer_d"] / 2).extrude(wt)
     head = hexagon(P["m6_head_af"], hh).translate((0, 0, wt)).edges(">Z").chamfer(0.6)
-    return shank.union(washer).union(head)
+    return stock(shank.union(washer).union(head), "hex_m6", L)
 
 
 def button_bolt(d_shank, head_d, head_h, length, socket_af):
     head = cq.Workplane("XY").circle(head_d / 2).extrude(head_h).edges(">Z").fillet(head_h * 0.8)
     head = head.cut(hexagon(socket_af, 2).translate((0, 0, head_h - 1.2)))
     shank = cq.Workplane("XY").circle(d_shank / 2).extrude(length + 0.5).translate((0, 0, -length)).faces("<Z").chamfer(0.4)
-    return shank.union(head)
+    return stock(shank.union(head), "button", d_shank, head_d, head_h, length, socket_af)
 
 
 def csk_bolt(d_shank, head_d, length):
@@ -374,7 +392,7 @@ def csk_bolt(d_shank, head_d, length):
     depth = (head_d - d_shank) / 2
     head = cq.Workplane("XY").add(cq.Solid.makeCone(d_shank / 2, head_d / 2, depth, cq.Vector(0, 0, -depth), cq.Vector(0, 0, 1)))
     shank = cq.Workplane("XY").circle(d_shank / 2).extrude(length - depth + 0.5).translate((0, 0, -length)).faces("<Z").chamfer(0.4)
-    return shank.union(head)
+    return stock(shank.union(head), "csk", d_shank, head_d, length)
 
 
 def csk_cut(d_shank, head_d):
@@ -384,11 +402,15 @@ def csk_cut(d_shank, head_d):
 
 
 def nut(af, h, bore):
-    return hexagon(af, h).cut(cq.Workplane("XY").circle(bore / 2).extrude(h + 2).translate((0, 0, -1)))
+    return stock(hexagon(af, h).cut(cq.Workplane("XY").circle(bore / 2).extrude(h + 2).translate((0, 0, -1))), "nut", af, h, bore)
 
 
 def compound(solids):
-    return cq.Compound.makeCompound([s.val() if hasattr(s, "val") else s for s in solids])
+    c = cq.Compound.makeCompound([s.val() if hasattr(s, "val") else s for s in solids])
+    hw = [getattr(s, "osa_hw", None) for s in solids]
+    if any(h is not None for h in hw):
+        c.osa_hw_list = hw     # None for a piece that is not tagged stock (the Fusion build draws those itself)
+    return c
 
 
 def plate_bolts(name, pts, n, bolt=None, label=None):
@@ -1816,7 +1838,7 @@ for sx in (-1, 1):
     # (the stub's end is a cut face: its slots do not open there, its 6.8 centre bore does). Drawn at the bore, as the feet are.
     hang = button_bolt(6.7, 13.0, 4.0, 20.0, 5.0)
     lb_hw.append(place(hang, (sx * LBI, P["lb_hang_y"], P["lb_hang_z"]), (-sx, 0, 0)))
-    lb_hw.append(place(cq.Workplane("XY").circle(8.0).circle(4.25).extrude(170.0 - LB_X), (sx * LB_X, P["lb_hang_y"], P["lb_hang_z"]), (sx, 0, 0)))
+    lb_hw.append(place(stock(cq.Workplane("XY").circle(8.0).circle(4.25).extrude(170.0 - LB_X), "ring", 16.0, 8.5, 170.0 - LB_X), (sx * LB_X, P["lb_hang_y"], P["lb_hang_z"]), (sx, 0, 0)))
 bar = box(-LBI, LBI, lb_by0, lb_by1, LBZ0, LBZ0 + BAR_T)                            # bottom bar
 for x in (-100.0, 100.0):
     bar = duct_screw(lb_hw, bar, (x, LB_Y0, LBZ0 + BAR_T / 2), (0, -1, 0))
@@ -2197,8 +2219,16 @@ barb = barb.union(hexagon(10.0, 4.0).translate((EX_X, P["exhaust_tap_y"], tap_z 
 add("exhaust-tap-barb (bought, 1/8 NPT or M6 brass barb fitting with a locknut, 5 mm barb, envelope)", barb, HARDWARE)
 PS1_PORT = (px_, py_ + 24.0, 60.0)                                                         # the switch's port on top of its body (V-205 sets which port)
 tube_pts = [(EX_X, P["exhaust_tap_y"], tap_z + 20.0), (EX_X, P["exhaust_tap_y"], 240.0), (PS1_PORT[0], PS1_PORT[1], 240.0), PS1_PORT]   # from the barb's end (the tube slides over it)
-tube_path = cq.Workplane("XY").polyline(tube_pts)
-ps1_tube = cq.Workplane("XY").workplane(offset=tube_pts[0][2]).center(tube_pts[0][0], tube_pts[0][1]).circle(3.0).sweep(tube_path, transition="round")
+# three straight runs with a ball at each bend: the solid a swept circle with round transitions makes, built so that it
+# survives the STEP file (the swept version's bend caps came back from STEP as three-quarter revolutions and the imported
+# solid measured 226 mm3 small, found when the parametric Fusion build was compared with it)
+ps1_tube = None
+for k in range(3):
+    a_, b_ = cq.Vector(*tube_pts[k]), cq.Vector(*tube_pts[k + 1])
+    run_ = cq.Workplane(cq.Plane(origin=a_, normal=(b_ - a_).normalized())).circle(3.0).extrude((b_ - a_).Length)
+    ps1_tube = run_ if ps1_tube is None else ps1_tube.union(run_)
+for k in (1, 2):
+    ps1_tube = ps1_tube.union(cq.Workplane("XY").sphere(3.0).translate(tube_pts[k]))
 add("ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route)", ps1_tube, RUBBER)
 assert tube_pts[1][2] > oz + 15.0 + P["m4_head_h"] + 10.0 and tube_pts[1][2] < bt - e - 10.0, "the tube passes over the thermostats, under the bay ceiling's rails"
 assert PS1_PORT[1] < P["blower_y0"] + 26 - 3.0, "the tube's drop sits in front of the outlet box"
@@ -2297,7 +2327,7 @@ for i, (x, z, d) in enumerate(rollers):
         spc_y = bulk_face if sgn > 0 else bulk_face - SP                    # spacer 16 x 10.5 x 8.5 between the bulkhead and the roller
         stud_hw.append(cq.Workplane("XZ").center(x, z).circle(8.0).circle(5.25).extrude(-SP).translate((0, spc_y, 0)))
         far = bulk_face - sgn * tb                                          # the bulkhead's far face: washer and nut
-        stud_hw.append(place(cq.Workplane("XY").circle(8.0).circle(4.2).extrude(1.6), (x, far, z), (0, -sgn, 0)))
+        stud_hw.append(place(stock(cq.Workplane("XY").circle(8.0).circle(4.2).extrude(1.6), "ring", 16.0, 8.4, 1.6), (x, far, z), (0, -sgn, 0)))
         stud_hw.append(place(nut(13.0, 6.5, 8.2), (x, far - sgn * 1.6, z), (0, -sgn, 0)))
         assert abs((spc_y + SP if sgn > 0 else spc_y) - (ry0 if sgn > 0 else ry0 + roller_w)) < 1e-6, "the spacer must reach the roller"
         assert abs(abs(head_face - (shim_y + 1.0 if sgn > 0 else shim_y)) - 0.5) < 1e-6, "the roller's end float must be 0.5"
@@ -2417,6 +2447,34 @@ import json
 with open(os.path.join(OUT, "cad", "plates.json"), "w", encoding="utf-8") as f:   # every flat plate with its expressions, for the Fusion build
     json.dump(dict(draft=DRAFT, user_params=[(k, n, float(P[k])) for k, n in USER_PARAMS],
                    derived_params=[(n, f, float(P[k])) for k, n, f in DERIVED_PARAMS], plates=plate_log), f, indent=0)
+# the derived numbers the parametric Fusion build (mechanical/cad/fusion_build) draws the modules, door, drive, sensors
+# and hardware from: one source of numbers, so the build cannot drift from this script
+belt_path = []
+for i in range(3):
+    pa, pb = belt_runs[i]
+    c_next = belt_circles[(i + 1) % 3]
+    p_out = belt_runs[(i + 1) % 3][0]
+    mid, _ = arc_mid(c_next, pb, p_out)
+    belt_path.append(("L", pa, pb))
+    belt_path.append(("A", pb, mid, p_out))
+NUM_NAMES = ["az", "e", "hw", "D", "Hb", "bt", "es", "tp", "tb", "ring_y0", "disc_y0", "ring_bolt_pts", "hinge_fixed_bolt_pts",
+             "hinge_swing_bolt_pts", "handle_pts", "hinge_zs", "DS_U", "DS_T", "DS_P", "DS_M", "MS_U", "MS_T", "MS_C", "MS_PTS",
+             "CONSOLE_C", "uci_pts", "fp_holes", "fp_z0", "fp_top", "TIMERS", "SEL_X", "START_X", "DEV_Y", "mz", "my0", "ml", "md",
+             "msr", "CRADLE_Y", "cradle_pts", "OB_Z0", "OB_Z1", "tz1", "ty0", "ty1", "bx", "by0", "by1", "td", "bz1", "wz1", "HM_BY",
+             "HM_BX", "Z_BOT", "Z_TOP", "Z_CNR", "tc", "cy", "cd_", "tx_", "ty_", "ph_", "RAIL_ZC", "hm_rail_y", "HM_DEVICES", "ey0",
+             "ch0", "PM_X0", "PM_W", "PM_Y", "pm_face", "pm_rail_x", "pm_bolt_x", "so_pts", "pz0", "pz1", "pxc", "PM_DEVICES", "bz_",
+             "cz0", "cz1", "so_len", "cover_y", "gs", "cord_z", "cx", "cyy", "th1_y0", "TH1_X", "TH1_Z", "ms_y0", "px_", "py_",
+             "ps1_pts", "oz", "ENTRIES", "belt_runs", "belt_circles", "BT", "BW", "ix", "iz", "piv", "anchor", "arm_len", "arm_ang",
+             "arm_y0", "ax_y1", "bracket_pts", "a_mid", "sp_y", "post_y1", "d_sp", "sp_len", "u_sp", "sp_free", "hook", "post_r",
+             "rollers", "roller_y", "SH", "THR", "SP", "roller_w", "con_y0", "con_z0", "con_z1", "up_x", "up_y", "cfoot_pts", "BRK_L",
+             "BRK_T", "BRK_W", "PS1_PORT", "tube_pts", "foot_pts", "TRAY_RAIL_X", "B20L", "B20T", "B20W", "A_L", "A_T", "CLAMP"]
+nums = {k: globals()[k] for k in NUM_NAMES}
+nums.update(belt_path=belt_path, T0=dict(FP_W=T0.FP_W, FP_H=T0.FP_H, FP_R=T0.FP_R, holes=T0.holes(), LABELS=T0.LABELS, RAIL=T0.RAIL,
+                                         SEL_X=T0.SEL_X, START_X=T0.START_X, DEV_Y=T0.DEV_Y, TIMERS=T0.TIMERS))
+with open(os.path.join(OUT, "cad", "numbers.json"), "w", encoding="utf-8") as f:
+    json.dump(dict(draft=DRAFT, numbers=nums), f, indent=0, default=float)
+with open(os.path.join(OUT, "cad", "hardware.json"), "w", encoding="utf-8") as f:   # every placed bolt, nut, washer and spacer, by part
+    json.dump(dict(draft=DRAFT, hardware=hardware_log), f, indent=0, default=float)
 with open(os.path.join(OUT, "drawings", "frame-cut-list.csv"), "w", newline="") as f:
     w = csv.writer(f)
     w.writerow(["item", "profile", "length_mm", "qty", "note"])

@@ -1465,7 +1465,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | drum-sheet | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
 | drum-sheet | Body1 | face count | OCP 600 / Fusion 570 | CHECK |
 | drum-sheet | Body1 | solid body | 1 | PASS |
-| drum-splice | Body1 | volume (mm3) | OCP 32383.401 / Fusion 32384.592 | PASS |
+| drum-splice | Body1 | volume (mm3) | OCP 32383.401 / Fusion 32383.369 | PASS |
 | drum-splice | Body1 | bounding box (mm) | max deviation 0.0000 | PASS |
 | drum-splice | Body1 | face count | OCP 26 / Fusion 26 | PASS |
 | drum-splice | Body1 | solid body | 1 | PASS |
@@ -1853,7 +1853,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts) | volume (mm3) (120 bodies added) | OCP 16207.714 / Fusion 16207.710 | PASS |
 | osa-dryer-assembly | hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | hardware-drum-tabs (bought, 60 x M4 x 8 button head, nuts) | solid body | 1 | PASS |
-| osa-dryer-assembly | drum-splice | volume (mm3) | OCP 32383.401 / Fusion 32384.592 | PASS |
+| osa-dryer-assembly | drum-splice | volume (mm3) | OCP 32383.401 / Fusion 32383.369 | PASS |
 | osa-dryer-assembly | drum-splice | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | drum-splice | solid body | 1 | PASS |
 | osa-dryer-assembly | hardware-drum-seam (bought, 16 x M4 x 8 button head, nuts) | volume (mm3) (32 bodies added) | OCP 4322.057 / Fusion 4322.056 | PASS |
@@ -2108,7 +2108,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan) | volume (mm3) (20 bodies added) | OCP 6357.217 / Fusion 6357.217 | PASS |
 | osa-dryer-assembly | hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | hardware-blower-plate (bought, 4 x M4 x 8 button head into the housing, 4 x M4 x 8 and nuts into the feet, 4 x M6 x 12 hex, washers, nuts through the base pan) | solid body | 1 | PASS |
-| osa-dryer-assembly | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | volume (mm3) | OCP 193361.673 / Fusion 193361.597 | PASS |
+| osa-dryer-assembly | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | volume (mm3) | OCP 193361.673 / Fusion 193361.656 | PASS |
 | osa-dryer-assembly | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | solid body | 1 | PASS |
 | osa-dryer-assembly | exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes) | volume (mm3) (4 bodies added) | OCP 10700.378 / Fusion 10700.378 | PASS |
@@ -2117,7 +2117,7 @@ Fusion record: `fusion-measured.csv`, written by `fusion_audit.py` running insid
 | osa-dryer-assembly | exhaust-tap-barb (bought, 1/8 NPT or M6 brass barb fitting with a locknut, 5 mm barb, envelope) | volume (mm3) | OCP 1215.319 / Fusion 1215.319 | PASS |
 | osa-dryer-assembly | exhaust-tap-barb (bought, 1/8 NPT or M6 brass barb fitting with a locknut, 5 mm barb, envelope) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | exhaust-tap-barb (bought, 1/8 NPT or M6 brass barb fitting with a locknut, 5 mm barb, envelope) | solid body | 1 | PASS |
-| osa-dryer-assembly | ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route) | volume (mm3) | OCP 11236.853 / Fusion 11236.845 | PASS |
+| osa-dryer-assembly | ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route) | volume (mm3) | OCP 11463.040 / Fusion 11463.040 | PASS |
 | osa-dryer-assembly | ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route) | bounding box (mm) | max deviation 0.0000 | PASS |
 | osa-dryer-assembly | ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route) | solid body | 1 | PASS |
 | osa-dryer-assembly | th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope) | volume (mm3) | OCP 17281.340 / Fusion 17281.340 | PASS |
@@ -2803,7 +2803,7 @@ Bought parts and envelopes in the assembly (no part file):
 | exhaust-duct (bought, 4 in aluminium pipe, 102 x 1, cut to length, one 6.5 hole for the tap) | 179.00..281.00 | 192.00..801.50 | 99.00..201.00 | 193361.7 |
 | exhaust-clamps (bought, 2 x worm-drive hose clamps for 102, envelopes) | 178.30..281.70 | 198.00..750.00 | 98.30..211.70 | 10700.4 |
 | exhaust-tap-barb (bought, 1/8 NPT or M6 brass barb fitting with a locknut, 5 mm barb, envelope) | 224.23..235.77 | 295.00..305.00 | 192.00..221.00 | 1215.3 |
-| ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route) | 227.00..253.00 | 91.00..303.00 | 60.00..243.00 | 11236.9 |
+| ps1-tube (bought, 6 mm silicone tube from the tap to PS1, drawn on its route) | 227.00..253.00 | 91.00..303.00 | 60.00..243.00 | 11463.0 |
 | th1-exhaust-thermistor (bought, 10 k NTC appliance thermistor, envelope) | 102.00..138.00 | 31.50..62.00 | 145.00..175.00 | 17281.3 |
 | hardware-th1 (bought, 1 x M4 x 20 button head from inside the lint box, nut on the body) | 115.96..124.04 | 36.30..58.50 | 166.20..173.80 | 420.9 |
 | moisture-bars (bought, dryer moisture sensor bar set, two stainless strips on an insulating base, envelope) | 175.44..248.58 | 41.50..49.50 | 452.91..545.13 | 20769.5 |
