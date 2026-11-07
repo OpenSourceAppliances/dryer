@@ -1101,8 +1101,17 @@ def box_body(comp, x0, x1, y0, y1, z0, z1, op="new", body=None, z0e=None, he=Non
     or 'cut' it works on body; returns the box's body for a new one."""
     sk = rect_on(comp, "z", z0, x0, y0, x1, y1, at_e=z0e)
     f = extrude(comp, all_profiles(sk), (z1 - z0) if he is None else he, op, along=plane_normal_sign(comp, "z"),
-                bodies=[body] if body is not None else None)
+                bodies=participants(comp, op, body))
     return f.bodies.item(0) if op == "new" else body
+
+
+def participants(comp, op, body):
+    """The bodies a feature works on: a join merges with every body of the component it meets (a piece that only
+    touches another is left as a body of its own, so the component's bodies are moved together); a cut keeps to the
+    body it was given."""
+    if op == "join":
+        return comp_bodies(comp) or None
+    return [body] if body is not None else None
 
 
 def rect_cut(comp, body, axis, at, a0, b0, a1, b1, depth, into, at_e=None):
@@ -1142,7 +1151,7 @@ def tube_body(comp, axis, c, d_out, d_in, a0, length, op="new", body=None, a0e=N
         circle(sk, *at(c[0], c[1]), d_in)
     prof = profile_at(sk, sk_pt(sk, *at(c[0] + (d_out + d_in) / 4.0, c[1])))
     f = extrude(comp, prof, length if le is None else le, op, along=plane_normal_sign(comp, axis),
-                bodies=[body] if body is not None else None)
+                bodies=participants(comp, op, body))
     return f.bodies.item(0) if op == "new" else body
 
 
@@ -1154,7 +1163,7 @@ def prism(comp, axis, a0, length, pts, op="new", body=None, a0e=None, le=None):
     tm = {"x": lambda u, v: (a0, u, v), "y": lambda u, v: (u, a0, v), "z": lambda u, v: (u, v, a0)}[axis]
     polygon(sk, [tm(u, v) for (u, v) in pts])
     f = extrude(comp, all_profiles(sk), length if le is None else le, op, along=plane_normal_sign(comp, axis),
-                bodies=[body] if body is not None else None)
+                bodies=participants(comp, op, body))
     return f.bodies.item(0) if op == "new" else body
 
 
@@ -1364,21 +1373,21 @@ def build_basket(n):
     comp = new_comp("basket-far-plate")
     b = sector_body(comp, fy0, BK0, BK1, BKH, BKT)
     holes(comp, b, "y", fy0, far_xz, 3.0, BKT + 1.0, +1)
-    move(comp, [b], *up)
+    move(comp, comp_bodies(comp), *up)
     comp = new_comp("basket-far-clamp")
     b = sector_body(comp, fy0 + BKT + MT, BK0, BK1, BKH, tp)
     holes(comp, b, "y", fy0 + BKT + MT, far_xz, 3.4, tp + 1.0, +1)
-    move(comp, [b], *up)
+    move(comp, comp_bodies(comp), *up)
     comp = new_comp("basket-lip-plate")
     b = sector_body(comp, ly_, LIP0, LIP1, LIPH, BKT, inner=(BK0 - MT, BK1 + MT, BKH + EPS))
     box_body(comp, -P["bk_pull_c"] / 2, P["bk_pull_c"] / 2, ly_, ly_ + BKT, -LIP0 - 2.0, -P["bk_pull_r"] + 4.0, op="join", body=b)   # the tab
     holes(comp, b, "y", ly_, lip_xz, 3.0, BKT + 1.0, +1)
     holes(comp, b, "y", ly_, [(x, n["pz"]) for x in (-P["bk_pull_c"] / 2, P["bk_pull_c"] / 2)], 4.5, BKT + 1.0, +1)
-    move(comp, [b], *up)
+    move(comp, comp_bodies(comp), *up)
     comp = new_comp("basket-lip-clamp")
     b = sector_body(comp, ly_ + BKT + MT, LIP0, LIP1, LIPH, tp, inner=(BK0 - MT, BK1 + MT, BKH + EPS))
     holes(comp, b, "y", ly_ + BKT + MT, lip_xz, 3.4, tp + 1.0, +1)
-    move(comp, [b], *up)
+    move(comp, comp_bodies(comp), *up)
     comp = new_comp("basket-mesh (bought, stainless 18 x 16 mesh strip, 42 wide, 350 long, wrapped and folded 5 at each edge)")
     b1 = sector_body(comp, fy0 + BKT, BK0, BK1, BKH, MT, inner=(BK0 + FL, BK1 - FL, BKH - math.degrees(FL / BK0)))          # far flange
     holes(comp, b1, "y", fy0 + BKT, far_xz, 3.4, MT + 1.0, +1)
@@ -1394,7 +1403,7 @@ def build_basket(n):
     for x in (-c / 2, c / 2):
         tube_body(comp, "y", (x, pz), 10.0, 0.0, ly_, -25.0, op="join", body=b)                                            # the legs, from the tab forward
     tapped(comp, b, "y", ly_, [(x, pz) for x in (-c / 2, c / 2)], 8.99, -1)                                                 # the script's hole starts 0.01 off the leg's end
-    move(comp, [b], *up)
+    move(comp, comp_bodies(comp), *up)
 
 
 def build_riser(n):
@@ -1645,16 +1654,18 @@ def chamfer_where(comp, body, pred, d):
     return cf.add(inp)
 
 
-def point_along_xz(comp, body, u, L):
-    """Turn a body built along +X from the origin (L long) about the component's Y axis so that +X lands on the unit
-    direction u = (ux, 0, uz): Fusion's Move rotate sign is checked on the body's box and corrected if it went the
-    other way."""
-    phi = math.degrees(math.atan2(u[2], u[0]))
-    rotate(comp, [body], comp.yConstructionAxis, -phi)
-    bb = body.boundingBox
-    xc, zc = (bb.minPoint.x + bb.maxPoint.x) / 2 / CM, (bb.minPoint.z + bb.maxPoint.z) / 2 / CM
-    if abs(xc - u[0] * L / 2) > 0.05 or abs(zc - u[2] * L / 2) > 0.05:
-        rotate(comp, [body], comp.yConstructionAxis, 2 * phi)
+def cyl_along(comp, theta_deg, r, t0, t1, op="new", body=None):
+    """A cylinder of radius r along the direction at theta in the XZ plane (0 along +X, 90 along +Z) through the
+    component's origin, from t0 to t1 along it: a circle on the plane normal to that direction at t0, extruded."""
+    pl = tangent_plane(comp, theta_deg, t0)
+    sk = comp.sketches.add(pl)
+    p = rot_xz(t0, 0.0, theta_deg)
+    sk.sketchCurves.sketchCircles.addByCenterRadius(sk.modelToSketchSpace(pt(p[0], 0.0, p[1])), r * CM)
+    n = pl.geometry.normal
+    u = rot_xz(1.0, 0.0, theta_deg)
+    along = 1.0 if (n.x * u[0] + n.z * u[1]) > 0 else -1.0
+    f = extrude(comp, all_profiles(sk), t1 - t0, op, along=along, bodies=participants(comp, op, body))
+    return f.bodies.item(0) if op == "new" else body
 
 
 def rot_y_pt(x, z, theta_deg):
@@ -1746,11 +1757,11 @@ def build_door(N):
     holes(comp, b, "y", ring_y0, rel(N["ring_bolt_pts"]), P["m4_hole"], t + 1.0, +1)
     holes(comp, b, "y", ring_y0, rel(N["hinge_fixed_bolt_pts"]), P["m6_hole"], t + 1.0, +1)
     holes(comp, b, "y", ring_y0, rel([N["DS_P"]]), P["ds_plunger_d"] + 0.5, t + 1.0, +1)
-    move(comp, [b], *up)
+    move(comp, comp_bodies(comp), *up)
     comp = new_comp("door-disc")
     b = tube_body(comp, "y", (0.0, 0.0), P["door_disc_d"], 0.0, disc_y0, t)
     holes(comp, b, "y", disc_y0, rel(N["hinge_swing_bolt_pts"] + N["handle_pts"]), P["m4_hole"], t + 1.0, +1)
-    move(comp, [b], *up)
+    move(comp, comp_bodies(comp), *up)
     # hinges: the fixed half (leaf on the ring, knuckle, pin) below the axis, the swinging half above
     hx, hy = P["hinge_pin_x"], P["hinge_pin_y"]
     kd, lt, lh = P["hinge_knuckle_d"], P["hinge_leaf_t"], P["hinge_leaf_h"]
@@ -1763,36 +1774,38 @@ def build_door(N):
             tube_body(comp, "z", (hx, hy), P["hinge_pin_d"], 0.0, zk - lh / 2 - 5.0, lh + 2 * P["hinge_z_off"] + 10.0, op="join", body=b)   # pin
             pts = rel(N["hinge_fixed_bolt_pts"])
             holes(comp, b, "y", ring_y0 - lt, pts, P["m6_hole"], lt + 1.0, +1)
-            # the countersinks: 45 degrees from the hole's 6.5 to 12.1 on the leaf's front face (the script's cone, 2.8 deep)
-            chamfer_where(comp, b, circle_edge_pred(P["m6_hole"] / 2, "y", ring_y0 - lt), 2.8)
+            # the countersinks: the script's cone (6.1 at 3 deep to 12.6 a quarter outside the leaf's front face), which
+            # also nicks the knuckle where it stands proud of that face
+            for (x, z) in pts:
+                cone_cut_y(comp, b, x, z, ring_y0 - lt + 3.0, 3.05, ring_y0 - lt - 0.25, 6.3)
         else:
             comp = new_comp(f"door-hinge-{i+1}-swing (bought, flag hinge, lift-off half)")
             b = tube_body(comp, "z", (hx, hy), kd, 0.0, zk - lh / 2, lh)
             box_body(comp, hx, P["hinge_leaf_x_in"], disc_y0 + t, disc_y0 + t + lt, zk - lh / 2, zk + lh / 2, op="join", body=b)   # leaf on the disc's back face
             holes(comp, b, "z", zk - lh / 2 - 1.0, [(hx, hy)], P["hinge_pin_d"] + 0.2, lh + 2.0, +1)                 # bored for the pin
             holes(comp, b, "y", disc_y0 + t, rel(N["hinge_swing_bolt_pts"]), 4.2, lt + 1.0, +1)                      # tapped M4
-        move(comp, [b], *up)
+        move(comp, comp_bodies(comp), *up)
     # handle: two standoffs and a bar, M4 from the back of the disc into the standoffs
     hd, hs_ = P["handle_bar_d"], P["handle_standoff"]
     comp = new_comp("door-handle (bought, D handle 128 centres)")
-    b = None
-    for (x, z) in rel(N["handle_pts"]):
-        b = tube_body(comp, "y", (x, z), hd, 0.0, disc_y0, -hs_, op=("new" if b is None else "join"), body=b)
-    tapped(comp, b, "y", disc_y0, rel(N["handle_pts"]), 9.99, -1)                                                 # the script's hole starts 0.01 off the face
     bar_x, bar_y = P["handle_x"], disc_y0 - hs_ - hd / 2 + 0.5
-    bar_ = tube_body(comp, "z", (bar_x, bar_y), hd, 0.0, -P["handle_span"] / 2 - hd / 2, P["handle_span"] + hd)
-    fillet_where(comp, bar_, circle_edge_pred(hd / 2, "z"), 5.0)
-    combine_join(comp, b, [bar_])
+    b = tube_body(comp, "z", (bar_x, bar_y), hd, 0.0, -P["handle_span"] / 2 - hd / 2, P["handle_span"] + hd)      # the bar, its ends rounded
+    fillet_where(comp, b, circle_edge_pred(hd / 2, "z"), 5.0)
+    b = comp.bRepBodies.item(0)
+    for (x, z) in rel(N["handle_pts"]):
+        tube_body(comp, "y", (x, z), hd, 0.0, disc_y0, -hs_, op="join", body=b)                                   # the standoffs, 0.5 into the bar
+    b = comp.bRepBodies.item(0)
+    tapped(comp, b, "y", disc_y0, rel(N["handle_pts"]), 9.99, -1)                                                 # the script's hole starts 0.01 off the face
     move(comp, comp_bodies(comp), *up)
     comp = new_comp("door-seal (bought, OEM door seal)")
     b = tube_body(comp, "y", (0.0, 0.0), 2 * P["seal_ro"], 2 * P["seal_ri"], disc_y0 + t, P["seal_t"])
-    move(comp, [b], *up)
+    move(comp, comp_bodies(comp), *up)
     comp = new_comp("door-catch (bought, magnetic catch)")
     b = box_body(comp, P["latch_x0"], P["latch_x1"], ring_y0 - 6.5, ring_y0, -6.0, 6.0)
-    move(comp, [b], *up)
+    move(comp, comp_bodies(comp), *up)
     comp = new_comp("door-catch-strike (bought)")
     b = box_body(comp, P["latch_x0"], P["latch_x1"], disc_y0 + t, disc_y0 + t + 1.0, -6.0, 6.0)
-    move(comp, [b], *up)
+    move(comp, comp_bodies(comp), *up)
     # the door switch behind the front upper panel, 45 degrees right of bottom; two M4 into its tapped ears
     bw_, bd_, bh_ = P["ds_body"]
     U, T = N["DS_U"], N["DS_T"]
@@ -1803,7 +1816,24 @@ def build_door(N):
     dsp = (N["DS_P"][0], N["DS_P"][1] - az)
     tube_body(comp, "y", dsp, P["ds_plunger_d"], 0.0, 1.0, -12.0, op="join", body=b)                             # plunger to Y -11
     tapped(comp, b, "y", 0.0, rel(N["DS_M"]), 8.0, +1)
-    move(comp, [b], *up)
+    move(comp, comp_bodies(comp), *up)
+
+
+def cone_cut_y(comp, body, x, z, y_in, r_in, y_out, r_out):
+    """A cone frustum about the line (x, *, z) along Y, radius r_in at y_in and r_out at y_out, cut from body: a
+    trapezoid on the plane z = z revolved about its axis line."""
+    pl = offset_plane(comp, "z", z)
+    sk = comp.sketches.add(pl)
+    lines = sk.sketchCurves.sketchLines
+    axis = lines.addByTwoPoints(sk_pt(sk, x, y_in, z), sk_pt(sk, x, y_out, z))
+    l1 = lines.addByTwoPoints(axis.endSketchPoint, sk_pt(sk, x + r_out, y_out, z))
+    l2 = lines.addByTwoPoints(l1.endSketchPoint, sk_pt(sk, x + r_in, y_in, z))
+    lines.addByTwoPoints(l2.endSketchPoint, axis.startSketchPoint)
+    rev = comp.features.revolveFeatures
+    inp = rev.createInput(all_profiles(sk), axis, OPS["cut"])
+    inp.setAngleExtent(False, adsk.core.ValueInput.createByString("360 deg"))
+    inp.participantBodies = [body]
+    return rev.add(inp)
 
 
 def combine_join(comp, target, tools):
@@ -1837,7 +1867,7 @@ def build_tier0(N):
     for dd, pts in by_d.items():
         holes(comp, b, "y", W(fp_z0), pts, dd, FP_T + 1.0, -1)
     engrave_labels(comp, b, T0["LABELS"], W(fp_top))
-    move(comp, [b], *shift)
+    move(comp, comp_bodies(comp), *shift)
     # knobs and timers
     for key, x in N["TIMERS"].items():
         comp = new_comp(f"tier0-knob-{key} (bought)")
@@ -1850,12 +1880,12 @@ def build_tier0(N):
         box_body(comp, x - 1.5, x + 1.5, W(w0 + h + 0.2), W(w0 + h - 1.0), 0.0, bd / 2 - 2.0, op="join", body=b)           # pointer across the top
         tube_body(comp, "y", (x, 0.0), 6.0, 0.0, 0.0, -(w0 + sk_h), op="join", body=b)                            # D shaft from the timer
         chamfer_where(comp, b, circle_edge_pred(3.0, "y", 0.0), 0.5)
-        move(comp, [b], *shift)
+        move(comp, comp_bodies(comp), *shift)
         comp = new_comp(f"tier0-timer-{key} (bought)")
         b = box_body(comp, x - 12.0, x + 12.0, W(fp_z0), W(fp_z0 - 1.5), -53.2, 53.2)                             # yoke strap against the plate's back
         holes(comp, b, "y", W(fp_z0 - 1.5), [(x, 0.0)], 13.0, 1.5 + 1.0, -1)
         box_body(comp, x - 20.3, x + 20.3, W(fp_z0 - 1.5), W(fp_z0 - 1.5 - 30.2), -35.45, 35.45, op="join", body=b)   # body behind it
-        move(comp, [b], *shift)
+        move(comp, comp_bodies(comp), *shift)
     # the two 22 mm devices: bezel, body and contact block; selector lever and start button
     DEV_Y = N["DEV_Y"]
     for x, nm_body, nm_cap, kind in ((N["SEL_X"], "tier0-selector-body (bought)", "tier0-selector (bought)", "sel"),
@@ -1864,7 +1894,7 @@ def build_tier0(N):
         b = tube_body(comp, "y", (x, DEV_Y), 30.0, 22.3, W(fp_top), -2.5)                                           # bezel
         tube_body(comp, "y", (x, DEV_Y), 22.0, 0.0, W(-45.0), -(fp_top + 45.0), op="join", body=b)                 # body, -45 to fp_top
         box_body(comp, x - 12.5, x + 12.5, W(-15.0), W(-45.0), DEV_Y - 17.5, DEV_Y + 17.5, op="join", body=b)       # contact block
-        move(comp, [b], *shift)
+        move(comp, comp_bodies(comp), *shift)
         comp = new_comp(nm_cap)
         w0 = fp_top + 2.5
         if kind == "sel":
@@ -1875,7 +1905,7 @@ def build_tier0(N):
         else:
             b = tube_body(comp, "y", (x, DEV_Y), 22.0, 0.0, W(w0), -8.0)
             fillet_where(comp, b, circle_edge_pred(11.0, "y", W(w0 + 8.0)), 2.0)
-        move(comp, [b], *shift)
+        move(comp, comp_bodies(comp), *shift)
     # K1 on 100 mm of DIN rail on two standoffs behind the plate
     (rx0, ry_), (rx1, _) = T0["RAIL"]
     comp = new_comp("tier0-k1-relay-on-din-rail (bought)")
@@ -1883,7 +1913,7 @@ def build_tier0(N):
     for x in (rx0, rx1):
         tube_body(comp, "y", (x, ry_), 8.0, 0.0, W(fp_z0 - 12.0), -12.0, op="join", body=b)                        # standoffs to the plate
     box_body(comp, rx0 - 9.0, rx0 + 19.0, W(fp_z0 - 19.5), W(fp_z0 - 19.5 - 65.0), ry_ - 36.0, ry_ + 19.0, op="join", body=b)   # socket and relay
-    move(comp, [b], *shift)
+    move(comp, comp_bodies(comp), *shift)
 
 
 def engrave_labels(comp, body, labels, y_face):
@@ -2024,15 +2054,16 @@ def build_idler(N):
     comp = new_comp("hardware-idler-spring-posts (bought, 2 x M5 shoulder posts)")
     tube_body(comp, "y", (a_mid[0], a_mid[1]), 5.0, 0.0, arm_y0 - 3.0, post_y1 - arm_y0 + 3.0)
     tube_body(comp, "y", (anchor[0], anchor[1]), 5.0, 0.0, arm_y0 - 6.0, post_y1 - arm_y0 + 6.0)
-    # the spring along u_sp from the arm's post to the anchor's: built along +X at the origin, turned about Y, moved
+    # the spring along u_sp from the arm's post to the anchor's: drawn about the origin on planes normal to that
+    # direction (a Move cannot turn a body about the component's own axis), then moved to its start
     u_sp, sp_free, hook, post_r, sp_y = N["u_sp"], N["sp_free"], N["hook"], N["post_r"], N["sp_y"]
+    theta = math.degrees(math.atan2(u_sp[2], u_sp[0]))
     comp = new_comp("idler-spring (bought, extension spring)")
-    b = tube_body(comp, "x", (0.0, 0.0), 8.0, 0.0, hook, sp_free - 2 * hook)                                       # coil body between the hooks
+    b = cyl_along(comp, theta, 4.0, hook, sp_free - hook)                                                           # coil body between the hooks
     for t0 in (0.0, sp_free - hook):
-        tube_body(comp, "x", (0.0, 0.0), 1.8, 0.0, t0, hook, op="join", body=b)
-    point_along_xz(comp, b, u_sp, sp_free)
+        cyl_along(comp, theta, 0.9, t0, t0 + hook, op="join", body=b)                                               # the hooks, as thin wire
     start = (a_mid[0] + u_sp[0] * post_r, sp_y, a_mid[1] + u_sp[2] * post_r)
-    move(comp, [b], start[0], start[1], start[2])
+    move(comp, comp_bodies(comp), start[0], start[1], start[2])
 
 
 def build_studs(N):

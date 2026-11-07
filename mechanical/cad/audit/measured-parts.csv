@@ -160,7 +160,7 @@ trunk-rear,1,1,1,-130.0,704.0,258.0,130.0,705.5,831.5,260.0,1.5,573.5,223308.512
 "[assembly] power-module-hardware (bought, 22 x M4 x 8 button head, 14 nuts)",36,,,-293.8,649.3,316.2,-156.2,731.7,823.8,137.6,82.4,507.6,5211.159,,,,,,,,,,,
 "[assembly] grommets (bought, 5 x rubber grommets for 1.5 panels: 22 mm hole x 2, 30 mm hole x 1, 16 mm hole x 2)",5,,,-289.0,38.75,298.75,301.0,708.0,1002.75,590.0,669.25,704.0,6693.713,,,,,,,,,,,
 "[assembly] cord-bushing (bought, PG16 strain relief)",1,,,-290.011,677.0,-6.5,-259.989,703.0,18.0,30.022,26.0,24.5,8877.396,,,,,,,,,,,
-[assembly] power-cord (bought),1,,,-279.5,685.5,-16.5,-270.5,820.0,320.0,9.0,134.5,336.5,29269.67,,,,,,,,,,,
+[assembly] power-cord (bought),1,,,-279.5,685.5,-16.5,-270.5,820.0,320.0,9.0,134.5,336.5,29365.096,,,,,,,,,,,
 "[assembly] hardware-liner (bought, 2 x M3 x 6 button head, nuts)",4,,,-15.7,16.3,863.45,15.7,22.0,871.229,31.401,5.7,7.779,234.826,,,,,,,,,,,
 "[assembly] lint-box-bars (30 x 8 aluminium flat bar: 2 sides mitred at the top, 1 bottom)",3,,,-166.0,8.5,62.0,166.0,38.5,462.066,332.0,30.0,400.066,261325.657,,,,,,,,,,,
 "[assembly] lint-box-foam (bought, 3 mm closed-cell foam tape 8 wide, 2 x 190, compressed to 1.5)",2,,,-166.0,38.5,275.0,166.0,40.0,462.066,332.0,1.5,187.066,4255.258,,,,,,,,,,,

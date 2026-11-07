@@ -1748,7 +1748,7 @@ add("cord-bushing (bought, PG16 strain relief)", place(bush, (cx, cyy, 0.0), (0,
 cord_z = -P["t_base"] - 10.5         # centre line of the run under the pan: 1 mm under the locknut, 3 above the floor with the feet run in
 cord = cq.Workplane("XY").center(cx, cyy).circle(4.5).extrude(P["cord_top_z"] - cord_z).translate((0, 0, cord_z))     # up through the bay and the ceiling grommet to X1
 cord = cord.union(cq.Workplane("XZ").center(cx, cord_z).circle(4.5).extrude(-(D + 70 - cyy)).translate((0, cyy, 0)))  # back under the pan, 70 past the panel
-cord = cord.union(cq.Workplane("XY").add(cq.Solid.makeSphere(4.5, cq.Vector(cx, cyy, cord_z))))                      # the bend
+cord = cord.union(cq.Workplane("XY").sphere(4.5).translate((cx, cyy, cord_z)))   # the bend: a ball (Solid.makeSphere's default is a half sphere, which left the bend's outside open until the Fusion build was compared with it)
 add("power-cord (bought)", cord, RUBBER)
 assert cord_z - 4.5 > -(P["foot_height"] + P["t_base"]), "the cord must clear the floor under the pan"
 assert abs(P["grommet_cord"][0] - cx) < 1e-9 and abs(P["grommet_cord"][1] - cyy) < 1e-9, "the cord's grommet sits over its bushing"
