@@ -154,9 +154,72 @@ def biggest_profile(sk):
     return best
 
 
+def _strokes(curve3d, tol_cm=0.005):
+    ev = curve3d.evaluator
+    ok, p0, p1 = ev.getParameterExtents()
+    ok, pts = ev.getStrokes(p0, p1, tol_cm)
+    return [(p.x, p.y) for p in pts]
+
+
+def _loop_poly(loop):
+    """The loop's curves sampled into one closed polygon in sketch coordinates, each curve turned to continue the chain."""
+    runs = [_strokes(loop.profileCurves.item(i).geometry) for i in range(loop.profileCurves.count)]
+    runs = [r for r in runs if r]
+    if not runs:
+        return []
+    poly = list(runs[0])
+    for i, s in enumerate(runs[1:]):
+        d0 = (s[0][0] - poly[-1][0]) ** 2 + (s[0][1] - poly[-1][1]) ** 2
+        d1 = (s[-1][0] - poly[-1][0]) ** 2 + (s[-1][1] - poly[-1][1]) ** 2
+        if i == 0 and min(d0, d1) > 1e-6:     # the first curve was sampled against the loop's direction
+            poly.reverse()
+            d0 = (s[0][0] - poly[-1][0]) ** 2 + (s[0][1] - poly[-1][1]) ** 2
+            d1 = (s[-1][0] - poly[-1][0]) ** 2 + (s[-1][1] - poly[-1][1]) ** 2
+        poly.extend(s[::-1] if d1 < d0 else s)
+    return poly
+
+
+def _inside(poly, x, y):
+    inside = False
+    n = len(poly)
+    for i in range(n):
+        x0, y0 = poly[i]
+        x1, y1 = poly[(i + 1) % n]
+        if (y0 > y) != (y1 > y):
+            xi = x0 + (y - y0) * (x1 - x0) / (y1 - y0)
+            if xi > x:
+                inside = not inside
+    return inside
+
+
+def profile_containing(sk, point3d):
+    """The profile that holds the sketch-space point: inside its outer loop and outside every inner loop, by a sampled
+    point-in-polygon test on the loops' curves (a bounding box test cannot tell a band from the region inside it)."""
+    x, y = point3d.x, point3d.y
+    for i in range(sk.profiles.count):
+        p = sk.profiles.item(i)
+        outer_ok, inner_hit = False, False
+        for j in range(p.profileLoops.count):
+            loop = p.profileLoops.item(j)
+            ins = _inside(_loop_poly(loop), x, y)
+            if loop.isOuter:
+                outer_ok = ins
+            elif ins:
+                inner_hit = True
+        if outer_ok and not inner_hit:
+            return p
+    return None
+
+
 def profile_at(sk, point3d):
-    """The largest profile whose box holds the sketch point (a plate's region, where a cut circle that reaches outside
-    the outline makes a bigger region of its own)."""
+    """The profile holding the sketch point (a plate's region, where a cut circle that reaches outside the outline makes
+    a bigger region of its own; a tube's wall, not its bore); falls back to the largest profile whose box holds it."""
+    try:
+        p = profile_containing(sk, point3d)
+        if p is not None:
+            return p
+    except Exception:
+        pass
     best, area = None, -1
     for i in range(sk.profiles.count):
         p = sk.profiles.item(i)
@@ -208,6 +271,110 @@ def move(comp, bodies, dx, dy, dz):
 
 def comp_bodies(comp):
     return [comp.bRepBodies.item(i) for i in range(comp.bRepBodies.count)]
+
+
+def rotate(comp, bodies, axis_entity, angle_expr):
+    """Turn bodies about a construction axis by an expression in degrees (a Move feature)."""
+    mf = comp.features.moveFeatures
+    coll = adsk.core.ObjectCollection.create()
+    for b in bodies:
+        coll.add(b)
+    inp = mf.createInput2(coll)
+    inp.defineAsRotate(axis_entity, V(angle_expr) if isinstance(angle_expr, str) else adsk.core.ValueInput.createByString(f"{angle_expr} deg"))
+    return mf.add(inp)
+
+
+def offset_plane(comp, axis, expr):
+    """A construction plane parallel to the base plane normal to the axis, at the model coordinate expr (mm or expression)."""
+    s = plane_normal_sign(comp, axis)
+    if isinstance(expr, str):
+        e_ = expr if s > 0 else f"-({expr})"
+    else:
+        e_ = expr * s
+    planes = comp.constructionPlanes
+    inp = planes.createInput()
+    inp.setByOffset(base_plane(comp, axis), V(e_))
+    pl = planes.add(inp)
+    pl.isLightBulbOn = False
+    return pl
+
+
+def angled_plane(comp, axis_entity, angle_expr, base):
+    """A construction plane turned about a construction axis from a base plane, by an expression in degrees."""
+    planes = comp.constructionPlanes
+    inp = planes.createInput()
+    inp.setByAngle(axis_entity, V(angle_expr) if isinstance(angle_expr, str) else adsk.core.ValueInput.createByString(f"{angle_expr} deg"), base)
+    pl = planes.add(inp)
+    pl.isLightBulbOn = False
+    return pl
+
+
+def circ_pattern(comp, features, axis_entity, n, total_angle="360 deg"):
+    """A circular pattern of features about a construction axis: n instances over the total angle."""
+    cp = comp.features.circularPatternFeatures
+    coll = adsk.core.ObjectCollection.create()
+    for f_ in features:
+        coll.add(f_)
+    inp = cp.createInput(coll, axis_entity)
+    inp.quantity = V_count(n)
+    inp.totalAngle = V(total_angle)
+    inp.isSymmetric = False
+    try:
+        inp.patternComputeOption = adsk.fusion.PatternComputeOptions.AdjustPatternCompute
+    except Exception:
+        pass
+    return cp.add(inp)
+
+
+def fillet_parallel_edges(comp, body, direction, radius, where=None):
+    """Fillet every straight edge of the body parallel to the model direction ('x', 'y' or 'z'), optionally only those
+    whose midpoint passes where(x, y, z) in mm."""
+    idx = {"x": 0, "y": 1, "z": 2}[direction]
+    coll = adsk.core.ObjectCollection.create()
+    for i in range(body.edges.count):
+        ed = body.edges.item(i)
+        g = ed.geometry
+        if g.curveType != adsk.core.Curve3DTypes.Line3DCurveType:
+            continue
+        v = g.startPoint.vectorTo(g.endPoint)
+        v.normalize()
+        comps_ = (abs(v.x), abs(v.y), abs(v.z))
+        if comps_[idx] < 0.999:
+            continue
+        if where is not None:
+            m = g.startPoint.copy()
+            m.translateBy(adsk.core.Vector3D.create((g.endPoint.x - g.startPoint.x) / 2, (g.endPoint.y - g.startPoint.y) / 2, (g.endPoint.z - g.startPoint.z) / 2))
+            if not where(m.x / CM, m.y / CM, m.z / CM):
+                continue
+        coll.add(ed)
+    if coll.count == 0:
+        return None
+    ff = comp.features.filletFeatures
+    inp = ff.createInput()
+    inp.edgeSetInputs.addConstantRadiusEdgeSet(coll, V(radius), True)
+    return ff.add(inp)
+
+
+def polygon(sk, model_pts):
+    """A closed chain of lines through model points (x, y, z)."""
+    lines = sk.sketchCurves.sketchLines
+    sps = [sk_pt(sk, *p) for p in model_pts]
+    out = []
+    first = lines.addByTwoPoints(sps[0], sps[1])
+    out.append(first)
+    prev = first
+    for i in range(2, len(sps)):
+        ln = lines.addByTwoPoints(prev.endSketchPoint, sps[i])
+        out.append(ln)
+        prev = ln
+    out.append(lines.addByTwoPoints(prev.endSketchPoint, first.startSketchPoint))
+    return out
+
+
+def rot_xz(x, z, theta_deg):
+    """Turn a point in the XZ plane about the origin by theta (0 along +X, 90 along +Z)."""
+    a = math.radians(theta_deg)
+    return (x * math.cos(a) - z * math.sin(a), x * math.sin(a) + z * math.cos(a))
 
 
 # ---------------------------------------------------------------------------
@@ -652,7 +819,269 @@ def stage_b(names=None):
     return f"stage B: {len(done)} plates" + (f"; failed {failed}" if failed else "")
 
 
+# ---------------------------------------------------------------------------
+# Stage C: the drum (sheet with its tabs, rings, splice, baffles), rollers, glides, felts
+# Every drum part is drawn about the component's origin with the drum axis along +Y, then moved to the drum's place
+# (0, drum_front_y, drum_axis_z), so circular patterns and angled planes use the component's Y axis.
+# ---------------------------------------------------------------------------
+def drum_numbers():
+    ro, ri = P["drum_d"] / 2, P["drum_d"] / 2 - P["drum_t"]
+    L = P["drum_l"]
+    rm = (P["drum_d"] - P["drum_t"]) / 2
+    flat_w = math.pi * (P["drum_d"] - P["drum_t"])
+    theta = lambda x: 90.0 + math.degrees(x / rm)
+    seam_ys = []
+    y = P["roller_track_w"] + 10
+    belt_track_y = P["motor_y0"] + P["motor_len"] + 12.0 - P["drum_front_y"]
+    while y <= L - P["roller_track_w"] - 10:
+        if abs(y - belt_track_y) > P["belt_track_w"] / 2 + 5:
+            seam_ys.append(y)
+        y += P["seam_pitch"]
+    return dict(ro=ro, ri=ri, L=L, rm=rm, flat_w=flat_w, seam_ys=seam_ys,
+                seam_thetas=(theta(P["seam_inset"]), theta(flat_w - P["seam_inset"])),
+                tab_thetas=[theta(flat_w * (i + 0.5) / P["tab_n"]) for i in range(P["tab_n"])],
+                baffle_thetas=[theta(flat_w * (i + 0.5) / P["baffle_n"]) for i in range(P["baffle_n"])],
+                baffle_ys=[L / 2 + off for off in P["baffle_hole_offsets"]],
+                r_tab_hole=ri - P["tab_h"] / 2)
+
+
+DRUM_SHIFT = ("0 mm", "drum_front_y", "drum_axis_z")   # the drum's place
+
+
+def tangent_plane(comp, theta_deg, r_out):
+    """A plane tangent to the drum (axis along the component's Y) at angle theta (0 along +X, 90 along +Z) and radius
+    r_out. Fusion's plane-at-angle always contains its axis, so: a radial plane through the Y axis whose normal points
+    along theta (the YZ plane, normal +X, turned by -theta about +Y), then that plane offset by r_out. The angle and offset signs are
+    found by testing which combination contains the point the plane must touch."""
+    want = rot_xz(r_out, 0.0, theta_deg)
+    planes = comp.constructionPlanes
+    for sa in (1.0, -1.0):
+        inp = planes.createInput()
+        inp.setByAngle(comp.yConstructionAxis, adsk.core.ValueInput.createByString(f"{-sa * theta_deg} deg"), comp.yZConstructionPlane)   # the YZ plane's normal (+X) turned to theta: Fusion turns it the other way round +Y
+        pa = planes.add(inp)
+        pa.isLightBulbOn = False
+        for so in (1.0, -1.0):
+            inp2 = planes.createInput()
+            inp2.setByOffset(pa, V(so * r_out))
+            pl = planes.add(inp2)
+            pl.isLightBulbOn = False
+            g = pl.geometry
+            o, n = g.origin, g.normal
+            d = n.x * (want[0] * CM - o.x) + n.y * (0.0 - o.y) + n.z * (want[1] * CM - o.z)
+            if abs(d) < 1e-3:
+                return pl
+            pl.deleteMe()
+        pa.deleteMe()
+    raise RuntimeError("tangent plane at %.3f degrees misses its point" % theta_deg)
+
+
+def radial_holes(comp, body, theta_deg, ys, d, r_out, depth):
+    """Holes along the drum's radius at angle theta (0 along +X), at the Y positions, from radius r_out inward by depth:
+    circles on the tangent plane at that angle, cut inward."""
+    pl = tangent_plane(comp, theta_deg, r_out)
+    sk = comp.sketches.add(pl)
+    p = rot_xz(r_out, 0.0, theta_deg)
+    for yy in ys:
+        sk.sketchCurves.sketchCircles.addByCenterRadius(sk.modelToSketchSpace(pt(p[0], yy, p[1])), d / 2 * CM)
+    n = pl.geometry.normal
+    u = rot_xz(1.0, 0.0, theta_deg)
+    inward = -1.0 if (n.x * u[0] + n.z * u[1]) > 0 else 1.0
+    return extrude(comp, all_profiles(sk), depth, "cut", along=inward)   # no participant bodies: a circular pattern of such a cut finds no target
+
+
+def tab_profile(sk, dn, theta_deg, yv):
+    """One tab's outline at angle theta on a sketch at Y yv: a box from ri - tab_h to the outer surface, tab_w wide, the
+    free end's corners rounded, with its hole; returns the profile to extrude."""
+    ro, ri = dn["ro"], dn["ri"]
+    tw, th, r3 = P["tab_w"], P["tab_h"], P["small_corner_r"]
+    x_in = ri - th
+    x_out = lambda z: math.sqrt(ro * ro - z * z)
+    R = lambda x, z: rot_xz(x, z, theta_deg)
+    P_ = lambda x, z: sk_pt(sk, R(x, z)[0], yv, R(x, z)[1])
+    lines = sk.sketchCurves.sketchLines
+    c = math.cos(math.radians(45)) * r3
+    l_in = lines.addByTwoPoints(P_(x_in, -tw / 2 + r3), P_(x_in, tw / 2 - r3))
+    a1, p1 = arc3(sk, l_in.endSketchPoint, P_(x_in + r3 - c, tw / 2 - r3 + c), P_(x_in + r3, tw / 2))
+    l_top = lines.addByTwoPoints(p1, P_(x_out(tw / 2), tw / 2))
+    a_out, p2 = arc3(sk, l_top.endSketchPoint, P_(ro, 0.0), P_(x_out(-tw / 2), -tw / 2))
+    l_bot = lines.addByTwoPoints(p2, P_(x_in + r3, -tw / 2))
+    arc3(sk, l_bot.endSketchPoint, P_(x_in + r3 - c, -tw / 2 + r3 - c), l_in.startSketchPoint)
+    sk.sketchCurves.sketchCircles.addByCenterRadius(P_(dn["r_tab_hole"], 0.0), P["tab_hole_d"] / 2 * CM)
+    return profile_at(sk, P_(x_in + 2.0, 0.0))
+
+
+def build_drum_sheet(dn):
+    comp = new_comp("drum-sheet")
+    ro, ri, L = dn["ro"], dn["ri"], dn["L"]
+    sk = sketch_on(comp, "y")
+    c1 = sk.sketchCurves.sketchCircles.addByCenterRadius(sk_pt(sk, 0, 0, 0), ro * CM)
+    c2 = sk.sketchCurves.sketchCircles.addByCenterRadius(sk_pt(sk, 0, 0, 0), ri * CM)
+    sk.sketchDimensions.addDiameterDimension(c1, sk_pt(sk, ro, 0, ro)).parameter.expression = "drum_d"
+    sk.sketchDimensions.addDiameterDimension(c2, sk_pt(sk, ri, 0, -ri)).parameter.expression = "drum_d - 1.6 mm"
+    along = plane_normal_sign(comp, "y")
+    shell = extrude(comp, profile_at(sk, sk_pt(sk, ro - 0.4, 0, 0)), "drum_l", "new", along=along)
+    body = shell.bodies.item(0)
+    theta0 = dn["tab_thetas"][0]
+    # the first tab at the script's first angle on each end, joined to the sheet and patterned round
+    skf = sketch_on(comp, "y")
+    tab_f = extrude(comp, tab_profile(skf, dn, theta0, 0.0), P["drum_t"], "join", along=-along, bodies=[body])
+    circ_pattern(comp, [tab_f], comp.yConstructionAxis, P["tab_n"], "360 deg")
+    skr = comp.sketches.add(offset_plane(comp, "y", "drum_l"))
+    tab_r = extrude(comp, tab_profile(skr, dn, theta0, L), P["drum_t"], "join", along=along, bodies=[body])
+    circ_pattern(comp, [tab_r], comp.yConstructionAxis, P["tab_n"], "360 deg")
+    # seam holes down both seam edges, and the baffle holes, through the wall
+    for th in dn["seam_thetas"]:
+        radial_holes(comp, body, th, dn["seam_ys"], P["seam_hole_d"], ro + 2, P["drum_t"] + 4)
+    for th in dn["baffle_thetas"]:
+        radial_holes(comp, body, th, dn["baffle_ys"], P["baffle_hole_d"], ro + 2, P["drum_t"] + 4)
+    move(comp, [body], *DRUM_SHIFT)
+    return comp
+
+
+def build_rings(dn):
+    ro, ri, L = dn["ro"], dn["ri"], dn["L"]
+    for name, y_expr in (("drum-ring-front", "drum_front_y"), ("drum-ring-rear", f"drum_front_y + drum_l - {P['ring_t']} mm")):
+        comp = new_comp(name)
+        sk = sketch_on(comp, "y")
+        c1 = sk.sketchCurves.sketchCircles.addByCenterRadius(sk_pt(sk, 0, 0, 0), ri * CM)
+        c2 = sk.sketchCurves.sketchCircles.addByCenterRadius(sk_pt(sk, 0, 0, 0), P["ring_id"] / 2 * CM)
+        sk.sketchDimensions.addDiameterDimension(c1, sk_pt(sk, ri, 0, ri)).parameter.expression = "drum_d - 1.6 mm"
+        sk.sketchDimensions.addDiameterDimension(c2, sk_pt(sk, 0, 0, -P["ring_id"] / 2)).parameter.expression = f"{P['ring_id']} mm"
+        along = plane_normal_sign(comp, "y")
+        ring = extrude(comp, profile_at(sk, sk_pt(sk, ri - 5, 0, 0)), P["ring_t"], "new", along=along)
+        body = ring.bodies.item(0)
+        skh = sketch_on(comp, "y")
+        p = rot_xz(dn["r_tab_hole"], 0.0, dn["tab_thetas"][0])
+        skh.sketchCurves.sketchCircles.addByCenterRadius(sk_pt(skh, p[0], 0, p[1]), P["tab_hole_d"] / 2 * CM)
+        hole = extrude(comp, all_profiles(skh), P["ring_t"], "cut", along=along)
+        circ_pattern(comp, [hole], comp.yConstructionAxis, P["tab_n"], "360 deg")
+        move(comp, [body], "0 mm", y_expr, "drum_axis_z")
+
+
+def build_splice(dn):
+    ro, ri, L = dn["ro"], dn["ri"], dn["L"]
+    comp = new_comp("drum-splice")
+    half_ang = math.degrees((P["splice_w"] / 2) / ri)
+    spl_len = L - 2 * P["ring_t"] - 2
+    y_start = P["ring_t"] + 1
+    w = ri * math.sin(math.radians(half_ang)) + 0.005          # the keep box's half width
+    r_in = ri - P["splice_t"]
+    zo = lambda x, r: math.sqrt(r * r - x * x)
+    sk = comp.sketches.add(offset_plane(comp, "y", y_start))
+    P_ = lambda x, z: sk_pt(sk, x, y_start, z)
+    lines = sk.sketchCurves.sketchLines
+    l1 = lines.addByTwoPoints(P_(-w, zo(w, r_in)), P_(-w, zo(w, ri)))
+    a1, p1 = arc3(sk, l1.endSketchPoint, P_(0.0, ri), P_(w, zo(w, ri)))
+    l2 = lines.addByTwoPoints(p1, P_(w, zo(w, r_in)))
+    arc3(sk, l2.endSketchPoint, P_(0.0, r_in), l1.startSketchPoint)
+    along = plane_normal_sign(comp, "y")
+    spl = extrude(comp, all_profiles(sk), spl_len, "new", along=along)
+    body = spl.bodies.item(0)
+    fillet_parallel_edges(comp, body, "z", P["small_corner_r"])
+    for th in dn["seam_thetas"]:
+        radial_holes(comp, body, th, dn["seam_ys"], P["seam_hole_d"], ri + 2, P["splice_t"] + 6)
+    move(comp, [body], *DRUM_SHIFT)
+    return comp
+
+
+def build_baffles(dn):
+    ro, ri, L = dn["ro"], dn["ri"], dn["L"]
+    leg, t_ang = P["baffle_leg"], 3.0
+    d_leg = math.sqrt(ri ** 2 - (leg / 2) ** 2) - 0.05
+    yb0 = L / 2 - P["baffle_len"] / 2
+    for i, theta in enumerate(dn["baffle_thetas"]):
+        comp = new_comp(f"baffle-{i+1} (angle, cut to length)")
+        prof_pts = [(d_leg - t_ang, -leg / 2), (d_leg, -leg / 2), (d_leg, leg / 2), (d_leg - leg, leg / 2),
+                    (d_leg - leg, leg / 2 - t_ang), (d_leg - t_ang, leg / 2 - t_ang)]
+        pts = [rot_xz(x, z, theta) for (x, z) in prof_pts]
+        sk = comp.sketches.add(offset_plane(comp, "y", yb0))
+        polygon(sk, [(x, yb0, z) for (x, z) in pts])
+        along = plane_normal_sign(comp, "y")
+        ang = extrude(comp, all_profiles(sk), P["baffle_len"], "new", along=along)
+        body = ang.bodies.item(0)
+        radial_holes(comp, body, theta, dn["baffle_ys"], P["baffle_hole_d"], d_leg + 2, t_ang + 4)
+        move(comp, [body], *DRUM_SHIFT)
+
+
+def build_rollers(dn):
+    rr = P["drum_d"] / 2 + P["roller_d"] / 2
+    roller_w = 25.0
+    L = dn["L"]
+    ry = {"front": P["roller_inset"], "rear": L - P["roller_inset_rear"] - roller_w}   # from the drum's front face
+    for i, ang in enumerate((-P["roller_angle_deg"], P["roller_angle_deg"])):
+        for end in ("front", "rear"):
+            comp = new_comp(f"roller-{end}-{i+1} (bought)")
+            sk = sketch_on(comp, "y")
+            c1 = sk.sketchCurves.sketchCircles.addByCenterRadius(sk_pt(sk, 0, 0, 0), P["roller_d"] / 2 * CM)
+            sk.sketchCurves.sketchCircles.addByCenterRadius(sk_pt(sk, 0, 0, 0), P["roller_bore_d"] / 2 * CM)
+            along = plane_normal_sign(comp, "y")
+            rl = extrude(comp, profile_at(sk, sk_pt(sk, P["roller_d"] / 2 - 2, 0, 0)), roller_w, "new", along=along)
+            sa, ca = math.sin(math.radians(ang)), math.cos(math.radians(ang))
+            y_e = f"drum_front_y + {P['roller_inset']} mm" if end == "front" else f"drum_front_y + drum_l - {roller_w + P['roller_inset_rear']} mm"
+            move(comp, [rl.bodies.item(0)], f"(drum_d / 2 + {P['roller_d'] / 2} mm) * {sa:.6f}", y_e,
+                 f"drum_axis_z - (drum_d / 2 + {P['roller_d'] / 2} mm) * {ca:.6f}")
+
+
+def build_felts():
+    """Two arcs per bulkhead, on the ring faces; the glide pads sit in the gaps (7b Seals)."""
+    pad_half = math.degrees((P["glide_w"] + 2.0) / 2 / P["glide_r"])
+    long_half = 180.0 - P["glide_angle_deg"] - pad_half
+    short_half = P["glide_angle_deg"] - pad_half
+    for end, y_expr, t in (("rear", f"rear_bulk_y - {P['felt_t_rear']} mm", P["felt_t_rear"]), ("front", "front_bulk_y + t_bulk", P["felt_t"])):
+        for arc_name, half, up in ((f"felt-seal-{end}-long", long_half, False), (f"felt-seal-{end}-short", short_half, True)):
+            comp = new_comp(arc_name)
+            sk = sketch_on(comp, "y")
+            sgn = -1.0 if up else 1.0     # the long arc hangs below the axis, the short one stands above it
+            tm = lambda u, v: (u, 0.0, -v if up else v)
+            sector(sk, tm, 0.0, 0.0, P["felt_ri"], P["felt_ro"], half)
+            along = plane_normal_sign(comp, "y")
+            f_ = extrude(comp, all_profiles(sk), t, "new", along=along)
+            move(comp, [f_.bodies.item(0)], "0 mm", y_expr, "drum_axis_z")
+
+
+def build_glides():
+    """Two nylon pads per bulkhead at 10 and 2 o'clock on the felt's radius, with two M4 holes and sunk nut pockets."""
+    for end, y_expr, t, pocket_far in (("front", "front_bulk_y + t_bulk", P["glide_t_front"], True), ("rear", f"rear_bulk_y - {P['glide_t_rear']} mm", P["glide_t_rear"], False)):
+        comp = new_comp(f"drum-glides-{end} (bought, 2 x nylon drum glide pads, 45 x 20 x {t:g})")
+        along = plane_normal_sign(comp, "y")
+        for ang in (-P["glide_angle_deg"], P["glide_angle_deg"]):
+            a = math.radians(ang)
+            cx_, cz_ = P["glide_r"] * math.sin(a), P["glide_r"] * math.cos(a)
+            sk = sketch_on(comp, "y")
+            # the pad's rounded rectangle, long axis along the tangent, drawn in place about the drum axis at the origin
+            tm = lambda u, v: (cx_ + u * math.cos(a) - v * math.sin(a), 0.0, cz_ - u * math.sin(a) - v * math.cos(a))
+            rounded_rect(sk, tm, -P["glide_w"] / 2, -P["glide_h"] / 2, P["glide_w"] / 2, P["glide_h"] / 2, 3.0)
+            for k in (-12.0, 12.0):
+                sk.sketchCurves.sketchCircles.addByCenterRadius(sk_pt(sk, *tm(k, 0.0)), 2.25 * CM)
+            pad = extrude(comp, profile_at(sk, sk_pt(sk, *tm(0.0, 0.0))), t, "new", along=along)
+            body = pad.bodies.item(0)
+            # nut pockets 4.5 deep, open on the ring side
+            y_pl = (t - 4.5) if pocket_far else 4.5
+            pl = offset_plane(comp, "y", y_pl)
+            skp = comp.sketches.add(pl)
+            for k in (-12.0, 12.0):
+                cxk, _, czk = tm(k, 0.0)
+                hexpts = [(cxk + 7.6 / 2 / math.cos(math.radians(30)) * math.cos(math.radians(60 * j)), y_pl, czk + 7.6 / 2 / math.cos(math.radians(30)) * math.sin(math.radians(60 * j))) for j in range(6)]
+                polygon(skp, hexpts)
+            extrude(comp, all_profiles(skp), 4.5, "cut", along=along * (1.0 if pocket_far else -1.0), bodies=[body])   # two pads in one component: keep the cut to its pad
+        move(comp, comp_bodies(comp), "0 mm", y_expr, "drum_axis_z")
+
+
+def stage_c():
+    app, design, root = app_design()
+    dn = drum_numbers()
+    done = []
+    for fn in (lambda: build_drum_sheet(dn), lambda: build_rings(dn), lambda: build_splice(dn), lambda: build_baffles(dn),
+               lambda: build_rollers(dn), build_felts, build_glides):
+        try:
+            fn()
+            done.append(fn.__name__ if hasattr(fn, "__name__") and fn.__name__ != "<lambda>" else "drum part")
+        except Exception:
+            done.append("FAILED: " + traceback.format_exc().splitlines()[-1])
+    return "stage C: " + "; ".join(done)
+
+
 def build_all():
     new_design()
-    out = [stage_a(), stage_b()]
+    out = [stage_a(), stage_b(), stage_c()]
     return "\n".join(out)

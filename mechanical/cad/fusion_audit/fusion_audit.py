@@ -120,8 +120,9 @@ def measure_body(rows, logf, file_tag, body_name, body):
                     break
             if not placed:
                 groups.append(dict(r=r, dir=dv, foot=foot, t0=t0, t1=t1, n=1))
+    vol_mm3, area_mm2 = body_volume_area(body)
     rows.append(dict(record="body", file=file_tag, body=body_name, is_solid=int(body.isSolid),
-                     volume_mm3=round(body.volume * 1000.0, 4), area_mm2=round(body.area * 100.0, 4),
+                     volume_mm3=round(vol_mm3, 4), area_mm2=round(area_mm2, 4),
                      faces=body.faces.count, planar_faces=n_plane, cylindrical_faces=n_cyl,
                      edges=body.edges.count, vertices=body.vertices.count,
                      xmin=round(mm(bb.minPoint.x), 5), ymin=round(mm(bb.minPoint.y), 5), zmin=round(mm(bb.minPoint.z), 5),
@@ -131,7 +132,18 @@ def measure_body(rows, logf, file_tag, body_name, body):
                          ax=round(grp["dir"][0], 6), ay=round(grp["dir"][1], 6), az=round(grp["dir"][2], 6),
                          fx=round(grp["foot"][0], 5), fy=round(grp["foot"][1], 5), fz=round(grp["foot"][2], 5),
                          t0=round(grp["t0"], 5), t1=round(grp["t1"], 5), length=round(grp["t1"] - grp["t0"], 5), n_faces=grp["n"]))
-    log(logf, f"  {body_name}: solid {body.isSolid}, {body.faces.count} faces ({n_plane} planar, {n_cyl} cylindrical in {len(groups)} cylinders), volume {body.volume * 1000.0:.3f} mm3")
+    log(logf, f"  {body_name}: solid {body.isSolid}, {body.faces.count} faces ({n_plane} planar, {n_cyl} cylindrical in {len(groups)} cylinders), volume {vol_mm3:.3f} mm3")
+
+
+def body_volume_area(body):
+    """Volume (mm3) and area (mm2) at Fusion's high calculation accuracy. body.volume is the medium-accuracy value, and
+    on a thin curved strip (the drum splice, 1 mm on a 309 mm radius) that is 0.01 percent low, enough to fail the
+    comparison with OpenCascade; the high-accuracy value is within 0.001 percent of the exact figure."""
+    try:
+        pp = body.getPhysicalProperties(adsk.fusion.CalculationAccuracy.HighCalculationAccuracy)
+        return pp.volume * 1000.0, pp.area * 100.0
+    except Exception:
+        return body.volume * 1000.0, body.area * 100.0
 
 
 def all_bodies(design):

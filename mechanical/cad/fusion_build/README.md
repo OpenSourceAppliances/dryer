@@ -37,7 +37,7 @@ Each stage is run, checked and pushed before the next.
 | --- | --- | --- |
 | A | Parameters; the frame (four posts, the rails of three levels, the tray rails) with the T-slot profile | done 2026-11-07: 23 bars, every one at the script's volume and place; a change of `cab_w` or `cab_h` moves and stretches them |
 | B | The plates: panels, bulkheads, bay ceiling, base pan, console plates, module and duct plates, with every hole, slot and cut | done 2026-11-07: the 34 plates the script draws with `plate_xz/xy/yz`, from `../plates.json`; each one is an outline sketch (dimensioned where the numbers carry expressions), its thickness extruded, its holes and slots as patterned cuts (627 holes in 133 cuts, 88 slots in 2), then a Move by its position; 55 of 55 bodies at the script's volume and place |
-| C | The drum: sheet with its tabs, rings, splice, baffles; rollers, studs, glides, felts | pending |
+| C | The drum: sheet with its tabs, rings, splice, baffles; rollers, studs, glides, felts | done 2026-11-07: 17 components, 19 bodies; the sheet is a tube (diameters `drum_d` and `drum_d - 1.6 mm`, length `drum_l`) with one tab joined at each end and patterned 30 times round the axis, its seam and baffle holes cut inward from tangent planes; the rings, splice, baffles, felts and glides are drawn about the drum axis at the origin and moved by `drum_front_y` and `drum_axis_z`, the rollers by expressions in `drum_d`; 74 of 74 bodies of stages A to C at the script's volume and place |
 | D | The ducts: lint box, spool, riser hood, trunk, nozzle, liner, basket; blower plate; exhaust set | pending |
 | E | The modules: electric heat module, power module, Tier 0 module; the door; the drive (motor, blower, pulley, belt, idler); sensors, blanks, clamps | pending |
 | F | Hardware: every bolt, nut, washer, stud as patterned bodies | pending |
@@ -55,3 +55,11 @@ Each stage is run, checked and pushed before the next.
   `python3 cad_audit.py . --fusion cad/audit/fusion-build-measured.csv --fusion-partial` compares the parts built so far.
 - Fusion orders an arc's own start and end counterclockwise whatever order it was drawn in, so every chained curve
   continues from whichever of the arc's end points lies where the drawing left off (`arc3`).
+- Volumes are measured with Fusion's high calculation accuracy (`getPhysicalProperties`), not `body.volume`: that
+  property is the medium-accuracy figure, and on the drum splice (a 1 mm strip on a 309 mm radius) it reads 0.015
+  percent low, more than the comparison's 0.01 percent, while the geometry was right (end faces, arcs and fillets all
+  at their exact areas). The STEP measurement record `../audit/fusion-measured.csv` was made before this change at the
+  medium accuracy; it is remade at stage G.
+- Holes in the drum parts are circles on a plane tangent to the drum at the hole's angle, cut inward. Fusion's
+  plane-at-angle always contains its axis and turns the YZ plane's normal the other way round +Y, so `tangent_plane`
+  tries the sign combinations and keeps the plane that holds the point it must touch.
