@@ -15,6 +15,13 @@ Affects: which files or subsystems this changes.
 
 ---
 
+## 2026-11-07  In the parametric Fusion build the hardware is fixed bodies, not features
+
+Decision: `mechanical/cad/fusion_build/fusion_build.py` draws every made part and every bought envelope as sketches, dimensions and features, and draws the bolts, nuts, washers and spacers (861 pieces in 45 hardware sets) as fixed bodies built with Fusion's temporary-geometry tools from `hardware.json`, one base feature per hardware set, at the script's positions.
+Why: a bolt as features is a revolve, a hex cut, two chamfers and a placement, five to eight timeline entries each, and Fusion's time per feature grows with the document (stage D's 150 features took 8 minutes; the plates' 133 patterned cuts took 3); 861 bolts that way would take hours and bury the editable parts under thousands of hardware entries in the timeline. A builder edits plates, bars and the drum, not bought stock, and the hardware follows the holes: when a parameter moves the holes, running stage F again redraws the hardware on them from the script's list. What is given up: the hardware does not move with a parameter change by itself.
+Charter: follows (the editable form is the parts a builder makes; the hardware is catalog stock).
+Affects: `mechanical/cad/fusion_build/`, `mechanical/cad/hardware.json`, `mechanical/cad/osa_dryer_cad.py` (the stock tags and the log in `place()`).
+
 ## 2026-11-06  The parts are finished in the script; the editable Fusion build is made at the end
 
 Decision: The design is drawn to completion in `mechanical/cad/osa_dryer_cad.py` (draft 9 finishes the reference build's parts), with Fusion used as it is now: joints, motion, interference, a second kernel's measurements and the archive of record. When the parts are finished, the whole design is rebuilt once inside Fusion by a script of its own, from sketches, dimensions and user parameters, and that archive goes on GitHub as the version a builder edits in Fusion's own interface. Until then the imported archive is the editable form: bodies that can be pushed and pulled, not parameters.
