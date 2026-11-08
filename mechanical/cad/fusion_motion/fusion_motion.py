@@ -32,6 +32,9 @@ What moves and how (all as-built joints, so nothing is displaced when the joint 
     heat module tray slider along Y, tray and module envelope together, 250 mm pull-out toward the back
     lint basket      slider along Y, the basket's plates, mesh and pull together, 40 mm back out of the slot into the drum
 Everything else is grounded. The belt is drawn on its path and does not deform.
+Draft 7, 2026-11-07: the two-tone paint is distant blue (RAL 5023) and graphite grey (RAL 7024), two appearances the
+script makes in the design from the library's glossy enamel (PAINT); render() makes the product renders of
+mechanical/renders/ with Fusion's own renderer.
 Draft 6, 2026-11-06 (draft 1 made its own barebones faceplate, knobs and hinge pin; draft 2 jointed the model's own;
 draft 3 follows model draft 6: vertical console face, the tray slides out the back, the rear lower panel is left out
 of the moved poses; draft 4 follows model draft 7: the whole heat module, every "heat-module" part, rides the tray;
@@ -415,12 +418,21 @@ def check_poses(ts=(0.0, 0.25, 0.5), min_mm3=1.0):
     return found
 
 
-# Appearances from the Fusion Appearance Library (exact library names), by component name or name prefix
+# The two-tone paint (draft 7 of this script, DECISIONS.md 2026-11-07): the library's glossy enamel copied into the
+# design and given a RAL colour (sRGB), one appearance for the body panels and one for the trim. Change a colour here
+# and run dress() again; the appearances keep their names, so Fusion's own appearance editor can change them too.
+PAINT_BASE = "Paint - Enamel Glossy (White)"
+PAINT = {
+    "OSA body paint (RAL 5023 distant blue)": (66, 105, 140),
+    "OSA trim paint (RAL 7024 graphite grey)": (69, 73, 78),
+}
+
+# Appearances from the Fusion Appearance Library (exact library names) or PAINT, by component name or name prefix
 APPEARANCES = [
-    # two-tone paint (draft 5 of this script): warm white body, charcoal console, door and skirt
-    ("Paint - Enamel Glossy (White)", ("side-panel-left", "side-panel-right", "front-upper-panel", "rear-upper-panel", "top-panel")),
-    ("Paint - Enamel Glossy (Dark Grey)", ("door-ring", "door-disc", "front-lower-panel", "rear-lower-panel", "console-face", "console-cap",
-                                           "console-cheek-left", "console-cheek-right", "console-rear")),
+    # two-tone paint: distant blue body (side, upper front and rear, and top panels), graphite console, door and skirt
+    ("OSA body paint (RAL 5023 distant blue)", ("side-panel-left", "side-panel-right", "front-upper-panel", "rear-upper-panel", "top-panel")),
+    ("OSA trim paint (RAL 7024 graphite grey)", ("door-ring", "door-disc", "front-lower-panel", "rear-lower-panel", "console-face", "console-cap",
+                                                "console-cheek-left", "console-cheek-right", "console-rear")),
     ("Aluminum - Anodized Rough (Grey)", ("post-", "rail-", "tray-rail-", "console-post", "console-rail", "heat-module-angles-",
                                           "heat-module-element-rails", "heat-module-terminal-angle", "power-module-barrier-angle")),
     ("Steel - Galvanized (Small)", ("front-bulkhead", "rear-bulkhead", "bay-ceiling", "base-pan", "heat-module-tray", "heat-module-wall-",
@@ -462,21 +474,41 @@ def _appearance_for(name):
     return None
 
 
-def dress():
-    """Give every component a real appearance from Fusion's library, so the model reads as the materials it is."""
+def paint_appearance(design, lib, name, rgb):
+    """The design's own copy of the library's glossy enamel, named and coloured; made once, recoloured on every call."""
+    appr = None
+    try:
+        appr = design.appearances.itemByName(name)
+    except Exception:
+        appr = None
+    if appr is None:
+        appr = design.appearances.addByCopy(lib.appearances.itemByName(PAINT_BASE), name)
+    colour = appr.appearanceProperties.itemById("opaque_albedo")    # the paint layer's colour; surface_albedo is the clear coat
+    colour.value = adsk.core.Color.create(rgb[0], rgb[1], rgb[2], 255)
+    return appr
+
+
+def dress(only=None):
+    """Give every component a real appearance from Fusion's library, so the model reads as the materials it is;
+    with only (name prefixes), just those components (the whole model takes minutes in the parametric document)."""
     app, design = get_design()
     root = design.rootComponent
     lib = app.materialLibraries.itemByName("Fusion Appearance Library")
     done, missing = 0, []
     cache = {}
     for occ in root.allOccurrences:
+        if only is not None and not any(occ.component.name.startswith(p) for p in only):
+            continue
         appr_name = _appearance_for(occ.component.name)
         if appr_name is None:
             missing.append(occ.component.name)
             continue
         if appr_name not in cache:
             try:
-                cache[appr_name] = lib.appearances.itemByName(appr_name)
+                if appr_name in PAINT:
+                    cache[appr_name] = paint_appearance(design, lib, appr_name, PAINT[appr_name])
+                else:
+                    cache[appr_name] = lib.appearances.itemByName(appr_name)
             except Exception:   # a name the library does not have raises rather than returning None
                 cache[appr_name] = None
         appr = cache[appr_name]
@@ -525,6 +557,264 @@ def view(name="iso"):
     cam.isFitView = True
     vp.camera = cam
     vp.refresh()
+
+
+# Product renders (draft 7): file name, what the shot shows, the components shown (name prefixes; None is everything),
+# the components hidden, and where the camera stands as a direction from the centre of what is shown (X across, left
+# negative; Y front to back; Z up), the distance following from its size. Rendered by render() with Fusion's own
+# renderer into mechanical/renders/.
+SHOTS = [
+    ("01-dryer-front-left", "the dryer from the front left", None, (), (-0.85, -1.0, 0.42)),
+    ("02-dryer-rear-right", "the dryer from the rear right: the exhaust, the console's back, the cord", None, (), (0.85, 1.0, 0.42)),
+    ("03-dryer-front", "the dryer from the front: door, skirt, console", None, (), (-0.12, -1.0, 0.16)),
+    ("04-dryer-service-side", "the left side panel and the top off: drum, drive, ducts and modules in place", None,
+     ("side-panel-left", "hardware-side-panel-left", "top-panel", "hardware-top-panel"), (-1.0, -0.6, 0.42)),
+    ("05-dryer-rear-open", "the rear panels and the power module cover off: heat module, power module, blower, exhaust", None,
+     ("rear-upper-panel", "rear-lower-panel", "hardware-rear-upper-panel", "hardware-rear-lower-panel", "console-rear",
+      "hardware-console-rear", "power-module-cover"), (0.9, 1.0, 0.4)),
+    ("06-drum-set", "the drum: sheet, rings, splice, baffles, rollers and their studs",
+     ("drum-", "baffle-", "roller-", "hardware-drum-", "hardware-roller-studs"), (), (-0.9, -1.0, 0.5)),
+    ("07-heat-module", "the electric heat module on its tray: element, collar, thermostats, DIN rail and devices",
+     ("heat-module-",), (), (-0.9, 1.0, 0.6)),
+    ("08-power-module", "the power module without its cover: the five DIN rails and their devices, barrier, standoffs, ground stud",
+     ("power-module-", "hardware-power-module-plate"), ("power-module-cover",), (-0.55, 1.0, 0.3)),
+    ("09-tier0-module", "the Tier 0 control module: faceplate, timers, knobs, HEAT selector, START, K1",
+     ("tier0-", "hardware-tier0-faceplate"), (), (-0.35, -1.0, 0.25)),
+    ("10-door", "the door: ring, disc, hinges, handle, seal, catch and switch", ("door-", "hardware-door-"), (), (-0.8, -1.0, 0.35)),
+    ("11-drive", "the drive: motor on its cradles, pulley, idler, blower on its plate (the belt runs up to the drum, left out)",
+     ("motor", "pulley", "blower", "idler-", "hardware-idler-", "spring-bracket", "hardware-motor-mounts", "hardware-blower-plate",
+      "exhaust-thermostats", "hardware-exhaust-thermostats"), (), (-1.0, 0.5, 0.5)),
+    ("12-lint-path", "the lint path: lint box, basket, riser, liner, hood, trunk and nozzle",
+     ("lint-box-", "basket-", "hardware-basket", "spool-", "riser-hardware", "liner", "hardware-liner", "hood-", "trunk-", "nozzle-",
+      "th1-", "hardware-th1", "moisture-bars", "hardware-moisture-bars"), (), (-0.9, -1.0, 0.5)),
+    ("13-exhaust-set", "the exhaust: blower outlet, thermostats, pipe, clamps, tap, PS1 and its tube",
+     ("blower (bought", "exhaust-", "hardware-exhaust-", "ps1-", "hardware-ps1", "th1-", "hardware-th1"), (), (1.0, 0.7, 0.5)),
+    ("14-frame", "the frame: posts, rails, tray rails, console sub-frame, brackets and feet",
+     ("post-", "rail-", "tray-rail", "console-post", "console-rail", "console-brackets", "hardware-console-brackets", "feet"), (), (-0.85, -1.0, 0.42)),
+]
+RENDER_ENVIRONMENT = "Soft Light"       # the lighting; the background is a plain white
+RENDER_LENS = 0.40                       # the viewport camera's perspective angle, radians (the renderer does not use it)
+RENDER_TAN_H = 0.5                       # the local renderer's own lens: half the horizontal view angle as a tangent, a 36 mm
+#                                          lens on a 36 mm frame, whatever the viewport camera's angle (measured 2026-11-07:
+#                                          renders at angles 0.3, 0.4 and 0.8 all came out with the same view angle)
+RENDER_CROP = 1.5                        # render this much bigger and keep the middle: the look of a 54 mm lens
+RENDER_EXPOSURE = None                   # camera exposure value, None keeps the environment's own (9.5 with Soft Light;
+#                                          setting 12 made the scene dark, so leave it unless the environment changes)
+RENDER_LIGHT_ANGLE = 0.0                 # rotation of the environment's light about the model, radians
+
+
+def _visible_box(design):
+    lo, hi = [1e9] * 3, [-1e9] * 3
+    for o in design.rootComponent.allOccurrences:
+        if not o.isLightBulbOn:
+            continue
+        bb = o.boundingBox
+        if bb is None:
+            continue
+        p, q = bb.minPoint, bb.maxPoint
+        lo = [min(lo[0], p.x), min(lo[1], p.y), min(lo[2], p.z)]
+        hi = [max(hi[0], q.x), max(hi[1], q.y), max(hi[2], q.z)]
+    return lo, hi
+
+
+def aim(direction, margin=1.06, aspect=16 / 9, crop=1.0):
+    """Point the viewport camera at what is visible, from the direction given, just far enough back that every
+    corner of its box fits the frame that is kept: the renderer's own lens (RENDER_TAN_H across the whole render,
+    the height following from the aspect ratio), divided by the crop that keeps the middle of the render."""
+    app, design = get_design()
+    lo, hi = _visible_box(design)
+    centre = [(a + b) / 2 for a, b in zip(lo, hi)]
+    radius = max(math.dist(lo, hi) / 2, 1.0)
+    n = math.sqrt(sum(c * c for c in direction))
+    d = [c / n for c in direction]
+    f = [-c for c in d]                                            # from the eye to the target
+    r = [f[1] * 1.0 - f[2] * 0.0, f[2] * 0.0 - f[0] * 1.0, f[0] * 0.0 - f[1] * 0.0]     # f x up(0,0,1)
+    rn = math.sqrt(sum(c * c for c in r)) or 1.0
+    r = [c / rn for c in r]
+    u = [r[1] * f[2] - r[2] * f[1], r[2] * f[0] - r[0] * f[2], r[0] * f[1] - r[1] * f[0]]   # r x f
+    th = RENDER_TAN_H / crop
+    tv = th / aspect
+    dist = 0.0
+    for cx in (lo[0], hi[0]):
+        for cy in (lo[1], hi[1]):
+            for cz in (lo[2], hi[2]):
+                c = [cx - centre[0], cy - centre[1], cz - centre[2]]
+                depth = sum(a * b for a, b in zip(c, f))
+                x = abs(sum(a * b for a, b in zip(c, r)))
+                y = abs(sum(a * b for a, b in zip(c, u)))
+                dist = max(dist, x / th - depth, y / tv - depth)
+    dist = max(dist * margin, radius * 1.01)
+    vp = app.activeViewport
+    cam = vp.camera
+    cam.cameraType = adsk.core.CameraTypes.PerspectiveCameraType
+    cam.perspectiveAngle = RENDER_LENS
+    cam.isSmoothTransition = False
+    cam.isFitView = False
+    cam.target = adsk.core.Point3D.create(*centre)
+    cam.eye = adsk.core.Point3D.create(centre[0] + d[0] * dist, centre[1] + d[1] * dist, centre[2] + d[2] * dist)
+    cam.upVector = adsk.core.Vector3D.create(0, 0, 1)
+    vp.camera = cam
+    vp.refresh()
+    return centre, radius, dist
+
+
+def scene():
+    """The render scene: a studio light, a white background, a ground that takes shadows and a little reflection.
+    The Render workspace is activated first; the scene settings are set from there. Setting SceneSettings.cameraType
+    closed Fusion outright (twice, 2026-11-07), so the camera's type is left to the viewport camera (aim)."""
+    app, design = get_design()
+    rm = design.renderManager
+    rm.activateRenderWorkspace()
+    ss = rm.sceneSettings
+    env = rm.renderEnvironments.itemByName(RENDER_ENVIRONMENT)
+    if env is not None:
+        ss.backgroundEnvironment = env
+    ss.backgroundSolidColor = adsk.core.Color.create(255, 255, 255, 255)
+    ss.isGroundDisplayed = True
+    ss.isGroundFlattened = False
+    ss.isGroundReflections = True
+    ss.groundRoughness = 0.6
+    ss.groundOffset = 0.0
+    ss.isDepthOfFieldEnabled = False
+    if RENDER_EXPOSURE is not None:
+        ss.cameraExposure = RENDER_EXPOSURE
+    ss.lightAngle = RENDER_LIGHT_ANGLE
+    return ss
+
+
+def png_crop(src, dst, crop):
+    """Keep the middle 1/crop of a PNG's width and height (8-bit, not interlaced, as Fusion writes them), without
+    an image library: the IDAT stream is inflated, the rows unfiltered, the middle cut out and deflated again."""
+    import struct
+    import zlib
+    data = open(src, "rb").read()
+    if data[:8] != b"\x89PNG\r\n\x1a\n":
+        raise ValueError(src + " is not a PNG")
+    pos, chunks, idat = 8, [], []
+    while pos < len(data):
+        n, kind = struct.unpack(">I4s", data[pos:pos + 8])
+        body = data[pos + 8:pos + 8 + n]
+        pos += 12 + n
+        if kind == b"IDAT":
+            idat.append(body)
+        elif kind == b"IEND":
+            break
+        else:
+            chunks.append((kind, body))
+    ihdr = chunks[0][1]
+    w, h, depth, ctype, _, _, interlace = struct.unpack(">IIBBBBB", ihdr)
+    if depth != 8 or interlace != 0:
+        raise ValueError(src + ": only 8-bit non-interlaced PNGs")
+    bpp = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}[ctype]
+    stride = w * bpp
+    raw = zlib.decompress(b"".join(idat))
+    cw, ch = int(round(w / crop)), int(round(h / crop))
+    left, top = (w - cw) // 2, (h - ch) // 2
+    rows, prev, p = [], bytearray(stride), 0
+    for y in range(top + ch):
+        ft = raw[p]
+        cur = bytearray(raw[p + 1:p + 1 + stride])
+        p += 1 + stride
+        if ft == 1:
+            for i in range(bpp, stride):
+                cur[i] = (cur[i] + cur[i - bpp]) & 255
+        elif ft == 2:
+            cur = bytearray((a + b) & 255 for a, b in zip(cur, prev))
+        elif ft == 3:
+            for i in range(stride):
+                cur[i] = (cur[i] + (((cur[i - bpp] if i >= bpp else 0) + prev[i]) >> 1)) & 255
+        elif ft == 4:
+            for i in range(stride):
+                a = cur[i - bpp] if i >= bpp else 0
+                b = prev[i]
+                c = prev[i - bpp] if i >= bpp else 0
+                q = a + b - c
+                pa, pb, pc = abs(q - a), abs(q - b), abs(q - c)
+                cur[i] = (cur[i] + (a if pa <= pb and pa <= pc else b if pb <= pc else c)) & 255
+        if y >= top:
+            rows.append(bytes(cur[left * bpp:(left + cw) * bpp]))
+        prev = cur
+    out = [b"\x89PNG\r\n\x1a\n"]
+
+    def chunk(kind, body):
+        out.append(struct.pack(">I", len(body)) + kind + body + struct.pack(">I", zlib.crc32(kind + body) & 0xFFFFFFFF))
+
+    chunk(b"IHDR", struct.pack(">IIBBBBB", cw, ch, 8, ctype, 0, 0, 0))
+    for kind, body in chunks[1:]:
+        chunk(kind, body)
+    chunk(b"IDAT", zlib.compress(b"".join(b"\x00" + r for r in rows), 6))
+    chunk(b"IEND", b"")
+    open(dst, "wb").write(b"".join(out))
+    return cw, ch
+
+
+def render(names=None, quality=75, width=1920, height=1080, crop=None, folder=None, timeout=3600):
+    """Render the SHOTS (or those whose file name starts with one of names) with Fusion's local renderer, one after
+    another, waiting for each; quality 75 is Fusion's 'Final'. Each shot is rendered crop times bigger than width by
+    height and its middle kept (RENDER_CROP, a longer lens than the renderer's own). Returns one line per shot."""
+    app, design = get_design()
+    if crop is None:
+        crop = RENDER_CROP
+    if folder is None:
+        folder = os.path.join(REPO, "mechanical", "renders")
+    os.makedirs(folder, exist_ok=True)
+    root = design.rootComponent
+    root.isJointsFolderLightBulbOn = False
+    root.isConstructionFolderLightBulbOn = False
+    root.isSketchFolderLightBulbOn = False
+    root.isOriginFolderLightBulbOn = False
+    scene()
+    big_w, big_h = int(round(width * crop)), int(round(height * crop))
+    if big_w > 4000 or big_h > 4000:
+        raise ValueError("the renderer takes at most 4000 pixels a side: %d x %d" % (big_w, big_h))
+    lines = []
+    for stem, what, shown, hidden, direction in SHOTS:
+        if names is not None and not any(stem.startswith(n) for n in names):
+            continue
+        show_all()
+        if shown is not None:
+            for o in root.allOccurrences:
+                if not any(o.component.name.startswith(p) for p in shown):
+                    o.isLightBulbOn = False
+        if hidden:
+            hide(*hidden)
+        for _ in range(2):                                  # set twice and let the viewport settle: the renderer read a
+            aim(direction, aspect=width / height, crop=crop)  # stale target when the camera was set once and the render
+            app.activeViewport.refresh()                    # started at once (shots off centre, 2026-11-07)
+            adsk.doEvents()
+            time.sleep(1.5)
+            adsk.doEvents()
+        rendering = design.renderManager.rendering          # a fresh object each time; its settings do not persist
+        rendering.aspectRatio = adsk.fusion.RenderAspectRatios.CustomRenderAspectRatio
+        rendering.resolutionWidth = big_w
+        rendering.resolutionHeight = big_h
+        rendering.renderQuality = quality
+        rendering.isBackgroundTransparent = False
+        path = os.path.join(folder, stem + ".png")
+        big = os.path.join(folder, stem + "-full.png") if crop != 1.0 else path
+        for f in (path, big):
+            if os.path.exists(f):
+                os.remove(f)
+        t0 = time.time()
+        fut = rendering.startLocalRender(big)
+        state = fut.renderState
+        while state in (adsk.fusion.LocalRenderStates.QueuedLocalRenderState, adsk.fusion.LocalRenderStates.ProcessingLocalRenderState):
+            adsk.doEvents()
+            time.sleep(2.0)
+            state = fut.renderState
+            if time.time() - t0 > timeout:
+                break
+        ok = state == adsk.fusion.LocalRenderStates.FinishedLocalRenderState and os.path.exists(big)
+        t_render = time.time() - t0
+        if ok and crop != 1.0:
+            png_crop(big, path, crop)
+            os.remove(big)
+        line = f"{stem}: {'done' if ok else 'FAILED (state %s)' % state} in {t_render:.0f} s render, {time.time() - t0 - t_render:.0f} s crop, {what}"
+        lines.append(line)
+        print(line)
+        app.log(line)
+    show_all()
+    return "\n".join(lines)
 
 
 def export_archive(path=None):

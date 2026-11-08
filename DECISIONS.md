@@ -15,6 +15,15 @@ Affects: which files or subsystems this changes.
 
 ---
 
+## 2026-11-07  The two-tone paint is distant blue and graphite grey
+
+Decision: The Fusion model's paint scheme (2026-11-06, white and charcoal) changes to a blue and grey pair: the body panels (sides, upper front and rear, top) in RAL 5023 distant blue, the trim (console, door ring and disc, the lower front and rear panels) in RAL 7024 graphite grey. `fusion_motion.py` makes the two appearances in the design from the library's glossy enamel (`PAINT`), so a builder changes a colour by editing one line or the appearance in Fusion's own editor. The product renders in `mechanical/renders/` show this scheme.
+Why: A real colour pair that a builder could order as powder coat, named by RAL number so it can be matched; it keeps the earlier rule that the dark trim marks what comes off for service. Still a presentation choice, not a specification: the build guide leaves colours to the builder.
+Charter: follows.
+Affects: `mechanical/cad/fusion_motion/fusion_motion.py` (draft 7), `mechanical/fusion/osa-dryer-parametric.f3d`, `mechanical/renders/`.
+
+---
+
 ## 2026-11-07  In the parametric Fusion build the hardware is fixed bodies, not features
 
 Decision: `mechanical/cad/fusion_build/fusion_build.py` draws every made part and every bought envelope as sketches, dimensions and features, and draws the bolts, nuts, washers and spacers (861 pieces in 45 hardware sets; the roller studs' 20 pieces are drawn with the drive as features, the other 841 as below) as fixed bodies built with Fusion's temporary-geometry tools from `hardware.json`, one base feature per hardware set, at the script's positions.
