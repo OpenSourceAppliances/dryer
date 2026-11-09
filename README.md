@@ -2,7 +2,27 @@
 
 Open Source Appliances: clothes dryer.
 
-**Status: paper design complete for the electric reference build; every part of the chassis, the electric and no-heat modules and the Tier 0 control module is drawn (model draft 9). Nothing has been built. The checks in `docs/verification.md` are all open.** There is no tagged release. Do not build from it. The editable Fusion build (sketches, dimensions and user parameters a builder changes in Fusion's own interface) is made from the finished design next; until then `mechanical/fusion/osa-dryer-assembly-motion.f3d` opens in Fusion as bodies that can be pushed and pulled (`DECISIONS.md` 2026-11-06).
+![Render of the CAD model from the front left: a blue and grey cabinet with a round door and a control console on top](mechanical/renders/01-dryer-front-left.png)
+
+*A render of the CAD model, not a photograph. Nothing has been built.*
+
+## Where this project stands
+
+**A complete paper design that has never been built, powered, or independently reviewed. Do not build from it yet.** There is no tagged release.
+
+| Stage | State |
+| --- | --- |
+| Design (electric reference build, Tier 0 controls) | Drawn: all 213 parts, model draft 9, with DXFs, STEP files, a cut list, wiring documents and a BOM |
+| Computer checks of the drawings | Done by the author: no part overlaps another, every hole matches its fastener, and the model measures the same in two independent CAD kernels (OpenCascade and Autodesk Fusion) and while the door, drum and drive move |
+| Paper design review (`docs/verification.md` Gate 0) | 10 of 23 checks have results, 4 wait on real parts, **9 not done**, among them the electrical ones: contactor and relay ratings, the 24 V budget, the breaker against the motor start, wire gauges, heater limits and thermostat settings, and the interlock truth table |
+| Real parts measured against the drawings (Gate 1) | **0 of 16.** No part has been bought |
+| Bench tests (Gate 2) | **0 of 8** |
+| Assembled, unpowered (Gate 3) | **0 of 11** |
+| Commissioning and test run (Gates 4 and 5) | **Not started; 0 of 8 test-run checks.** It has never been powered |
+| Bill of materials | Specs complete; **most vendor part numbers are written from memory and unverified, and there are no prices** (`bom/order-plan.csv`) |
+| Independent review | **None.** Every check so far was done by the author. The design was drafted with heavy AI assistance (Claude), which is one more reason every number needs a human check |
+
+The open checks are listed with how to run them in `docs/verification.md`. Many drawings have holes placed from a seller's listing or a datasheet rather than a part in hand; those DXFs are marked there as not to be cut until their check closes.
 
 ## Risk statement
 
