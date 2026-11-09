@@ -74,5 +74,3 @@ This repo follows the Open Source Appliances Design Charter, kept in the `charte
 - Hardware: CERN-OHL-S v2 (`LICENSE-HARDWARE`)
 - Firmware: GPLv3 (`LICENSE-SOFTWARE`)
 - Documentation: CC BY-SA 4.0
-
-These are starting choices, not legal advice.
