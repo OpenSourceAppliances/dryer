@@ -19,7 +19,7 @@ Open Source Appliances: clothes dryer.
 | Bench tests (Gate 2) | **0 of 8** |
 | Assembled, unpowered (Gate 3) | **0 of 11** |
 | Commissioning and test run (Gates 4 and 5) | **Not started; 0 of 8 test-run checks.** It has never been powered |
-| Bill of materials | Specs complete; **most vendor part numbers are written from memory and unverified, and there are no prices** (`bom/order-plan.csv`) |
+| Bill of materials | Specs complete (`bom/order-plan.csv`). The electrical, appliance, frame, fastener and stock parts were found for sale and priced on 2026-11-09, about 3500 USD before shipping (`bom/sourcing-2026-11-09.md`). **The drive (motor, pulley, belt, idler) and the blower have no catalog match yet, the laser-cut plates are not priced, and the BOM's second-source part numbers are still unverified** |
 | Independent review | **None.** Every check so far was done by the author. The design was drafted with heavy AI assistance (Claude), which is one more reason every number needs a human check |
 
 The open checks are listed with how to run them in `docs/verification.md`. Many drawings have holes placed from a seller's listing or a datasheet rather than a part in hand; those DXFs are marked there as not to be cut until their check closes.

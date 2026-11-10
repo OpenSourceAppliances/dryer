@@ -39,7 +39,7 @@ Duty assumed for the life figures: 5 loads a week (260 a year), one motor start 
 | Line | Part | Pick | Maker's rating | Duty here | Life at that duty | Verdict |
 | --- | --- | --- | --- | --- | --- | --- |
 | CPM-PSU | 24 V power supply | Mean Well HDR-60-24 (60 W, DIN rail) | MTBF over 500,000 h (Telcordia SR-332); -30 to 70 C; convection cooled, no fan; UL 62368-1, UL 508 ([datasheet](https://files.trcelectronics.com/datasheets/hdr60.pdf)) | About 10 W of its 60 W: coils, relays, the K1 hold | Runs cool and lightly loaded, which is what keeps a supply's capacitors alive | Outlasts the machine |
-| CPM-CB1 | 120 V breaker | Eaton WMZT1C10 (FAZ, 10 A, C curve) | UL 489 (a full branch-circuit breaker), CSA C22.2 No. 5, 277/480 V, 10 kA interrupting (UL) ([datasheet](https://www.eaton.com/mx/en-us/skuPage.WMZT1C10.html)) | Carries the motor side; trips only on a fault | Operates only on a fault | Outlasts the machine |
+| CPM-CB1 | 120 V breaker | Eaton FAZ-C10/1-SP (FAZ, 10 A, C curve) | UL 1077 supplementary protector, CSA C22.2 No. 235, IEC 60947-2, 277 V (Digi-Key listing, 2026-11-09) | Carries the motor side; trips only on a fault | Operates only on a fault | Outlasts the machine |
 
 ## Connections
 
@@ -53,7 +53,7 @@ Duty assumed for the life figures: 5 loads a week (260 a year), one motor start 
 - CPM-K_MOTOR: Corrected: the BOM said LC1K0910BD, which does not exist (Schneider's DC-coil TeSys K is LP1K or LP4K). LP4K adds the built-in suppressor and triples the mechanical life.
 - T0-K1: Corrected socket: PYF08A-E is not in Omron's catalogue; PYFZ-08-E (10 A, -55 to 70 C) replaces it.
 - T0-SW: Corrected: the XB4BD33 already has its two NO contacts; the BOM listed two extra ZBE101 blocks.
-- CPM-CB1: Changed the first choice: the BOM led with ABB S201-C10, an IEC part that is not the North American listed version. The Eaton is UL 489, which is more than the UL 1077 the spec asked for.
+- CPM-CB1: Changed the first choice: the BOM led with ABB S201-C10, an IEC part that is not the North American listed version. Changed again on 2026-11-09: the Eaton WMZT1C10 picked here is listed as discontinued, and it is UL 1077, not UL 489 as this record first said. The pick is now Eaton FAZ-C10/1-SP, the same FAZ breaker, UL 1077, which is what the spec asks for. For a UL 489 breaker use FAZ-C10/1-NA-SP.
 
 ## Not yet checked
 
